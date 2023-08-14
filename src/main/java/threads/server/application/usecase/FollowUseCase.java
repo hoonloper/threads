@@ -1,4 +1,4 @@
-package threads.server.application.controller;
+package threads.server.application.usecase;
 
 import org.springframework.stereotype.Service;
 import threads.server.domain.follow.Follow;
