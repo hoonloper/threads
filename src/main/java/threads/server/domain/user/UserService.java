@@ -11,6 +11,10 @@ public class UserService {
     }
 
     public UserDTO signUp(UserDTO userDTO) {
+        userRepository.findByEmail(userDTO.email()).ifPresent(user -> {
+            throw new IllegalStateException("이미 존재하는 회원입니다.");
+        });
+
         User user = new User(null, userDTO.email(), userDTO.name(), userDTO.nickname(), userDTO.userRole());
         userRepository.save(user);
         return toDto(user);
