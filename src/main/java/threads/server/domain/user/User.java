@@ -18,4 +18,7 @@ public class User extends BaseEntity {
 
     @Column
     private String nickname;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
 }
