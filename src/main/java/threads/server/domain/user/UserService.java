@@ -20,6 +20,14 @@ public class UserService {
     }
 
     private UserDTO toDto(User user) {
-        return new UserDTO(user.getId(), user.getEmail(), user.getName(), user.getNickname(), user.getUserRole());
+        return new UserDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getName(),
+                user.getNickname(),
+                user.getUserRole(),
+                user.getCreatedAt(),
+                user.getLastModifiedAt()
+        );
     }
 }

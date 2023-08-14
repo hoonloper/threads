@@ -1,4 +1,12 @@
 package threads.server.domain.post;
 
-public record PostDTO(Long id, Long userId, String content) {
+import java.time.LocalDateTime;
+
+public record PostDTO(
+        Long id,
+        Long userId,
+        String content,
+        LocalDateTime createdAt,
+        LocalDateTime lastModifiedAt
+) {
 }

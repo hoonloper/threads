@@ -8,6 +8,6 @@ public record CommentDTO(
         Long postId,
         String content,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime lastModifiedAt
 ) {
 }
