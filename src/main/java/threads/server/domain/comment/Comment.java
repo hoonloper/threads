@@ -1,13 +1,13 @@
 package threads.server.domain.comment;
 
 import jakarta.persistence.*;
-import threads.server.domain.common.BaseEntity;
+import threads.server.domain.common.BaseTime;
 import threads.server.domain.post.Post;
 import threads.server.domain.user.User;
 
 @Entity
 @Table(name = "comments")
-public class Comment extends BaseEntity {
+public class Comment extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

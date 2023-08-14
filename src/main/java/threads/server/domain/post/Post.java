@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import threads.server.domain.common.BaseEntity;
+import threads.server.domain.common.BaseTime;
 import threads.server.domain.user.User;
 
 @AllArgsConstructor
@@ -12,7 +12,7 @@ import threads.server.domain.user.User;
 @Getter
 @Entity
 @Table(name = "posts")
-public class Post extends BaseEntity {
+public class Post extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -4,14 +4,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import threads.server.domain.common.BaseEntity;
+import threads.server.domain.common.BaseTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity {
+public class User extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
