@@ -17,10 +17,11 @@ public class User extends BaseEntity {
     private Long id;
 
     @Column
-    private String name;
+    private String email;
 
     @Column
-    private String email;
+    private String name;
+
 
     @Column
     private String nickname;
