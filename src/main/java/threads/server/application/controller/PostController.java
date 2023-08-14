@@ -1,9 +1,6 @@
 package threads.server.application.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import threads.server.domain.post.PostDTO;
 import threads.server.domain.post.PostService;
 
@@ -14,6 +11,11 @@ public class PostController {
 
     public PostController(PostService postService) {
         this.postService = postService;
+    }
+
+    @GetMapping("{postId}")
+    public PostDTO getOnePost(@PathVariable("postId") Long postId) {
+        return postService.findOneById(postId);
     }
 
     @PostMapping
