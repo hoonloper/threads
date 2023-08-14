@@ -1,5 +1,6 @@
 package threads.server.application.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import threads.server.domain.post.PostDTO;
 import threads.server.domain.post.PostService;
@@ -19,6 +20,7 @@ public class PostController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public PostDTO createPost(@RequestBody PostDTO postDTO) {
         return postService.save(postDTO);
     }
