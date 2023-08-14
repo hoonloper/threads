@@ -1,9 +1,16 @@
 package threads.server.domain.follow;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import threads.server.domain.user.User;
 
+import java.time.LocalDateTime;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "follows")
 public class Follow {
@@ -20,6 +27,5 @@ public class Follow {
     private User fromUser;
 
     @Column
-    @CreatedDate
-    private Long followAt;
+    private LocalDateTime followAt;
 }
