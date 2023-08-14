@@ -23,4 +23,8 @@ public class Post extends BaseTime {
 
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    public Post(Long id) {
+        this.id = id;
+    }
 }
