@@ -1,9 +1,7 @@
 package threads.server.application.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import threads.server.application.usecase.FollowUseCase;
 import threads.server.domain.follow.FollowDTO;
 import threads.server.domain.follow.FollowService;
@@ -20,6 +18,7 @@ public class FollowController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void follow(@RequestBody FollowDTO followDTO) {
         followUseCase.follow(followDTO);
     }

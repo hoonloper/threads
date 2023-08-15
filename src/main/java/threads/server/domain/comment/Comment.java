@@ -1,10 +1,16 @@
 package threads.server.domain.comment;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import threads.server.domain.common.BaseTime;
 import threads.server.domain.post.Post;
 import threads.server.domain.user.User;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 @Entity
 @Table(name = "comments")
 public class Comment extends BaseTime {
