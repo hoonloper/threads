@@ -15,10 +15,10 @@ public class CommentService {
     public CommentDTO save(CommentDTO commentDTO) {
         User user = new User(commentDTO.userId());
         Post post = new Post(commentDTO.postId());
-        return toDto(new Comment(null, user, post, commentDTO.content()));
+        return toCommentDto(commentRepository.save(new Comment(null, user, post, commentDTO.content())));
     }
 
-    private CommentDTO toDto(Comment comment) {
+    private CommentDTO toCommentDto(Comment comment) {
         return new CommentDTO(
                 comment.getId(),
                 comment.getUser().getId(),
