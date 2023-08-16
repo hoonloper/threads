@@ -28,4 +28,8 @@ public class Comment extends BaseTime {
 
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    public void change(String content) {
+        this.content = content;
+    }
 }

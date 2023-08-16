@@ -7,7 +7,7 @@ import threads.server.domain.follow.FollowDTO;
 import threads.server.domain.follow.FollowService;
 
 @RestController
-@RequestMapping("/api/v1/follow")
+@RequestMapping("/api/v1/follows")
 public class FollowController {
     private final FollowUseCase followUseCase;
     private final FollowService followService;

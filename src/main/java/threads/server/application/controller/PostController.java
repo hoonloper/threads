@@ -6,7 +6,7 @@ import threads.server.domain.post.PostDTO;
 import threads.server.domain.post.PostService;
 
 @RestController
-@RequestMapping("/api/v1/post")
+@RequestMapping("/api/v1/posts")
 public class PostController {
     private final PostService postService;
 

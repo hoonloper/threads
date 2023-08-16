@@ -18,6 +18,13 @@ public class CommentService {
         return toCommentDto(commentRepository.save(new Comment(null, user, post, commentDTO.content())));
     }
 
+    public CommentDTO update(CommentDTO commentDTO) {
+        Comment comment = commentRepository.findById(commentDTO.id()).orElseThrow();
+        comment.change(commentDTO.content());
+        commentRepository.save(comment);
+        return toCommentDto(comment);
+    }
+
     private CommentDTO toCommentDto(Comment comment) {
         return new CommentDTO(
                 comment.getId(),
@@ -28,4 +35,5 @@ public class CommentService {
                 comment.getLastModifiedAt()
         );
     }
+
 }
