@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import threads.server.domain.post.Post;
 import threads.server.domain.user.User;
 
+import static threads.server.domain.comment.CommentDTO.toCommentDto;
+
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
@@ -23,17 +25,6 @@ public class CommentService {
         comment.change(commentDTO.content());
         commentRepository.save(comment);
         return toCommentDto(comment);
-    }
-
-    private CommentDTO toCommentDto(Comment comment) {
-        return new CommentDTO(
-                comment.getId(),
-                comment.getUser().getId(),
-                comment.getPost().getId(),
-                comment.getContent(),
-                comment.getCreatedAt(),
-                comment.getLastModifiedAt()
-        );
     }
 
     public void delete(Long commentId) {

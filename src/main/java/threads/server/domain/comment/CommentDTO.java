@@ -10,4 +10,14 @@ public record CommentDTO(
         LocalDateTime createdAt,
         LocalDateTime lastModifiedAt
 ) {
+    public static CommentDTO toCommentDto(Comment comment) {
+        return new CommentDTO(
+                comment.getId(),
+                comment.getUser().getId(),
+                comment.getPost().getId(),
+                comment.getContent(),
+                comment.getCreatedAt(),
+                comment.getLastModifiedAt()
+        );
+    }
 }

@@ -8,6 +8,9 @@ import threads.server.domain.user.User;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static threads.server.domain.comment.CommentDTO.toCommentDto;
+import static threads.server.domain.post.PostDTO.toPostDto;
+
 @Service
 public class PostService {
     private final PostRepository postRepository;
@@ -33,31 +36,6 @@ public class PostService {
         return toPostDto(post);
     }
 
-    private PostDTO toPostDto(Post post) {
-        return new PostDTO(
-                post.getId(),
-                post.getUser().getId(),
-                post.getContent(),
-                toCommentsDto(post.getComments()),
-                post.getCreatedAt(),
-                post.getLastModifiedAt()
-        );
-    }
-
-    private List<CommentDTO> toCommentsDto(List<Comment> comments) {
-        return comments
-                .stream()
-                .map(comment ->
-                        new CommentDTO(
-                                comment.getId(),
-                                comment.getPost().getId(),
-                                comment.getUser().getId(),
-                                comment.getContent(),
-                                comment.getCreatedAt(),
-                                comment.getLastModifiedAt()
-                        )
-                ).collect(Collectors.toList());
-    }
 
     public void remove(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow();
