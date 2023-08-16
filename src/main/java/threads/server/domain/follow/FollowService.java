@@ -20,7 +20,8 @@ public class FollowService {
         followRepository.save(new Follow(null, toUser, fromUser, LocalDateTime.now()));
     }
 
-    public void unfollow(Follow follow) {
+    public void unfollow(Long followId) {
+        Follow follow = followRepository.findById(followId).orElseThrow();
         followRepository.delete(follow);
     }
 
