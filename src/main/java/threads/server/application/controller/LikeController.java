@@ -1,8 +1,9 @@
 package threads.server.application.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import threads.server.domain.like.LikeDTO;
 import threads.server.domain.like.LikeService;
 
 @RestController
@@ -12,5 +13,11 @@ public class LikeController {
 
     public LikeController(LikeService likeService) {
         this.likeService = likeService;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public LikeDTO like(@RequestBody LikeDTO likeDTO) {
+        return likeService.save(likeDTO);
     }
 }
