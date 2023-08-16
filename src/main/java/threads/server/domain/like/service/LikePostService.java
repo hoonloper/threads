@@ -9,21 +9,18 @@ import threads.server.domain.user.User;
 
 import java.time.LocalDateTime;
 
-import static threads.server.domain.like.LikeDTO.toLikeDto;
-
 @Service
-public class LikePostService extends LikeService {
+public class LikePostService implements LikeService {
     private final LikePostRepository likePostRepository;
 
     public LikePostService(LikePostRepository likePostRepository) {
         this.likePostRepository = likePostRepository;
     }
 
-    public LikeDTO save(LikeDTO likeDTO) {
+    public void save(LikeDTO likeDTO) {
         User user = new User(likeDTO.userId());
         Post post = new Post(likeDTO.targetId());
-        LikePost likePost = likePostRepository.save(new LikePost(null, user, post, LocalDateTime.now()));
-        return toLikeDto(likePost.getId(), likeDTO, likePost.getLikeAt());
+        likePostRepository.save(new LikePost(null, user, post, LocalDateTime.now()));
     }
 
     public void delete(LikeDTO likeDTO) {

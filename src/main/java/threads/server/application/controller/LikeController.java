@@ -23,12 +23,12 @@ public class LikeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public LikeDTO like(@RequestBody LikeDTO likeDTO) {
+    public void like(@RequestBody LikeDTO likeDTO) {
         if (likeDTO.type().equals(LikeType.POST)) {
-            return likePostService.save(likeDTO);
+            likePostService.save(likeDTO);
         }
         if (likeDTO.type().equals(LikeType.COMMENT)) {
-            return likeCommentService.save(likeDTO);
+            likeCommentService.save(likeDTO);
         }
         throw new IllegalStateException("잘못된 타입입니다.");
     }
