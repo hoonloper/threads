@@ -2,6 +2,8 @@ package threads.server.domain.user;
 
 import org.springframework.stereotype.Service;
 
+import static threads.server.domain.user.UserDTO.toDto;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -17,17 +19,5 @@ public class UserService {
 
         User user = userRepository.save(new User(null, userDTO.email(), userDTO.name(), userDTO.nickname(), userDTO.userRole()));
         return toDto(user);
-    }
-
-    private UserDTO toDto(User user) {
-        return new UserDTO(
-                user.getId(),
-                user.getEmail(),
-                user.getName(),
-                user.getNickname(),
-                user.getUserRole(),
-                user.getCreatedAt(),
-                user.getLastModifiedAt()
-        );
     }
 }

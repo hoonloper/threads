@@ -11,4 +11,15 @@ public record UserDTO(
         LocalDateTime createdAt,
         LocalDateTime lastModifiedAt
 ) {
+    public static UserDTO toDto(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getName(),
+                user.getNickname(),
+                user.getUserRole(),
+                user.getCreatedAt(),
+                user.getLastModifiedAt()
+        );
+    }
 }
