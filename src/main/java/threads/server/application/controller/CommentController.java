@@ -25,4 +25,10 @@ public class CommentController {
     public CommentDTO updateComment(@RequestBody CommentDTO commentDTO) {
         return commentService.update(commentDTO);
     }
+
+    @DeleteMapping("{commentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeComment(@PathVariable("commentId") Long commentId) {
+        commentService.delete(commentId);
+    }
 }
