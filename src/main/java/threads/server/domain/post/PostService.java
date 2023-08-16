@@ -20,7 +20,7 @@ public class PostService {
     public PostDTO findOneById(Long postId) {
         Optional<Post> foundPost = postRepository.findById(postId);
         if(foundPost.isEmpty()) {
-            throw new IllegalStateException("없는 쓰레드입니다.");
+            throw new IllegalStateException("존재하지 않는 쓰레드입니다.");
         }
         Post post = foundPost.get();
         return toPostDto(post);
@@ -28,6 +28,13 @@ public class PostService {
 
     public PostDTO save(PostDTO postDTO) {
         Post post = postRepository.save(new Post(null, new User(postDTO.userId()), postDTO.content()));
+        return toPostDto(post);
+    }
+
+    public PostDTO update(PostDTO postDTO) {
+        Post post = postRepository.findById(postDTO.id()).orElseThrow();
+        post.change(postDTO.content());
+        postRepository.save(post);
         return toPostDto(post);
     }
 

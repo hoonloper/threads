@@ -24,4 +24,10 @@ public class PostController {
     public PostDTO createPost(@RequestBody PostDTO postDTO) {
         return postService.save(postDTO);
     }
+
+    @PatchMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public PostDTO updatePost(@RequestBody PostDTO postDTO) {
+        return postService.update(postDTO);
+    }
 }

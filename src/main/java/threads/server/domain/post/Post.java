@@ -2,6 +2,7 @@ package threads.server.domain.post;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import threads.server.domain.comment.Comment;
@@ -38,6 +39,10 @@ public class Post extends BaseTime {
     public Post(Long id, User user, String content) {
         this.id = id;
         this.user = user;
+        this.content = content;
+    }
+
+    public void change(String content) {
         this.content = content;
     }
 }
