@@ -9,4 +9,7 @@ public record LikeDTO(
         LikeType type,
         LocalDateTime likeAt
 ) {
+    public static LikeDTO toLikeDto(Long id, LikeDTO likeDTO, LocalDateTime likeAt) {
+        return new LikeDTO(id, likeDTO.userId(), likeDTO.targetId(), likeDTO.type(), likeAt);
+    }
 }
