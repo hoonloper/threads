@@ -39,4 +39,18 @@ public class LikeService {
     private LikeDTO toLikeDto(Long id, LikeDTO likeDTO, LocalDateTime likeAt) {
         return new LikeDTO(id, likeDTO.userId(), likeDTO.targetId(), likeDTO.type(), likeAt);
     }
+
+    public void delete(LikeDTO likeDTO) {
+        if (likeDTO.type().equals(LikeType.POST)) {
+            LikePost likePost = likePostRepository.findById(likeDTO.id()).orElseThrow();
+            likePostRepository.delete(likePost);
+            return;
+        }
+        if (likeDTO.type().equals(LikeType.COMMENT)) {
+            LikeComment likeComment = likeCommentRepository.findById(likeDTO.id()).orElseThrow();
+            likeCommentRepository.delete(likeComment);
+            return;
+        }
+        throw new IllegalStateException("잘못된 타입입니다.");
+    }
 }

@@ -20,4 +20,10 @@ public class LikeController {
     public LikeDTO like(@RequestBody LikeDTO likeDTO) {
         return likeService.save(likeDTO);
     }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeLike(@RequestBody LikeDTO likeDTO) {
+        likeService.delete(likeDTO);
+    }
 }
