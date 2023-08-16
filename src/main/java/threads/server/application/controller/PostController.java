@@ -30,4 +30,10 @@ public class PostController {
     public PostDTO updatePost(@RequestBody PostDTO postDTO) {
         return postService.update(postDTO);
     }
+
+    @DeleteMapping("{postId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removePost(@PathVariable("postId") Long postId) {
+        postService.remove(postId);
+    }
 }
