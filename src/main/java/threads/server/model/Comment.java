@@ -1,20 +1,16 @@
-package threads.server.domain.like.entity;
+package threads.server.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import threads.server.domain.comment.Comment;
-import threads.server.domain.user.User;
-
-import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(name = "likes_comment")
-public class LikeComment {
+@Table(name = "comments")
+public class Comment extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,9 +20,17 @@ public class LikeComment {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
-    private Comment comment;
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    @Column
-    private LocalDateTime likeAt;
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
+    public Comment(Long id) {
+        this.id = id;
+    }
+
+    public void change(String content) {
+        this.content = content;
+    }
 }

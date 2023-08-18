@@ -1,13 +1,9 @@
-package threads.server.domain.post;
+package threads.server.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import threads.server.domain.comment.Comment;
-import threads.server.domain.common.BaseTime;
-import threads.server.domain.user.User;
 
 import java.util.ArrayList;
 import java.util.List;

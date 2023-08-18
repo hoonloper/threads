@@ -1,4 +1,4 @@
-package threads.server.domain.common;
+package threads.server.model;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

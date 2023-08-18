@@ -1,5 +1,7 @@
 package threads.server.domain.user;
 
+import threads.server.model.User;
+
 import java.time.LocalDateTime;
 
 public record UserDTO(

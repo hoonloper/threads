@@ -3,10 +3,10 @@ package threads.server.domain.like.service;
 import org.springframework.stereotype.Service;
 import threads.server.application.exceptions.NotFoundException;
 import threads.server.domain.like.LikeDTO;
-import threads.server.domain.like.entity.LikePost;
+import threads.server.model.LikePost;
 import threads.server.domain.like.repository.LikePostRepository;
-import threads.server.domain.post.Post;
-import threads.server.domain.user.User;
+import threads.server.model.Post;
+import threads.server.model.User;
 
 import java.time.LocalDateTime;
 

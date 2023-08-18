@@ -1,6 +1,7 @@
 package threads.server.domain.post;
 
 import threads.server.domain.comment.CommentDTO;
+import threads.server.model.Post;
 
 import java.time.LocalDateTime;
 import java.util.List;
