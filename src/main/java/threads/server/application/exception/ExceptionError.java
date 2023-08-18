@@ -1,4 +1,4 @@
-package threads.server.application.exceptions;
+package threads.server.application.exception;
 
 import lombok.Builder;
 

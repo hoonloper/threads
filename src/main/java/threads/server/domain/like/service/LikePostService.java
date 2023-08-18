@@ -1,7 +1,7 @@
 package threads.server.domain.like.service;
 
 import org.springframework.stereotype.Service;
-import threads.server.application.exceptions.NotFoundException;
+import threads.server.application.exception.NotFoundException;
 import threads.server.domain.like.LikeDTO;
 import threads.server.domain.like.entity.LikePost;
 import threads.server.domain.like.repository.LikePostRepository;

@@ -1,7 +1,7 @@
 package threads.server.domain.comment;
 
 import org.springframework.stereotype.Service;
-import threads.server.application.exceptions.NotFoundException;
+import threads.server.application.exception.NotFoundException;
 import threads.server.domain.post.Post;
 import threads.server.domain.user.User;
 

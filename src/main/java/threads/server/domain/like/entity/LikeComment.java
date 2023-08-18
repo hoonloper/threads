@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import threads.server.domain.comment.Comment;
 import threads.server.domain.user.User;
+import threads.server.domain.comment.Comment;
 
 import java.time.LocalDateTime;
 

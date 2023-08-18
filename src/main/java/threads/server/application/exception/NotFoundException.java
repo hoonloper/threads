@@ -1,4 +1,4 @@
-package threads.server.application.exceptions;
+package threads.server.application.exception;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {

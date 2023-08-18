@@ -4,7 +4,7 @@ package threads.server.application.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import threads.server.application.exceptions.BadRequestException;
+import threads.server.application.exception.BadRequestException;
 import threads.server.domain.like.LikeDTO;
 import threads.server.domain.like.LikeType;
 import threads.server.domain.like.service.LikeCommentService;

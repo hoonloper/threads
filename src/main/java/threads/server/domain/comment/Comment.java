@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import threads.server.domain.common.BaseTime;
 import threads.server.domain.post.Post;
 import threads.server.domain.user.User;
+import threads.server.domain.common.BaseTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
