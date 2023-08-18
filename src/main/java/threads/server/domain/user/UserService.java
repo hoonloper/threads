@@ -1,6 +1,7 @@
 package threads.server.domain.user;
 
 import org.springframework.stereotype.Service;
+import threads.server.application.exceptions.BadRequestException;
 
 import static threads.server.domain.user.UserDTO.toDto;
 
@@ -13,8 +14,8 @@ public class UserService {
     }
 
     public UserDTO signUp(UserDTO userDTO) {
-        userRepository.findByEmail(userDTO.email()).ifPresent(user -> {
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
+        userRepository.findByEmail(userDTO.email()).ifPresent((user) -> {
+            throw new BadRequestException("이미 존재하는 이메일입니다.");
         });
 
         User user = userRepository.save(new User(null, userDTO.email(), userDTO.name(), userDTO.nickname(), userDTO.userRole()));

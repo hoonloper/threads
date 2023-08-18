@@ -1,14 +1,9 @@
 package threads.server.domain.post;
 
 import org.springframework.stereotype.Service;
-import threads.server.domain.comment.Comment;
-import threads.server.domain.comment.CommentDTO;
+import threads.server.application.exceptions.NotFoundException;
 import threads.server.domain.user.User;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static threads.server.domain.comment.CommentDTO.toCommentDto;
 import static threads.server.domain.post.PostDTO.toPostDto;
 
 @Service
@@ -20,7 +15,7 @@ public class PostService {
     }
 
     public PostDTO findOneById(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow();
+        Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
         return toPostDto(post);
     }
 
@@ -30,7 +25,7 @@ public class PostService {
     }
 
     public PostDTO update(PostDTO postDTO) {
-        Post post = postRepository.findById(postDTO.id()).orElseThrow();
+        Post post = postRepository.findById(postDTO.id()).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
         post.change(postDTO.content());
         postRepository.save(post);
         return toPostDto(post);
@@ -38,7 +33,7 @@ public class PostService {
 
 
     public void remove(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow();
+        Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
         postRepository.delete(post);
     }
 }
