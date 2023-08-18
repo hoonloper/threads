@@ -1,7 +1,7 @@
 package threads.server.domain.user;
 
 import org.springframework.stereotype.Service;
-import threads.server.application.exceptions.BadRequestException;
+import threads.server.application.exception.BadRequestException;
 import threads.server.model.User;
 
 import static threads.server.domain.user.UserDTO.toDto;

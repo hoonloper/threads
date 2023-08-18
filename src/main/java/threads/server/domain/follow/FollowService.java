@@ -1,7 +1,7 @@
 package threads.server.domain.follow;
 
 import org.springframework.stereotype.Service;
-import threads.server.application.exceptions.NotFoundException;
+import threads.server.application.exception.NotFoundException;
 import threads.server.model.Follow;
 import threads.server.model.User;
 

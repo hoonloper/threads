@@ -1,7 +1,7 @@
 package threads.server.domain.post;
 
 import org.springframework.stereotype.Service;
-import threads.server.application.exceptions.NotFoundException;
+import threads.server.application.exception.NotFoundException;
 import threads.server.model.Post;
 import threads.server.model.User;
 
