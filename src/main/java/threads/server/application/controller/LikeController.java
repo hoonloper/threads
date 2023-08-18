@@ -4,6 +4,7 @@ package threads.server.application.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import threads.server.application.exceptions.BadRequestException;
 import threads.server.domain.like.LikeDTO;
 import threads.server.domain.like.LikeType;
 import threads.server.domain.like.service.LikeCommentService;
@@ -30,7 +31,7 @@ public class LikeController {
         if (likeDTO.type().equals(LikeType.COMMENT)) {
             likeCommentService.save(likeDTO);
         }
-        throw new IllegalStateException("잘못된 타입입니다.");
+        throw new BadRequestException("잘못된 타입입니다.");
     }
 
     @DeleteMapping
@@ -42,6 +43,6 @@ public class LikeController {
         if(likeDTO.type().equals(LikeType.COMMENT)) {
             likeCommentService.delete(likeDTO);
         }
-        throw new IllegalStateException("잘못된 타입입니다.");
+        throw new BadRequestException("잘못된 타입입니다.");
     }
 }

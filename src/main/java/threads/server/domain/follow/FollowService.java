@@ -1,10 +1,10 @@
 package threads.server.domain.follow;
 
 import org.springframework.stereotype.Service;
+import threads.server.application.exceptions.NotFoundException;
 import threads.server.domain.user.User;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class FollowService {
@@ -21,11 +21,7 @@ public class FollowService {
     }
 
     public void unfollow(Long followId) {
-        Follow follow = followRepository.findById(followId).orElseThrow();
+        Follow follow = followRepository.findById(followId).orElseThrow(() -> new NotFoundException("팔로우 내역을 찾을 수 없습니다."));
         followRepository.delete(follow);
-    }
-
-    public Optional<Follow> getFollow(FollowDTO followDTO) {
-        return followRepository.findByToUserIdAndFromUserId(followDTO.toUserId(), followDTO.fromUserId());
     }
 }

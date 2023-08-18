@@ -1,6 +1,7 @@
 package threads.server.domain.like.service;
 
 import org.springframework.stereotype.Service;
+import threads.server.application.exceptions.NotFoundException;
 import threads.server.domain.like.LikeDTO;
 import threads.server.domain.like.entity.LikePost;
 import threads.server.domain.like.repository.LikePostRepository;
@@ -24,7 +25,7 @@ public class LikePostService implements LikeService {
     }
 
     public void delete(LikeDTO likeDTO) {
-        LikePost likePost = likePostRepository.findById(likeDTO.id()).orElseThrow();
+        LikePost likePost = likePostRepository.findById(likeDTO.id()).orElseThrow(() -> new NotFoundException("좋아요 내역을 찾을 수 없습니다."));
         likePostRepository.delete(likePost);
     }
 }
