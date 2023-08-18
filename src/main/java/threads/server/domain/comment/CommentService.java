@@ -2,9 +2,8 @@ package threads.server.domain.comment;
 
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
-import threads.server.model.Comment;
-import threads.server.model.Post;
-import threads.server.model.User;
+import threads.server.domain.post.Post;
+import threads.server.domain.user.User;
 
 import static threads.server.domain.comment.CommentDTO.toCommentDto;
 

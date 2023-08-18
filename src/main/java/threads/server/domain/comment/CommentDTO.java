@@ -1,7 +1,5 @@
 package threads.server.domain.comment;
 
-import threads.server.model.Comment;
-
 import java.time.LocalDateTime;
 
 public record CommentDTO(

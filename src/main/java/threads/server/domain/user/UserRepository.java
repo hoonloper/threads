@@ -1,7 +1,6 @@
 package threads.server.domain.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import threads.server.model.User;
 
 import java.util.Optional;
 

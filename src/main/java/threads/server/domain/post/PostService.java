@@ -2,8 +2,7 @@ package threads.server.domain.post;
 
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
-import threads.server.model.Post;
-import threads.server.model.User;
+import threads.server.domain.user.User;
 
 import static threads.server.domain.post.PostDTO.toPostDto;
 

@@ -1,32 +1,31 @@
-package threads.server.model;
+package threads.server.domain.follow;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import threads.server.model.Post;
-import threads.server.model.User;
+import threads.server.domain.user.User;
 
 import java.time.LocalDateTime;
 
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Entity
-@Table(name = "likes_post")
-public class LikePost {
+@Table(name = "follows")
+public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "to_user_id")
+    private User toUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @JoinColumn(name = "from_user_id")
+    private User fromUser;
 
     @Column
-    private LocalDateTime likeAt;
+    private LocalDateTime followAt;
 }

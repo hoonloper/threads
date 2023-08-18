@@ -1,10 +1,10 @@
-package threads.server.model;
+package threads.server.domain.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import threads.server.domain.user.UserRole;
+import threads.server.domain.common.BaseTime;
 
 @AllArgsConstructor
 @NoArgsConstructor

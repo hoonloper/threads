@@ -1,11 +1,11 @@
 package threads.server.domain.like.service;
 
 import org.springframework.stereotype.Service;
-import threads.server.model.Comment;
+import threads.server.domain.comment.Comment;
 import threads.server.domain.like.LikeDTO;
-import threads.server.model.LikeComment;
+import threads.server.domain.like.entity.LikeComment;
 import threads.server.domain.like.repository.LikeCommentRepository;
-import threads.server.model.User;
+import threads.server.domain.user.User;
 
 import java.time.LocalDateTime;
 @Service
