@@ -1,5 +1,6 @@
 package threads.server.domain.post;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
 import threads.server.domain.user.User;
@@ -7,12 +8,9 @@ import threads.server.domain.user.User;
 import static threads.server.domain.post.PostDTO.toPostDto;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-
-    public PostService(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
 
     public PostDTO findOneById(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));

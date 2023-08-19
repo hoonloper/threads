@@ -1,7 +1,7 @@
 package threads.server.application.controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import threads.server.application.exception.BadRequestException;
@@ -12,15 +12,10 @@ import threads.server.domain.like.service.LikePostService;
 
 @RestController
 @RequestMapping("/api/v1/likes")
+@RequiredArgsConstructor
 public class LikeController {
     private final LikePostService likePostService;
     private final LikeCommentService likeCommentService;
-
-    @Autowired
-    public LikeController(LikePostService likePostService, LikeCommentService likeCommentService) {
-        this.likePostService = likePostService;
-        this.likeCommentService = likeCommentService;
-    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

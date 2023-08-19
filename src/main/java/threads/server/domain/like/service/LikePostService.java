@@ -1,5 +1,6 @@
 package threads.server.domain.like.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
 import threads.server.domain.like.LikeDTO;
@@ -11,12 +12,9 @@ import threads.server.domain.user.User;
 import java.time.LocalDateTime;
 
 @Service
+@RequiredArgsConstructor
 public class LikePostService implements LikeService {
     private final LikePostRepository likePostRepository;
-
-    public LikePostService(LikePostRepository likePostRepository) {
-        this.likePostRepository = likePostRepository;
-    }
 
     public void save(LikeDTO likeDTO) {
         User user = new User(likeDTO.userId());
