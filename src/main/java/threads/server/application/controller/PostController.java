@@ -1,5 +1,6 @@
 package threads.server.application.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import threads.server.domain.post.PostDTO;
@@ -7,12 +8,9 @@ import threads.server.domain.post.PostService;
 
 @RestController
 @RequestMapping("/api/v1/posts")
+@RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
 
     @GetMapping("{postId}")
     public PostDTO getOnePost(@PathVariable("postId") Long postId) {

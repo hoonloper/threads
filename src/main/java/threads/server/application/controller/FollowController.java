@@ -1,5 +1,6 @@
 package threads.server.application.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import threads.server.domain.follow.FollowDTO;
@@ -7,12 +8,9 @@ import threads.server.domain.follow.FollowService;
 
 @RestController
 @RequestMapping("/api/v1/follows")
+@RequiredArgsConstructor
 public class FollowController {
     private final FollowService followService;
-
-    public FollowController(FollowService followService) {
-        this.followService = followService;
-    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

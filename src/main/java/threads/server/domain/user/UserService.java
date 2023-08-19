@@ -1,17 +1,15 @@
 package threads.server.domain.user;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.BadRequestException;
 
 import static threads.server.domain.user.UserDTO.toDto;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public UserDTO signUp(UserDTO userDTO) {
         userRepository.findByEmail(userDTO.email()).ifPresent((user) -> {

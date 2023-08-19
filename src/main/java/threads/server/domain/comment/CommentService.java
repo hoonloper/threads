@@ -1,5 +1,6 @@
 package threads.server.domain.comment;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
 import threads.server.domain.post.Post;
@@ -8,12 +9,9 @@ import threads.server.domain.user.User;
 import static threads.server.domain.comment.CommentDTO.toCommentDto;
 
 @Service
+@RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
-
-    public CommentService(CommentRepository commentRepository) {
-        this.commentRepository = commentRepository;
-    }
 
     public CommentDTO save(CommentDTO commentDTO) {
         User user = new User(commentDTO.userId());
