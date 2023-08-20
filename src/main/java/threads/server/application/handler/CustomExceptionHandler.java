@@ -4,15 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import threads.server.application.exception.*;
 
 @ControllerAdvice
 @Slf4j
-public class ExceptionHandler {
+public class CustomExceptionHandler {
     /* Validator Exception */
-    @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ExceptionError handleValidException(final MethodArgumentNotValidException ex) {
@@ -20,7 +21,7 @@ public class ExceptionHandler {
         return buildExceptionError(ex, HttpStatus.BAD_REQUEST);
     }
     /* 400 - Bad Request */
-    @org.springframework.web.bind.annotation.ExceptionHandler(BadRequestException.class)
+    @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ExceptionError handleBadRequest(final RuntimeException ex) {
@@ -29,7 +30,7 @@ public class ExceptionHandler {
     }
 
     /* 401 - Unauthorized */
-    @org.springframework.web.bind.annotation.ExceptionHandler(UnauthorizedException.class)
+    @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
     public ExceptionError handleUnauthorized(final RuntimeException ex) {
@@ -38,7 +39,7 @@ public class ExceptionHandler {
     }
 
     /* 403 - Forbidden */
-    @org.springframework.web.bind.annotation.ExceptionHandler(ForbiddenException.class)
+    @ExceptionHandler(ForbiddenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     public ExceptionError handleForbidden(final RuntimeException ex) {
@@ -47,7 +48,7 @@ public class ExceptionHandler {
     }
 
     /* 404 - Not Found */
-    @org.springframework.web.bind.annotation.ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ExceptionError handleNotFound(final RuntimeException ex) {
@@ -57,7 +58,7 @@ public class ExceptionHandler {
 
 
     /* 500 - Internal Server Error(and ALL) */
-    @org.springframework.web.bind.annotation.ExceptionHandler({ Exception.class })
+    @ExceptionHandler({ Exception.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ExceptionError handleServerError(final Exception ex) {
@@ -67,7 +68,7 @@ public class ExceptionHandler {
     }
 
     /* 알 수 없는 에러 */
-    @org.springframework.web.bind.annotation.ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ExceptionError handleUnknownException(final RuntimeException ex) {
