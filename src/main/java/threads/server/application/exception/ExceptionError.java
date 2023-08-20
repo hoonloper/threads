@@ -1,6 +1,7 @@
 package threads.server.application.exception;
 
 import lombok.Builder;
+import org.springframework.http.HttpStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,6 +14,6 @@ public record ExceptionError(String message, String statusMessage, Integer statu
     public ExceptionError(String message, String statusMessage, Integer statusCode) {
         this.message = message;
         this.statusMessage = statusMessage;
-        this.statusCode = statusCode != null ? statusCode : 500;
+        this.statusCode = statusCode != null ? statusCode : HttpStatus.INTERNAL_SERVER_ERROR.value();
     }
 }
