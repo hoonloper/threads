@@ -18,4 +18,9 @@ public class AuthController {
     public UserDTO signUp(@RequestBody UserDTO userDTO) {
         return userService.signUp(userDTO);
     }
+
+    @PostMapping("sign-in")
+    public UserDTO getMyUserInfo(@RequestBody UserDTO userDTO) {
+        return userService.signIn(userDTO);
+    }
 }

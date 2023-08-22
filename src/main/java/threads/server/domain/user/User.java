@@ -1,5 +1,6 @@
 package threads.server.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,10 @@ public class User extends BaseTime {
 
     @Column
     private String email;
+
+    @JsonIgnore
+    @Column
+    private String password;
 
     @Column
     private String name;
