@@ -90,5 +90,25 @@ public class PostServiceTest {
                 assertThat(c.getUser().hashCode()).isEqualTo(user.hashCode());
             });
         }
+
+        @Test
+        @DisplayName("한개 쓰레드 수정 테스트")
+        void 한개쓰레드수정() {
+            User user = new User(postDto.userId());
+            Post post = new Post(1L, user, postDto.content());
+
+            PostDTO newPostDto = new PostDTO(1L, 1L, "수정한 내용", null, null, null);
+
+            when(postRepository.findById(newPostDto.id())).thenReturn(Optional.of(post));
+            when(postRepository.save(any(Post.class))).thenReturn(post);
+
+            PostService postService = new PostService(postRepository);
+            PostDTO resultPostDto = postService.update(newPostDto);
+
+            assertThat(resultPostDto).isNotNull();
+            assertThat(resultPostDto.id()).isNotNull().isEqualTo(post.getId());
+            assertThat(resultPostDto.userId()).isEqualTo(newPostDto.id());
+            assertThat(resultPostDto.content()).isEqualTo(newPostDto.content());
+        }
     }
 }
