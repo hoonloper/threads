@@ -16,6 +16,7 @@ import org.hamcrest.Matchers;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 
@@ -50,6 +51,32 @@ public class PostServiceTest {
 
             PostService postService = new PostService(postRepository);
             PostDTO resultPostDto = postService.save(postDto);
+
+            assertThat(resultPostDto).isNotNull();
+            assertThat(resultPostDto.id()).isNotNull().isEqualTo(post.getId());
+            assertThat(resultPostDto.userId()).isEqualTo(user.getId());
+            assertThat(resultPostDto.content()).isEqualTo(post.getContent());
+            assertThat(resultPostDto.comments()).isNotNull();
+            comments.forEach(c -> {
+                assertThat(c.getContent()).isEqualTo(comment.getContent());
+                assertThat(c.getPost().hashCode()).isEqualTo(commentPost.hashCode());
+                assertThat(c.getId()).isEqualTo(comment.getId());
+                assertThat(c.getUser().hashCode()).isEqualTo(user.hashCode());
+            });
+        }
+        @Test
+        @DisplayName("한개 쓰레드 찾기 테스트")
+        void 한개쓰레드찾기() {
+            User user = new User(postDto.userId());
+            Post commentPost = new Post(1L, user, postDto.content());
+            Comment comment = new Comment(1L, user, commentPost, "TEST");
+            List<Comment> comments = List.of(comment);
+            Post post = new Post(1L, user, postDto.content(), comments);
+
+            when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
+
+            PostService postService = new PostService(postRepository);
+            PostDTO resultPostDto = postService.findOneById(post.getId());
 
             assertThat(resultPostDto).isNotNull();
             assertThat(resultPostDto.id()).isNotNull().isEqualTo(post.getId());
