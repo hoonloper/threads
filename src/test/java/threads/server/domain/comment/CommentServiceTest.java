@@ -80,5 +80,14 @@ public class CommentServiceTest {
             assertThat(outputCommentDto.createdAt()).isInstanceOf(LocalDateTime.class);
             assertThat(outputCommentDto.lastModifiedAt()).isInstanceOf(LocalDateTime.class);
         }
+
+
+        @Test
+        @DisplayName("한개 댓글 삭제 테스트")
+        void 한개_댓글_삭제() {
+            Comment savedComment = commentRepository.save(new Comment(null, savedUser, savedPost, inputCommentDto.content()));
+            commentService.delete(savedComment.getId());
+            assertThat(commentRepository.findAll().size()).isNotNull().isEqualTo(0);
+        }
     }
 }
