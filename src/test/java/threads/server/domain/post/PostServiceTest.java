@@ -14,6 +14,7 @@ import threads.server.domain.user.UserRole;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
@@ -29,7 +30,7 @@ public class PostServiceTest {
 
     @Nested
     @DisplayName("성공 케이스")
-    class Success {
+    class 성공 {
         private final User user = userRepository.save(new User(null, "test@test.com", "비밀번호", "이름", "닉네임", UserRole.USER));;
         private final PostDTO POST_DTO = new PostDTO(null, 1L, "쓰레드테스트", null, null, null);
 
@@ -46,7 +47,6 @@ public class PostServiceTest {
             PostDTO outputPostDto = postService.save(inputPostDto);
 
             assertThat(outputPostDto).isNotNull();
-//            assertThat(outputPostDto.id()).isNotNull().isEqualTo(1L);
             assertThat(outputPostDto.id()).isNotNull();
             assertThat(outputPostDto.userId()).isEqualTo(user.getId());
             assertThat(outputPostDto.content()).isEqualTo(inputPostDto.content());
@@ -62,9 +62,7 @@ public class PostServiceTest {
             PostDTO outputPostDto = postService.update(inputPostDto);
 
             assertThat(outputPostDto).isNotNull();
-//            assertThat(outputPostDto.id()).isNotNull().isEqualTo(inputPostDto.id());
-            assertThat(outputPostDto.id()).isNotNull();
-//            assertThat(outputPostDto.userId()).isEqualTo(inputPostDto.userId());
+            assertThat(outputPostDto.id()).isNotNull(); // AUTO_INCREMENT로 인해 Not Null만 판단
             assertThat(outputPostDto.userId()).isNotNull();
             assertThat(outputPostDto.content()).isEqualTo(inputPostDto.content());
             assertThat(outputPostDto.comments()).isNotNull();
@@ -78,33 +76,21 @@ public class PostServiceTest {
             PostDTO outputPostDto = postService.findOneById(savedPostDto.id());
 
             assertThat(outputPostDto).isNotNull();
-//            assertThat(outputPostDto.id()).isNotNull().isEqualTo(savedPostDto.id());
             assertThat(outputPostDto.id()).isNotNull();
-//            assertThat(outputPostDto.userId()).isEqualTo(user.getId());
             assertThat(outputPostDto.userId()).isNotNull();
             assertThat(outputPostDto.content()).isEqualTo(POST_DTO.content());
             assertThat(outputPostDto.comments()).isNotNull();
             assertThat(outputPostDto.createdAt()).isInstanceOf(LocalDateTime.class);
             assertThat(outputPostDto.lastModifiedAt()).isInstanceOf(LocalDateTime.class);
-//            comments.forEach(c -> {
-//                assertThat(c.getContent()).isEqualTo(comment.getContent());
-//                assertThat(c.getPost().hashCode()).isEqualTo(commentPost.hashCode());
-//                assertThat(c.getId()).isEqualTo(comment.getId());
-//                assertThat(c.getUser().hashCode()).isEqualTo(user.hashCode());
-//            });
         }
 
 
         @Test
         @DisplayName("한개 쓰레드 삭제 테스트")
-        void 한개쓰레드삭제() {
-//            User user = new User(postDto.userId());
-//            Post post = new Post(1L, user, postDto.content());
-//
-//            PostDTO newPostDto = new PostDTO(1L, 1L, "TEST", null, null, null);
-//
-//            when(postRepository.findById(newPostDto.id())).thenReturn(Optional.of(post));
-//            when(postRepository.delete(any(Post.class))).thenThrow(void);
+        void 한개_쓰레드_삭제() {
+            postService.remove(savedPostDto.id());
+            List<Post> posts = postRepository.findAll();
+            assertThat(posts.size()).isEqualTo(0);
         }
     }
 }
