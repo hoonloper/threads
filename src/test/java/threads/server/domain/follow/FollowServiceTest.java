@@ -42,5 +42,18 @@ public class FollowServiceTest {
             followService.follow(followDto);
             assertThat(followRepository.findAll().size()).isEqualTo(1);
         }
+
+        @Test
+        @DisplayName("팔로우 끊기 테스트")
+        void 팔로우끊기() {
+            userRepository.save(new User(1L));
+            userRepository.save(new User(2L));
+
+            FollowDTO followDto = new FollowDTO(null, 1L, 2L, LocalDateTime.now());
+            followService.follow(followDto);
+            followService.unfollow(1L);
+
+            assertThat(followRepository.findAll().size()).isEqualTo(0);
+        }
     }
 }
