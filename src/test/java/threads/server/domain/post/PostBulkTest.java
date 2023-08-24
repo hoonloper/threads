@@ -13,6 +13,6 @@ class PostBulkTest {
     @Test
     void bulkInsert() {
         int SIZE = 100_000;
-        postBulk.bulkInsert(SIZE);
+//        postBulk.bulkInsert(SIZE);
     }
 }

@@ -1,6 +1,7 @@
 package threads.server.domain.follow;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -32,13 +33,18 @@ public class FollowServiceTest {
     @Nested
     @DisplayName("성공 케이스")
     class 성공 {
+        private Long userAId;
+        private Long userBId;
+
+        @BeforeEach
+        void 설정() {
+            userAId = userRepository.save(new User(null)).getId();
+            userBId = userRepository.save(new User(null)).getId();
+        }
         @Test
         @DisplayName("팔로우 테스트")
         void 팔로우하기() {
-            userRepository.save(new User(1L));
-            userRepository.save(new User(2L));
-
-            FollowDTO followDto = new FollowDTO(null, 1L, 2L, LocalDateTime.now());
+            FollowDTO followDto = new FollowDTO(null, userAId, userBId, LocalDateTime.now());
             followService.follow(followDto);
             assertThat(followRepository.findAll().size()).isEqualTo(1);
         }
@@ -46,10 +52,7 @@ public class FollowServiceTest {
         @Test
         @DisplayName("팔로우 끊기 테스트")
         void 팔로우끊기() {
-            userRepository.save(new User(1L));
-            userRepository.save(new User(2L));
-
-            FollowDTO followDto = new FollowDTO(null, 1L, 2L, LocalDateTime.now());
+            FollowDTO followDto = new FollowDTO(null, userAId, userBId, LocalDateTime.now());
             followService.follow(followDto);
             followService.unfollow(1L);
 
