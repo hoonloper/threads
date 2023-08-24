@@ -40,11 +40,11 @@ public class UserServiceTest {
 
     @Nested
     @DisplayName("성공 케이스")
-    class Success {
+    class 성공 {
 
         @Test
         @DisplayName("회원가입 테스트")
-        void signUp() {
+        void 회원가입() {
             UserDTO outputUserDto = userService.signUp(inputUserDto);
 
             assertThat(outputUserDto).isNotNull();
@@ -58,10 +58,10 @@ public class UserServiceTest {
 
     @Nested
     @DisplayName("실패 케이스")
-    class Fail {
+    class 실패 {
         @Test
         @DisplayName("회원가입 존재하는 이메일")
-        void signUp() {
+        void 회원가입() {
             userService.signUp(inputUserDto);
 
             String FAIL_MESSAGE = "이미 존재하는 이메일입니다.";

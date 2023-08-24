@@ -30,7 +30,7 @@ public class PostServiceTest {
 
     @Nested
     @DisplayName("성공 케이스")
-    class Success {
+    class 성공 {
         private final User user = userRepository.save(new User(null, "test@test.com", "비밀번호", "이름", "닉네임", UserRole.USER));;
         private final PostDTO POST_DTO = new PostDTO(null, 1L, "쓰레드테스트", null, null, null);
 
