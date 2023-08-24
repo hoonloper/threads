@@ -1,5 +1,5 @@
 CREATE TABLE users (
-                       id bigint NOT NULL,
+                       id bigint NOT NULL AUTO_INCREMENT,
                        created_at datetime DEFAULT NULL,
                        last_modified_at datetime DEFAULT NULL,
                        email varchar(255) DEFAULT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE posts (
-                       id bigint NOT NULL,
+                       id bigint NOT NULL AUTO_INCREMENT,
                        created_at datetime DEFAULT NULL,
                        last_modified_at datetime DEFAULT NULL,
                        content text,
@@ -23,7 +23,7 @@ CREATE TABLE posts (
 );
 
 CREATE TABLE comments (
-    id bigint NOT NULL,
+    id bigint NOT NULL AUTO_INCREMENT,
     created_at datetime DEFAULT NULL,
     last_modified_at datetime DEFAULT NULL,
     content text,
@@ -38,7 +38,7 @@ CREATE TABLE comments (
 
 
 CREATE TABLE follows (
-   id bigint NOT NULL,
+   id bigint NOT NULL AUTO_INCREMENT,
    follow_at datetime DEFAULT NULL,
    from_user_id bigint DEFAULT NULL,
    to_user_id bigint DEFAULT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE follows (
 );
 
 CREATE TABLE likes_comment (
-     id bigint NOT NULL,
+     id bigint NOT NULL AUTO_INCREMENT,
      like_at datetime DEFAULT NULL,
      comment_id bigint DEFAULT NULL,
      user_id bigint DEFAULT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE likes_comment (
 );
 
 CREATE TABLE likes_post (
-      id bigint NOT NULL,
+      id bigint NOT NULL AUTO_INCREMENT,
       like_at datetime DEFAULT NULL,
       post_id bigint DEFAULT NULL,
       user_id bigint DEFAULT NULL,
