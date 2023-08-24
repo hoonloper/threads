@@ -87,7 +87,7 @@ public class PostServiceTest {
 
         @Test
         @DisplayName("한개 쓰레드 삭제 테스트")
-        void 한개쓰레드삭제() {
+        void 한개_쓰레드_삭제() {
             postService.remove(savedPostDto.id());
             List<Post> posts = postRepository.findAll();
             assertThat(posts.size()).isEqualTo(0);
