@@ -1,6 +1,8 @@
-package threads.server.domain.user;
+package threads.server.domain.user.dto;
 
 import lombok.Builder;
+import threads.server.domain.user.User;
+import threads.server.domain.user.UserRole;
 
 import java.time.LocalDateTime;
 
@@ -8,7 +10,6 @@ import java.time.LocalDateTime;
 public record UserDTO(
         Long id,
         String email,
-        String password,
         String name,
         String nickname,
         UserRole userRole,

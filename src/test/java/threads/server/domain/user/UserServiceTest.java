@@ -1,6 +1,5 @@
 package threads.server.domain.user;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -11,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import threads.server.application.exception.BadRequestException;
+import threads.server.domain.user.dto.UserDTO;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
