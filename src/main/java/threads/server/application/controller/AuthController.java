@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import threads.server.domain.user.UserDTO;
+import threads.server.domain.user.dto.SignInDTO;
+import threads.server.domain.user.dto.SignUpDTO;
+import threads.server.domain.user.dto.UserDTO;
 import threads.server.domain.user.UserService;
 
 @RestController
@@ -23,13 +25,13 @@ public class AuthController {
             @ApiResponse(responseCode = "201", description = "CREATED",
                     content = @Content(schema = @Schema(implementation = UserDTO.class))
             ),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+//            @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+//            @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
     @PostMapping("sign-up")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO signUp(@RequestBody UserDTO userDTO) {
+    public UserDTO signUp(@RequestBody SignUpDTO userDTO) {
         return userService.signUp(userDTO);
     }
 
@@ -41,7 +43,7 @@ public class AuthController {
             ),
     })
     @PostMapping("sign-in")
-    public UserDTO signIn(@RequestBody UserDTO userDTO) {
+    public UserDTO signIn(@RequestBody SignInDTO userDTO) {
         return userService.signIn(userDTO);
     }
 }
