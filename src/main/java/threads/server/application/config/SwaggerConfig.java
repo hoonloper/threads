@@ -11,9 +11,9 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
 
         Info info = new Info()
-                .version("v1.0.0")
-                .title("API 타이틀")
-                .description("API Description");
+                .version("v0.1.0")
+                .title("Threads API")
+                .description("내 입맛대로 Threads 클론 API");
 
         return new OpenAPI()
                 .info(info);
