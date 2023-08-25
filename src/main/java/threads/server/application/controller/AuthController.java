@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class AuthController {
     })
     @PostMapping("sign-up")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO signUp(@RequestBody SignUpDTO userDTO) {
+    public UserDTO signUp(@Valid @RequestBody SignUpDTO userDTO) {
         return userService.signUp(userDTO);
     }
 
@@ -43,7 +44,7 @@ public class AuthController {
             ),
     })
     @PostMapping("sign-in")
-    public UserDTO signIn(@RequestBody SignInDTO userDTO) {
+    public UserDTO signIn(@Valid @RequestBody SignInDTO userDTO) {
         return userService.signIn(userDTO);
     }
 }
