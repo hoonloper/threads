@@ -2,6 +2,7 @@ package threads.server.domain.like.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.comment.Comment;
 import threads.server.domain.like.dto.CreatingLikeDTO;
 import threads.server.domain.like.dto.RemovingLikeDTO;
@@ -15,14 +16,21 @@ import java.time.LocalDateTime;
 public class LikeCommentService implements LikeService {
     private final LikeCommentRepository likeCommentRepository;
 
-    public void save(CreatingLikeDTO likeDTO) {
-        User user = new User(likeDTO.userId());
-        Comment comment = new Comment(likeDTO.targetId());
+    public void save(CreatingLikeDTO likeDto) {
+        User user = new User(likeDto.userId());
+        Comment comment = new Comment(likeDto.targetId());
         likeCommentRepository.save(new LikeComment(null, user, comment, LocalDateTime.now()));
     }
 
-    public void delete(RemovingLikeDTO likeDTO) {
-        LikeComment likeComment = likeCommentRepository.findById(likeDTO.id()).orElseThrow();
+    public void delete(RemovingLikeDTO likeDto) {
+        LikeComment likeComment = likeCommentRepository.findById(likeDto.id()).orElseThrow();
+        authorizeUser(likeDto.userId(), likeComment.getUser().getId());
         likeCommentRepository.delete(likeComment);
+    }
+
+    private void authorizeUser(Long requestUserId, Long userIdFromLike) {
+        if(!requestUserId.equals(userIdFromLike)) {
+            throw new UnauthorizedException("권한이 없습니다.");
+        }
     }
 }
