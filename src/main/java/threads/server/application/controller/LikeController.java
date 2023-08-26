@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import threads.server.application.exception.BadRequestException;
 import threads.server.domain.like.dto.CreatingLikeDTO;
 import threads.server.domain.like.LikeType;
-import threads.server.domain.like.dto.RemovingLikeDTO;
+import threads.server.domain.like.dto.DeletingLikeDTO;
 import threads.server.domain.like.service.LikeCommentService;
 import threads.server.domain.like.service.LikePostService;
 
@@ -44,7 +44,7 @@ public class LikeController {
     })
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeLike(@RequestBody RemovingLikeDTO likeDTO) {
+    public void removeLike(@RequestBody DeletingLikeDTO likeDTO) {
         if(likeDTO.type().equals(LikeType.POST)) {
             likePostService.delete(likeDTO);
         }

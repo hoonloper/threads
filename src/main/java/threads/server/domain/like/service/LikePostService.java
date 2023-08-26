@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.like.dto.CreatingLikeDTO;
-import threads.server.domain.like.dto.RemovingLikeDTO;
+import threads.server.domain.like.dto.DeletingLikeDTO;
 import threads.server.domain.like.entity.LikePost;
 import threads.server.domain.like.repository.LikePostRepository;
 import threads.server.domain.post.Post;
@@ -24,7 +24,7 @@ public class LikePostService implements LikeService {
         likePostRepository.save(new LikePost(null, user, post, LocalDateTime.now()));
     }
 
-    public void delete(RemovingLikeDTO likeDto) {
+    public void delete(DeletingLikeDTO likeDto) {
         LikePost likePost = likePostRepository.findById(likeDto.id()).orElseThrow(() -> new NotFoundException("좋아요 내역을 찾을 수 없습니다."));
         authorizeUser(likeDto.userId(), likePost.getUser().getId());
         likePostRepository.delete(likePost);

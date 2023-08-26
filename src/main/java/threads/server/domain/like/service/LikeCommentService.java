@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.comment.Comment;
 import threads.server.domain.like.dto.CreatingLikeDTO;
-import threads.server.domain.like.dto.RemovingLikeDTO;
+import threads.server.domain.like.dto.DeletingLikeDTO;
 import threads.server.domain.like.entity.LikeComment;
 import threads.server.domain.like.repository.LikeCommentRepository;
 import threads.server.domain.user.User;
@@ -22,7 +22,7 @@ public class LikeCommentService implements LikeService {
         likeCommentRepository.save(new LikeComment(null, user, comment, LocalDateTime.now()));
     }
 
-    public void delete(RemovingLikeDTO likeDto) {
+    public void delete(DeletingLikeDTO likeDto) {
         LikeComment likeComment = likeCommentRepository.findById(likeDto.id()).orElseThrow();
         authorizeUser(likeDto.userId(), likeComment.getUser().getId());
         likeCommentRepository.delete(likeComment);
