@@ -6,6 +6,7 @@ import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.comment.dto.CommentDTO;
 import threads.server.domain.comment.dto.CreatingCommentDTO;
+import threads.server.domain.comment.dto.RemovingCommentDTO;
 import threads.server.domain.comment.dto.UpdatingCommentDTO;
 import threads.server.domain.post.Post;
 import threads.server.domain.user.User;
@@ -31,8 +32,9 @@ public class CommentService {
         return toCommentDto(comment);
     }
 
-    public void delete(Long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
+    public void delete(RemovingCommentDTO commentDto) {
+        Comment comment = commentRepository.findById(commentDto.id()).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
+        authorizeUser(commentDto.userId(), comment.getUser().getId());
         commentRepository.delete(comment);
     }
 
