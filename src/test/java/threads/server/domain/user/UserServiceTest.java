@@ -10,6 +10,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import threads.server.application.exception.BadRequestException;
+import threads.server.domain.user.dto.SignInDTO;
+import threads.server.domain.user.dto.SignUpDTO;
 import threads.server.domain.user.dto.UserDTO;
 
 
@@ -29,14 +31,6 @@ public class UserServiceTest {
     private final String PASSWORD = "1234";
     private final String NAME = "이름";
     private final String NICKNAME = "닉네임";
-    private final UserDTO inputUserDto = UserDTO
-            .builder()
-            .email(EMAIL)
-            .password(PASSWORD)
-            .userRole(UserRole.USER)
-            .nickname(NICKNAME)
-            .name(NAME)
-            .build();;
 
     @Nested
     @DisplayName("성공 케이스")
@@ -45,12 +39,12 @@ public class UserServiceTest {
         @Test
         @DisplayName("회원가입 테스트")
         void 회원가입() {
+            SignUpDTO inputUserDto = new SignUpDTO(EMAIL, PASSWORD, NAME, NICKNAME, UserRole.USER);
             UserDTO outputUserDto = userService.signUp(inputUserDto);
 
             assertThat(outputUserDto).isNotNull();
             assertThat(outputUserDto.id()).isNotNull();
             assertThat(outputUserDto.email()).isEqualTo(inputUserDto.email());
-            assertThat(outputUserDto.password()).isNull();
             assertThat(outputUserDto.name()).isEqualTo(inputUserDto.name());
             assertThat(outputUserDto.nickname()).isEqualTo(inputUserDto.nickname());
         }
@@ -62,6 +56,7 @@ public class UserServiceTest {
         @Test
         @DisplayName("회원가입 존재하는 이메일")
         void 회원가입() {
+            SignUpDTO inputUserDto = new SignUpDTO(EMAIL, PASSWORD, NAME, NICKNAME, UserRole.USER);
             userService.signUp(inputUserDto);
 
             String FAIL_MESSAGE = "이미 존재하는 이메일입니다.";
