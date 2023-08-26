@@ -1,6 +1,5 @@
 package threads.server.domain.follow;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -12,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import threads.server.domain.follow.dto.FollowDTO;
+import threads.server.domain.follow.dto.FollowingDTO;
 import threads.server.domain.user.User;
 import threads.server.domain.user.UserRepository;
 
@@ -45,16 +45,16 @@ public class FollowServiceTest {
         @Test
         @DisplayName("팔로우 테스트")
         void 팔로우하기() {
-            FollowDTO followDto = new FollowDTO(null, userAId, userBId, LocalDateTime.now());
-            followService.follow(followDto);
+            FollowingDTO inputFollowDto = new FollowingDTO(userAId, userBId);
+            followService.follow(inputFollowDto);
             assertThat(followRepository.findAll().size()).isEqualTo(1);
         }
 
         @Test
         @DisplayName("팔로우 끊기 테스트")
         void 팔로우끊기() {
-            FollowDTO followDto = new FollowDTO(null, userAId, userBId, LocalDateTime.now());
-            followService.follow(followDto);
+            FollowingDTO inputFollowDto = new FollowingDTO(userAId, userBId);
+            followService.follow(inputFollowDto);
             followService.unfollow(1L);
 
             assertThat(followRepository.findAll().size()).isEqualTo(0);
