@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import threads.server.domain.follow.dto.FollowDTO;
 import threads.server.domain.follow.FollowService;
 import threads.server.domain.follow.dto.FollowingDTO;
+import threads.server.domain.follow.dto.UnfollowingDTO;
 
 @RestController
 @RequestMapping("/api/v1/follows")
@@ -33,9 +34,9 @@ public class FollowController {
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
     })
-    @DeleteMapping("{followId}")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void unfollow(@PathVariable("followId") Long followId) {
-        followService.unfollow(followId);
+    public void unfollow(@RequestBody UnfollowingDTO followDto) {
+        followService.unfollow(followDto);
     }
 }
