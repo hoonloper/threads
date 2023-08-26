@@ -35,24 +35,24 @@ public class PostServiceTest {
     @Nested
     @DisplayName("성공 케이스")
     class 성공 {
-        private User user;
+        private User savedUser;
         private Post savedPost;
 
         @BeforeEach
         void 설정() {
-            user = userRepository.save(new User(null, "test@test.com", "비밀번호", "이름", "닉네임", UserRole.USER));
-            savedPost = postRepository.save(new Post(null, user, "내용"));
+            savedUser = userRepository.save(new User(null, "test@test.com", "비밀번호", "이름", "닉네임", UserRole.USER));
+            savedPost = postRepository.save(new Post(null, savedUser, "내용"));
         }
 
         @Test
         @DisplayName("쓰레드 생성 테스트")
         void 쓰레드_생성() {
-            CreatingPostDTO inputPostDto = new CreatingPostDTO(user.getId(), "쓰레드테스트");
+            CreatingPostDTO inputPostDto = new CreatingPostDTO(savedUser.getId(), "쓰레드테스트");
             PostDTO outputPostDto = postService.save(inputPostDto);
 
             assertThat(outputPostDto).isNotNull();
             assertThat(outputPostDto.id()).isNotNull();
-            assertThat(outputPostDto.userId()).isEqualTo(user.getId());
+            assertThat(outputPostDto.userId()).isEqualTo(savedUser.getId());
             assertThat(outputPostDto.content()).isEqualTo(inputPostDto.content());
             assertThat(outputPostDto.comments()).isNotNull();
             assertThat(outputPostDto.createdAt()).isInstanceOf(LocalDateTime.class);
@@ -62,7 +62,7 @@ public class PostServiceTest {
         @Test
         @DisplayName("한개 쓰레드 수정 테스트")
         void 한개_쓰레드_수정() {
-            UpdatingPostDTO inputPostDto = new UpdatingPostDTO(savedPost.getId(), user.getId(), "수정한 내용");
+            UpdatingPostDTO inputPostDto = new UpdatingPostDTO(savedPost.getId(), savedUser.getId(), "수정한 내용");
             PostDTO outputPostDto = postService.update(inputPostDto);
 
             assertThat(outputPostDto).isNotNull();
@@ -92,10 +92,9 @@ public class PostServiceTest {
         @Test
         @DisplayName("한개 쓰레드 삭제 테스트")
         void 한개_쓰레드_삭제() {
-            RemovingPostDTO inputPostDto = new RemovingPostDTO(savedPost.getId(), user.getId());
+            RemovingPostDTO inputPostDto = new RemovingPostDTO(savedPost.getId(), savedUser.getId());
             postService.remove(inputPostDto);
-            List<Post> posts = postRepository.findAll();
-            assertThat(posts.size()).isEqualTo(0);
+            assertThat(postRepository.findAll().size()).isEqualTo(0);
         }
     }
 }

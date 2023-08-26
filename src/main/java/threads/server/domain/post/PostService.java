@@ -43,7 +43,7 @@ public class PostService {
     }
 
     private void authorizeUser(Long requestUserId, Long userIdFromPost) {
-        if (requestUserId.equals(userIdFromPost)) {
+        if (!requestUserId.equals(userIdFromPost)) {
             throw new UnauthorizedException("권한이 없습니다.");
         }
     }
