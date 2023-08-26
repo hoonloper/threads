@@ -3,6 +3,7 @@ package threads.server.domain.post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
+import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.post.dto.CreatingPostDTO;
 import threads.server.domain.post.dto.PostDTO;
 import threads.server.domain.post.dto.RemovingPostDTO;
@@ -28,6 +29,9 @@ public class PostService {
 
     public PostDTO update(UpdatingPostDTO postDto) {
         Post post = postRepository.findById(postDto.id()).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
+        if(!post.getUser().getId().equals(postDto.userId())) {
+            throw new UnauthorizedException("제거할 권한이 없습니다.");
+        }
         post.change(postDto.content());
         postRepository.save(post);
         return toPostDto(post);
