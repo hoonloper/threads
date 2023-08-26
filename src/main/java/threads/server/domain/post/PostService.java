@@ -29,9 +29,7 @@ public class PostService {
 
     public PostDTO update(UpdatingPostDTO postDto) {
         Post post = postRepository.findById(postDto.id()).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        if(!post.getUser().getId().equals(postDto.userId())) {
-            throw new UnauthorizedException("제거할 권한이 없습니다.");
-        }
+        authorizeUser(postDto.userId(), post.getUser().getId());
         post.change(postDto.content());
         postRepository.save(post);
         return toPostDto(post);
@@ -40,6 +38,13 @@ public class PostService {
 
     public void remove(RemovingPostDTO postDto) {
         Post post = postRepository.findById(postDto.id()).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
+        authorizeUser(postDto.userId(), post.getUser().getId());
         postRepository.delete(post);
+    }
+
+    private void authorizeUser(Long requestUserId, Long userIdFromPost) {
+        if (requestUserId.equals(userIdFromPost)) {
+            throw new UnauthorizedException("권한이 없습니다.");
+        }
     }
 }
