@@ -1,4 +1,6 @@
-package threads.server.domain.comment;
+package threads.server.domain.comment.dto;
+
+import threads.server.domain.comment.Comment;
 
 import java.time.LocalDateTime;
 
