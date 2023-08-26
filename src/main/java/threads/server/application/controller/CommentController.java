@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import threads.server.domain.comment.dto.CommentDTO;
 import threads.server.domain.comment.CommentService;
 import threads.server.domain.comment.dto.CreatingCommentDTO;
-import threads.server.domain.comment.dto.RemovingCommentDTO;
+import threads.server.domain.comment.dto.DeletingCommentDTO;
 import threads.server.domain.comment.dto.UpdatingCommentDTO;
 
 @RestController
@@ -52,7 +52,7 @@ public class CommentController {
     })
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeComment(@RequestBody RemovingCommentDTO commentDto) {
+    public void removeComment(@RequestBody DeletingCommentDTO commentDto) {
         commentService.delete(commentDto);
     }
 }

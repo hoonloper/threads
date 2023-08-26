@@ -6,7 +6,7 @@ import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.post.dto.CreatingPostDTO;
 import threads.server.domain.post.dto.PostDTO;
-import threads.server.domain.post.dto.RemovingPostDTO;
+import threads.server.domain.post.dto.DeletingPostDTO;
 import threads.server.domain.post.dto.UpdatingPostDTO;
 import threads.server.domain.user.User;
 
@@ -36,7 +36,7 @@ public class PostService {
     }
 
 
-    public void remove(RemovingPostDTO postDto) {
+    public void remove(DeletingPostDTO postDto) {
         Post post = postRepository.findById(postDto.id()).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
         authorizeUser(postDto.userId(), post.getUser().getId());
         postRepository.delete(post);

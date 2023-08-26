@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import threads.server.domain.post.dto.CreatingPostDTO;
 import threads.server.domain.post.dto.PostDTO;
 import threads.server.domain.post.PostService;
-import threads.server.domain.post.dto.RemovingPostDTO;
+import threads.server.domain.post.dto.DeletingPostDTO;
 import threads.server.domain.post.dto.UpdatingPostDTO;
 
 @RestController
@@ -62,7 +62,7 @@ public class PostController {
     })
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removePost(@RequestBody RemovingPostDTO postDTO) {
+    public void removePost(@RequestBody DeletingPostDTO postDTO) {
         postService.remove(postDTO);
     }
 }

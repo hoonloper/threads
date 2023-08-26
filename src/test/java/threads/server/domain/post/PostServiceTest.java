@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import threads.server.domain.post.dto.CreatingPostDTO;
 import threads.server.domain.post.dto.PostDTO;
-import threads.server.domain.post.dto.RemovingPostDTO;
+import threads.server.domain.post.dto.DeletingPostDTO;
 import threads.server.domain.post.dto.UpdatingPostDTO;
 import threads.server.domain.user.User;
 import threads.server.domain.user.UserRepository;
@@ -18,7 +18,6 @@ import threads.server.domain.user.UserRole;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
@@ -92,7 +91,7 @@ public class PostServiceTest {
         @Test
         @DisplayName("한개 쓰레드 삭제 테스트")
         void 한개_쓰레드_삭제() {
-            RemovingPostDTO inputPostDto = new RemovingPostDTO(savedPost.getId(), savedUser.getId());
+            DeletingPostDTO inputPostDto = new DeletingPostDTO(savedPost.getId(), savedUser.getId());
             postService.remove(inputPostDto);
             assertThat(postRepository.findAll().size()).isEqualTo(0);
         }

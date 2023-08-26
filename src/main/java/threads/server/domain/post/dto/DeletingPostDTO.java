@@ -1,6 +1,6 @@
 package threads.server.domain.post.dto;
 
-public record RemovingPostDTO(
+public record DeletingPostDTO(
         Long id,
         Long userId
 ) {}
