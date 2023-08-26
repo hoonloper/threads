@@ -7,7 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import threads.server.domain.post.dto.CreatingPostDTO;
 import threads.server.domain.post.dto.PostDTO;
+import threads.server.domain.post.dto.RemovingPostDTO;
+import threads.server.domain.post.dto.UpdatingPostDTO;
 import threads.server.domain.user.User;
 import threads.server.domain.user.UserRepository;
 import threads.server.domain.user.UserRole;
@@ -44,7 +47,7 @@ public class PostServiceTest {
         @Test
         @DisplayName("쓰레드 생성 테스트")
         void 쓰레드_생성() {
-            PostDTO inputPostDto = new PostDTO(null, user.getId(), "쓰레드테스트", null, null, null);
+            CreatingPostDTO inputPostDto = new CreatingPostDTO(user.getId(), "쓰레드테스트");
             PostDTO outputPostDto = postService.save(inputPostDto);
 
             assertThat(outputPostDto).isNotNull();
@@ -59,7 +62,7 @@ public class PostServiceTest {
         @Test
         @DisplayName("한개 쓰레드 수정 테스트")
         void 한개_쓰레드_수정() {
-            PostDTO inputPostDto = new PostDTO(savedPost.getId(), user.getId(), "수정한 내용", null, null, null);
+            UpdatingPostDTO inputPostDto = new UpdatingPostDTO(savedPost.getId(), user.getId(), "수정한 내용");
             PostDTO outputPostDto = postService.update(inputPostDto);
 
             assertThat(outputPostDto).isNotNull();
@@ -89,7 +92,8 @@ public class PostServiceTest {
         @Test
         @DisplayName("한개 쓰레드 삭제 테스트")
         void 한개_쓰레드_삭제() {
-            postService.remove(savedPost.getId());
+            RemovingPostDTO inputPostDto = new RemovingPostDTO(savedPost.getId(), user.getId());
+            postService.remove(inputPostDto);
             List<Post> posts = postRepository.findAll();
             assertThat(posts.size()).isEqualTo(0);
         }
