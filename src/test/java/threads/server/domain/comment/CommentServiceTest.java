@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import threads.server.domain.comment.dto.CommentDTO;
 import threads.server.domain.comment.dto.CreatingCommentDTO;
+import threads.server.domain.comment.dto.RemovingCommentDTO;
 import threads.server.domain.comment.dto.UpdatingCommentDTO;
 import threads.server.domain.post.Post;
 import threads.server.domain.post.PostRepository;
@@ -86,7 +87,8 @@ public class CommentServiceTest {
         @DisplayName("한개 댓글 삭제 테스트")
         void 한개_댓글_삭제() {
             Comment savedComment = commentRepository.save(new Comment(null, savedUser, savedPost, "임시 댓글"));
-            commentService.delete(savedComment.getId());
+            RemovingCommentDTO inputCommentDto = new RemovingCommentDTO(savedComment.getId(), savedComment.getUser().getId());
+            commentService.delete(inputCommentDto);
             assertThat(commentRepository.findAll().size()).isNotNull().isEqualTo(0);
         }
     }
