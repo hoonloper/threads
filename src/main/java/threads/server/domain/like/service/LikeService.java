@@ -1,8 +1,9 @@
 package threads.server.domain.like.service;
 
-import threads.server.domain.like.LikeDTO;
+import threads.server.domain.like.dto.CreatingLikeDTO;
+import threads.server.domain.like.dto.RemovingLikeDTO;
 
 public interface LikeService {
-    void save(LikeDTO likeDTO);
-    void delete(LikeDTO likeDTO);
+    void save(CreatingLikeDTO likeDTO);
+    void delete(RemovingLikeDTO likeDTO);
 }

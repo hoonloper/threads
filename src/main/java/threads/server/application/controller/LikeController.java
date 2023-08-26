@@ -8,8 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import threads.server.application.exception.BadRequestException;
-import threads.server.domain.like.LikeDTO;
+import threads.server.domain.like.dto.CreatingLikeDTO;
 import threads.server.domain.like.LikeType;
+import threads.server.domain.like.dto.RemovingLikeDTO;
 import threads.server.domain.like.service.LikeCommentService;
 import threads.server.domain.like.service.LikePostService;
 
@@ -27,7 +28,7 @@ public class LikeController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void like(@RequestBody LikeDTO likeDTO) {
+    public void like(@RequestBody CreatingLikeDTO likeDTO) {
         if (likeDTO.type().equals(LikeType.POST)) {
             likePostService.save(likeDTO);
         }
@@ -43,7 +44,7 @@ public class LikeController {
     })
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeLike(@RequestBody LikeDTO likeDTO) {
+    public void removeLike(@RequestBody RemovingLikeDTO likeDTO) {
         if(likeDTO.type().equals(LikeType.POST)) {
             likePostService.delete(likeDTO);
         }
