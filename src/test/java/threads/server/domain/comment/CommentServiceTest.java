@@ -85,7 +85,7 @@ public class CommentServiceTest {
         @Test
         @DisplayName("한개 댓글 삭제 테스트")
         void 한개_댓글_삭제() {
-            Comment savedComment = commentRepository.save(new Comment(null, savedUser, savedPost, inputCommentDto.content()));
+            Comment savedComment = commentRepository.save(new Comment(null, savedUser, savedPost, "임시 댓글"));
             commentService.delete(savedComment.getId());
             assertThat(commentRepository.findAll().size()).isNotNull().isEqualTo(0);
         }
