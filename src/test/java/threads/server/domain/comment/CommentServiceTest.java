@@ -1,6 +1,5 @@
 package threads.server.domain.comment;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -12,6 +11,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import threads.server.domain.comment.dto.CommentDTO;
+import threads.server.domain.comment.dto.CreatingCommentDTO;
+import threads.server.domain.comment.dto.DeletingCommentDTO;
+import threads.server.domain.comment.dto.UpdatingCommentDTO;
 import threads.server.domain.post.Post;
 import threads.server.domain.post.PostRepository;
 import threads.server.domain.user.User;
@@ -47,13 +49,12 @@ public class CommentServiceTest {
         void 설정() {
             savedUser = userRepository.save(new User(1L));
             savedPost = postRepository.save(new Post(1L));
-            inputCommentDto = new CommentDTO(null, savedUser.getId(), savedPost.getId(), "댓글", null, null);
         }
         @Test
         @DisplayName("댓글 생성 테스트")
         void 댓글_생성() {
+            CreatingCommentDTO inputCommentDto = new CreatingCommentDTO(savedUser.getId(), savedPost.getId(), "댓글테스트");
             CommentDTO outputCommentDto = commentService.save(inputCommentDto);
-
 
             assertThat(outputCommentDto).isNotNull();
             assertThat(outputCommentDto.id()).isNotNull();
@@ -67,16 +68,16 @@ public class CommentServiceTest {
         @Test
         @DisplayName("한개 댓글 수정 테스트")
         void 한개_댓글_수정() {
-            Comment savedComment = commentRepository.save(new Comment(null, savedUser, savedPost, inputCommentDto.content()));
+            Comment savedComment = commentRepository.save(new Comment(null, savedUser, savedPost, "수정전 내용"));
             String CONTENT = "수정할 내용";
-            CommentDTO commentDto = new CommentDTO(savedComment.getId(), savedUser.getId(), savedPost.getId(), CONTENT, null, null);
-            CommentDTO outputCommentDto = commentService.update(commentDto);
+            UpdatingCommentDTO inputCommentDto = new UpdatingCommentDTO(savedComment.getId(), savedUser.getId(), savedPost.getId(), CONTENT);
+            CommentDTO outputCommentDto = commentService.update(inputCommentDto);
 
             assertThat(outputCommentDto).isNotNull();
             assertThat(outputCommentDto.id()).isNotNull(); // AUTO_INCREMENT로 인해 Not Null만 판단
-            assertThat(outputCommentDto.userId()).isNotNull().isEqualTo(savedUser.getId());
-            assertThat(outputCommentDto.postId()).isNotNull().isEqualTo(savedPost.getId());
-            assertThat(outputCommentDto.content()).isEqualTo(CONTENT);
+            assertThat(outputCommentDto.userId()).isNotNull().isEqualTo(inputCommentDto.userId());
+            assertThat(outputCommentDto.postId()).isNotNull().isEqualTo(inputCommentDto.postId());
+            assertThat(outputCommentDto.content()).isEqualTo(inputCommentDto.content());
             assertThat(outputCommentDto.createdAt()).isInstanceOf(LocalDateTime.class);
             assertThat(outputCommentDto.lastModifiedAt()).isInstanceOf(LocalDateTime.class);
         }
@@ -85,8 +86,9 @@ public class CommentServiceTest {
         @Test
         @DisplayName("한개 댓글 삭제 테스트")
         void 한개_댓글_삭제() {
-            Comment savedComment = commentRepository.save(new Comment(null, savedUser, savedPost, inputCommentDto.content()));
-            commentService.delete(savedComment.getId());
+            Comment savedComment = commentRepository.save(new Comment(null, savedUser, savedPost, "임시 댓글"));
+            DeletingCommentDTO inputCommentDto = new DeletingCommentDTO(savedComment.getId(), savedComment.getUser().getId());
+            commentService.delete(inputCommentDto);
             assertThat(commentRepository.findAll().size()).isNotNull().isEqualTo(0);
         }
     }

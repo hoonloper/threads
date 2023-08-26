@@ -8,8 +8,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import threads.server.domain.post.PostDTO;
+import threads.server.domain.post.dto.CreatingPostDTO;
+import threads.server.domain.post.dto.PostDTO;
 import threads.server.domain.post.PostService;
+import threads.server.domain.post.dto.DeletingPostDTO;
+import threads.server.domain.post.dto.UpdatingPostDTO;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -36,7 +39,7 @@ public class PostController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostDTO createPost(@RequestBody PostDTO postDTO) {
+    public PostDTO createPost(@RequestBody CreatingPostDTO postDTO) {
         return postService.save(postDTO);
     }
 
@@ -48,7 +51,7 @@ public class PostController {
     })
     @PatchMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostDTO updatePost(@RequestBody PostDTO postDTO) {
+    public PostDTO updatePost(@RequestBody UpdatingPostDTO postDTO) {
         return postService.update(postDTO);
     }
 
@@ -57,9 +60,9 @@ public class PostController {
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
     })
-    @DeleteMapping("{postId}")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removePost(@PathVariable("postId") Long postId) {
-        postService.remove(postId);
+    public void removePost(@RequestBody DeletingPostDTO postDTO) {
+        postService.remove(postDTO);
     }
 }
