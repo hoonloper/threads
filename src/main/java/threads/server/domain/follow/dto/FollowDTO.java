@@ -1,4 +1,4 @@
-package threads.server.domain.follow;
+package threads.server.domain.follow.dto;
 
 import java.time.LocalDateTime;
 

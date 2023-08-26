@@ -1,4 +1,6 @@
-package threads.server.domain.like;
+package threads.server.domain.like.dto;
+
+import threads.server.domain.like.LikeType;
 
 import java.time.LocalDateTime;
 
