@@ -3,6 +3,8 @@ package threads.server.domain.follow;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
+import threads.server.domain.follow.dto.FollowDTO;
+import threads.server.domain.follow.dto.FollowingDTO;
 import threads.server.domain.user.User;
 
 import java.time.LocalDateTime;
@@ -12,7 +14,7 @@ import java.time.LocalDateTime;
 public class FollowService {
     private final FollowRepository followRepository;
 
-    public void follow(FollowDTO followDTO) {
+    public void follow(FollowingDTO followDTO) {
         User toUser = new User(followDTO.toUserId());
         User fromUser = new User(followDTO.fromUserId());
         followRepository.save(new Follow(null, toUser, fromUser, LocalDateTime.now()));

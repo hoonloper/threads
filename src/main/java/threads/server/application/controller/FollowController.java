@@ -8,9 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import threads.server.domain.comment.dto.CommentDTO;
-import threads.server.domain.follow.FollowDTO;
+import threads.server.domain.follow.dto.FollowDTO;
 import threads.server.domain.follow.FollowService;
+import threads.server.domain.follow.dto.FollowingDTO;
 
 @RestController
 @RequestMapping("/api/v1/follows")
@@ -20,13 +20,11 @@ public class FollowController {
 
     @Operation(summary = "팔로우 하기", description = "유저를 팔로우합니다.", tags = { "팔로우 API" })
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "CREATED",
-                    content = @Content(schema = @Schema(implementation = FollowDTO.class))
-            ),
+            @ApiResponse(responseCode = "201", description = "CREATED"),
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void follow(@RequestBody FollowDTO followDTO) {
+    public void follow(@RequestBody FollowingDTO followDTO) {
         followService.follow(followDTO);
     }
 
