@@ -14,7 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import threads.server.domain.follow.FollowService;
 import threads.server.domain.follow.dto.FollowingDTO;
+import threads.server.domain.follow.dto.UnfollowingDTO;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,6 +48,22 @@ public class FollowControllerTest {
                             .accept(MediaType.APPLICATION_JSON)
                     ).andDo(print())
                     .andExpect(status().isCreated());
+        }
+
+
+        @Test
+        void 팔로우끊기() throws Exception {
+            UnfollowingDTO followingDto = new UnfollowingDTO(1L, 1L, 2L);
+            ObjectMapper mapper = new ObjectMapper()
+                    .registerModule(new JavaTimeModule())
+                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            String json = mapper.writeValueAsString(followingDto);
+            mvc.perform(delete(END_POINT)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(json)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andDo(print())
+                    .andExpect(status().isNoContent());
         }
     }
 }
