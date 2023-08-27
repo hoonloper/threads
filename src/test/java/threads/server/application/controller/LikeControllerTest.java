@@ -1,0 +1,59 @@
+package threads.server.application.controller;
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import threads.server.domain.follow.FollowService;
+import threads.server.domain.follow.dto.FollowingDTO;
+import threads.server.domain.like.LikeType;
+import threads.server.domain.like.dto.CreatingLikeDTO;
+import threads.server.domain.like.service.LikeCommentService;
+import threads.server.domain.like.service.LikePostService;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+public class LikeControllerTest {
+    @MockBean
+    LikePostService likePostService;
+
+    @MockBean
+    LikeCommentService likeCommentService;
+
+    @Autowired
+    MockMvc mvc;
+
+    private final String END_POINT = "/api/v1/likes";
+
+    @Nested
+    @DisplayName("성공 케이스")
+    class 성공 {
+        @Test
+        void 댓글좋아요() throws Exception {
+            CreatingLikeDTO likeDto = new CreatingLikeDTO(1L, 2L, LikeType.COMMENT);
+            ObjectMapper mapper = new ObjectMapper()
+                    .registerModule(new JavaTimeModule())
+                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            String json = mapper.writeValueAsString(likeDto);
+            mvc.perform(post(END_POINT)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(json)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andDo(print())
+                    .andExpect(status().isCreated());
+        }
+    }
+}

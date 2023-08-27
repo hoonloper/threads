@@ -31,9 +31,11 @@ public class LikeController {
     public void like(@RequestBody CreatingLikeDTO likeDTO) {
         if (likeDTO.type().equals(LikeType.POST)) {
             likePostService.save(likeDTO);
+            return;
         }
         if (likeDTO.type().equals(LikeType.COMMENT)) {
             likeCommentService.save(likeDTO);
+            return;
         }
         throw new BadRequestException("잘못된 타입입니다.");
     }
@@ -47,9 +49,11 @@ public class LikeController {
     public void removeLike(@RequestBody DeletingLikeDTO likeDTO) {
         if(likeDTO.type().equals(LikeType.POST)) {
             likePostService.delete(likeDTO);
+            return;
         }
         if(likeDTO.type().equals(LikeType.COMMENT)) {
             likeCommentService.delete(likeDTO);
+            return;
         }
         throw new BadRequestException("잘못된 타입입니다.");
     }
