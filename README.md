@@ -12,4 +12,14 @@
 
 ### 🚀 핵심 기능
 
-### 📄 API 스펙
+### 📄 Swagger API 목록
+
+<img width="449" alt="image" src="https://github.com/hoonloper/threads/assets/78959175/dfd2b1e3-e3a3-4c28-ab63-28bc5ae4487b">
+<br>
+<img width="440" alt="image" src="https://github.com/hoonloper/threads/assets/78959175/c3e1ac30-983f-4112-a229-f554edc595ec">
+<br>
+<img width="400" alt="image" src="https://github.com/hoonloper/threads/assets/78959175/bbc9223d-f881-4690-80b6-a085dcd611ca">
+<br>
+<img width="320" alt="image" src="https://github.com/hoonloper/threads/assets/78959175/e2140d40-06d8-49bb-aa31-b2c0d01e68b5">
+<br>
+<img width="445" alt="image" src="https://github.com/hoonloper/threads/assets/78959175/1c3ec307-77d5-4c2f-b840-a20766903e28">
