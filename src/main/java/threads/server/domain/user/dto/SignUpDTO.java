@@ -30,6 +30,5 @@ public record SignUpDTO(
         @Length(min = 2, max = 10)
         String nickname,
 
-        @NotEmpty
         UserRole userRole
 ) {}
