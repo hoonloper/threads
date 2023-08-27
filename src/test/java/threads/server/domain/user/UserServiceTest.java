@@ -3,21 +3,17 @@ package threads.server.domain.user;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import threads.server.application.exception.BadRequestException;
-import threads.server.domain.user.dto.SignInDTO;
 import threads.server.domain.user.dto.SignUpDTO;
 import threads.server.domain.user.dto.UserDTO;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-@RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
