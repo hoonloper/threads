@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import threads.server.domain.user.UserRole;
 import threads.server.domain.user.UserService;
+import threads.server.domain.user.dto.SignInDTO;
 import threads.server.domain.user.dto.SignUpDTO;
 import threads.server.domain.user.dto.UserDTO;
 
@@ -35,6 +36,8 @@ public class AuthControllerTest {
     @Autowired
     MockMvc mvc;
 
+    private final String END_POINT = "/api/v1/auth";
+
     @Nested
     @DisplayName("성공 케이스")
     class 성공 {
@@ -49,17 +52,45 @@ public class AuthControllerTest {
             UserDTO returnValue = new UserDTO(1L, signUpDto.email(), signUpDto.name(), signUpDto.nickname(), signUpDto.userRole(), today, today);
             given(userService.signUp(any())).willReturn(returnValue);
 
-            mvc.perform(post("/api/v1/auth/sign-up")
+            mvc.perform(post(END_POINT + "/sign-up")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(json)
                             .accept(MediaType.APPLICATION_JSON)
                     ).andDo(print())
                     .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.id").value(1L))
+                    .andExpect(jsonPath("$.id").value(returnValue.id()))
                     .andExpect(jsonPath("$.email").value(signUpDto.email()))
                     .andExpect(jsonPath("$.name").value(signUpDto.name()))
                     .andExpect(jsonPath("$.nickname").value(signUpDto.nickname()))
                     .andExpect(jsonPath("$.userRole").value(signUpDto.userRole().name()))
+                    .andExpect(jsonPath("$.createdAt").value(today.toString()))
+                    .andExpect(jsonPath("$.lastModifiedAt").value(today.toString()));
+        }
+
+        @Test
+        void 로그인() throws Exception {
+            String EMAIL = "test@test.com";
+            LocalDateTime today = LocalDateTime.now();
+            UserDTO returnValue = new UserDTO(1L, EMAIL, "로그인테스트", "로그인테스트", UserRole.USER, today, today);
+            given(userService.signIn(any())).willReturn(returnValue);
+
+            SignInDTO signInDto = new SignInDTO(EMAIL, "A!@$!B@F#BRa1");
+            ObjectMapper mapper = new ObjectMapper()
+                    .registerModule(new JavaTimeModule())
+                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            String json = mapper.writeValueAsString(signInDto);
+
+            mvc.perform(post(END_POINT + "/sign-in")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(json)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(returnValue.id()))
+                    .andExpect(jsonPath("$.email").value(signInDto.email()))
+                    .andExpect(jsonPath("$.name").value(returnValue.name()))
+                    .andExpect(jsonPath("$.nickname").value(returnValue.nickname()))
+                    .andExpect(jsonPath("$.userRole").value(returnValue.userRole().name()))
                     .andExpect(jsonPath("$.createdAt").value(today.toString()))
                     .andExpect(jsonPath("$.lastModifiedAt").value(today.toString()));
         }
