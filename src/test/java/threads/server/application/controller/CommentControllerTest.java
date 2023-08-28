@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -70,5 +71,31 @@ public class CommentControllerTest {
                     .andExpect(jsonPath("$.lastModifiedAt").value(today.toString()));
         }
 
+
+        @Test
+        void 댓글_수정() throws Exception {
+            LocalDateTime today = LocalDateTime.now();
+            CommentDTO comment = new CommentDTO(1L, 1L, 1L, "댓글", today, today);
+            given(commentService.update(any())).willReturn(comment);
+
+            UpdatingCommentDTO commentDto = new UpdatingCommentDTO(comment.id(), comment.userId(), comment.postId(), comment.content());
+            ObjectMapper mapper = new ObjectMapper()
+                    .registerModule(new JavaTimeModule())
+                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            String json = mapper.writeValueAsString(commentDto);
+
+            mvc.perform(patch(END_POINT)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(json)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andDo(print())
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.id").value(comment.id()))
+                    .andExpect(jsonPath("$.userId").value(commentDto.userId()))
+                    .andExpect(jsonPath("$.postId").value(commentDto.postId()))
+                    .andExpect(jsonPath("$.content").value(commentDto.content()))
+                    .andExpect(jsonPath("$.createdAt").value(today.toString()))
+                    .andExpect(jsonPath("$.lastModifiedAt").value(today.toString()));
+        }
     }
 }
