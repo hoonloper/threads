@@ -19,12 +19,14 @@ import threads.server.domain.comment.dto.CreatingCommentDTO;
 import threads.server.domain.post.PostService;
 import threads.server.domain.post.dto.CreatingPostDTO;
 import threads.server.domain.post.dto.PostDTO;
+import threads.server.domain.post.dto.UpdatingPostDTO;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -58,6 +60,33 @@ public class PostControllerTest {
             String json = mapper.writeValueAsString(inputPostDto);
 
             mvc.perform(post(END_POINT)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(json)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andDo(print())
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.id").value(postDto.id()))
+                    .andExpect(jsonPath("$.userId").value(inputPostDto.userId()))
+                    .andExpect(jsonPath("$.content").value(inputPostDto.content()))
+                    .andExpect(jsonPath("$.comments").isArray())
+                    .andExpect(jsonPath("$.comments").isEmpty())
+                    .andExpect(jsonPath("$.createdAt").value(today.toString()))
+                    .andExpect(jsonPath("$.lastModifiedAt").value(today.toString()));
+        }
+
+        @Test
+        void 쓰레드_수정() throws Exception {
+            LocalDateTime today = LocalDateTime.now();
+            PostDTO postDto = new PostDTO(1L, 1L, "쓰레드", new ArrayList<>(), today, today);
+            given(postService.update(any())).willReturn(postDto);
+
+            UpdatingPostDTO inputPostDto = new UpdatingPostDTO(postDto.id(), postDto.userId(), postDto.content());
+            ObjectMapper mapper = new ObjectMapper()
+                    .registerModule(new JavaTimeModule())
+                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            String json = mapper.writeValueAsString(inputPostDto);
+
+            mvc.perform(patch(END_POINT)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(json)
                             .accept(MediaType.APPLICATION_JSON)
