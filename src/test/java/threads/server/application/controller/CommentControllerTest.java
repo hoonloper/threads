@@ -15,14 +15,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import threads.server.domain.comment.CommentService;
 import threads.server.domain.comment.dto.CommentDTO;
 import threads.server.domain.comment.dto.CreatingCommentDTO;
+import threads.server.domain.comment.dto.DeletingCommentDTO;
 import threads.server.domain.comment.dto.UpdatingCommentDTO;
 
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -96,6 +96,23 @@ public class CommentControllerTest {
                     .andExpect(jsonPath("$.content").value(commentDto.content()))
                     .andExpect(jsonPath("$.createdAt").value(today.toString()))
                     .andExpect(jsonPath("$.lastModifiedAt").value(today.toString()));
+        }
+
+
+        @Test
+        void 댓글_삭제() throws Exception {
+            DeletingCommentDTO commentDto = new DeletingCommentDTO(1L, 1L);
+            ObjectMapper mapper = new ObjectMapper()
+                    .registerModule(new JavaTimeModule())
+                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            String json = mapper.writeValueAsString(commentDto);
+
+            mvc.perform(delete(END_POINT)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(json)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andDo(print())
+                    .andExpect(status().isNoContent());
         }
     }
 }
