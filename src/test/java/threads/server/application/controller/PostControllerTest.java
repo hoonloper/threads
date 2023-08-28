@@ -18,6 +18,7 @@ import threads.server.domain.comment.dto.CommentDTO;
 import threads.server.domain.comment.dto.CreatingCommentDTO;
 import threads.server.domain.post.PostService;
 import threads.server.domain.post.dto.CreatingPostDTO;
+import threads.server.domain.post.dto.DeletingPostDTO;
 import threads.server.domain.post.dto.PostDTO;
 import threads.server.domain.post.dto.UpdatingPostDTO;
 
@@ -26,8 +27,7 @@ import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -99,6 +99,22 @@ public class PostControllerTest {
                     .andExpect(jsonPath("$.comments").isEmpty())
                     .andExpect(jsonPath("$.createdAt").value(today.toString()))
                     .andExpect(jsonPath("$.lastModifiedAt").value(today.toString()));
+        }
+
+        @Test
+        void 쓰레드_삭제() throws Exception {
+            DeletingPostDTO inputPostDto = new DeletingPostDTO(1L, 1L);
+            ObjectMapper mapper = new ObjectMapper()
+                    .registerModule(new JavaTimeModule())
+                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            String json = mapper.writeValueAsString(inputPostDto);
+
+            mvc.perform(delete(END_POINT)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(json)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andDo(print())
+                    .andExpect(status().isNoContent());
         }
     }
 }
