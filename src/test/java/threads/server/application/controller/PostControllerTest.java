@@ -1,6 +1,5 @@
 package threads.server.application.controller;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -13,9 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import threads.server.domain.comment.CommentService;
-import threads.server.domain.comment.dto.CommentDTO;
-import threads.server.domain.comment.dto.CreatingCommentDTO;
 import threads.server.domain.post.PostService;
 import threads.server.domain.post.dto.CreatingPostDTO;
 import threads.server.domain.post.dto.DeletingPostDTO;
@@ -23,6 +19,7 @@ import threads.server.domain.post.dto.PostDTO;
 import threads.server.domain.post.dto.UpdatingPostDTO;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -48,8 +45,28 @@ public class PostControllerTest {
     @DisplayName("성공 케이스")
     class 성공 {
         @Test
+        void 쓰레드_단건_조회() throws Exception {
+            LocalDateTime today = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+            PostDTO postDto = new PostDTO(1L, 1L, "쓰레드", new ArrayList<>(), today, today);
+            given(postService.findOneById(any())).willReturn(postDto);
+
+            mvc.perform(get(END_POINT + "/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(postDto.id()))
+                    .andExpect(jsonPath("$.userId").value(postDto.userId()))
+                    .andExpect(jsonPath("$.content").value(postDto.content()))
+                    .andExpect(jsonPath("$.comments").isArray())
+                    .andExpect(jsonPath("$.comments").isEmpty())
+                    .andExpect(jsonPath("$.createdAt").value(today.toString()))
+                    .andExpect(jsonPath("$.lastModifiedAt").value(today.toString()));
+        }
+
+        @Test
         void 쓰레드_생성() throws Exception {
-            LocalDateTime today = LocalDateTime.now();
+            LocalDateTime today = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
             PostDTO postDto = new PostDTO(1L, 1L, "쓰레드", new ArrayList<>(), today, today);
             given(postService.save(any())).willReturn(postDto);
 
