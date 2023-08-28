@@ -3,7 +3,7 @@ package threads.server.bulk;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import threads.server.domain.post.PostBulk;
+import threads.server.domain.bulk.PostBulk;
 
 //@Transactional // SQL이 롤백이 된다.
 @SpringBootTest

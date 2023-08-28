@@ -1,4 +1,4 @@
-package threads.server.domain.post;
+package threads.server.domain.bulk;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
