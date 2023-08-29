@@ -1,14 +1,15 @@
 package threads.server.domain.post;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
-import threads.server.domain.post.dto.CreatingPostDTO;
-import threads.server.domain.post.dto.PostDTO;
-import threads.server.domain.post.dto.DeletingPostDTO;
-import threads.server.domain.post.dto.UpdatingPostDTO;
+import threads.server.domain.comment.dto.CommentDTO;
+import threads.server.domain.post.dto.*;
 import threads.server.domain.user.User;
+
+import java.util.List;
 
 import static threads.server.domain.post.dto.PostDTO.toPostDto;
 
@@ -16,6 +17,14 @@ import static threads.server.domain.post.dto.PostDTO.toPostDto;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+
+    public List<ReadPostDTO> findAllPost() {
+        List<Post> posts = postRepository.findAllPost();
+        return posts.stream().map(post -> {
+            List<CommentDTO> comments = post.getComments().stream().map(CommentDTO::toCommentDto).toList();
+            return new ReadPostDTO(post.getId(), post.getUser(), post.getContent(), comments, post.getCreatedAt(), post.getLastModifiedAt());
+        }).toList();
+    }
 
     public PostDTO findOneById(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
