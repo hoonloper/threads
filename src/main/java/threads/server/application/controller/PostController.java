@@ -8,17 +8,29 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import threads.server.domain.post.dto.CreatingPostDTO;
-import threads.server.domain.post.dto.PostDTO;
+import threads.server.domain.post.dto.*;
 import threads.server.domain.post.PostService;
-import threads.server.domain.post.dto.DeletingPostDTO;
-import threads.server.domain.post.dto.UpdatingPostDTO;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+
+
+    @Operation(summary = "쓰레드 전체 조회", description = "최근 작성된 쓰레드를 가져옵니다.", tags = { "쓰레드 API" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(schema = @Schema(implementation = List.class))
+            ),
+    })
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ReadPostDTO> getAllPost() {
+        return postService.findAllPost();
+    }
 
     @Operation(summary = "쓰레드 단건 조회", description = "ID에 해당하는 쓰레드 정보를 가져옵니다.", tags = { "쓰레드 API" })
     @ApiResponses({
@@ -27,6 +39,7 @@ public class PostController {
             ),
     })
     @GetMapping("{postId}")
+    @ResponseStatus(HttpStatus.OK)
     public PostDTO getOnePost(@PathVariable("postId") Long postId) {
         return postService.findOneById(postId);
     }
