@@ -1,6 +1,5 @@
 package threads.server.application.controller;
 
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -20,7 +19,6 @@ import threads.server.domain.like.service.LikePostService;
 public class LikeController {
     private final LikePostService likePostService;
     private final LikeCommentService likeCommentService;
-
 
     @Operation(summary = "좋아요 하기", description = "쓰레드 or 댓글을 '좋아요'합니다.", tags = { "좋아요 API" })
     @ApiResponses({

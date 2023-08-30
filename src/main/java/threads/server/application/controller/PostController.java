@@ -20,7 +20,6 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-
     @Operation(summary = "쓰레드 전체 조회", description = "최근 작성된 쓰레드를 가져옵니다.", tags = { "쓰레드 API" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK",

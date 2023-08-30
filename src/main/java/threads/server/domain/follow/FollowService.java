@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
-import threads.server.domain.follow.dto.FollowDTO;
 import threads.server.domain.follow.dto.FollowingDTO;
 import threads.server.domain.follow.dto.UnfollowingDTO;
 import threads.server.domain.user.User;
