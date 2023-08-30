@@ -3,6 +3,7 @@ package threads.server.application.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -45,10 +46,15 @@ public class PostControllerTest {
     @Nested
     @DisplayName("성공 케이스")
     class 성공 {
+        private LocalDateTime today;
+        private final User user = new User(1L);
+
+        @BeforeEach
+        void 설정() {
+            today = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        }
         @Test
         void 쓰레드_단건_조회() throws Exception {
-            LocalDateTime today = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-            User user = new User(1L);
             PostDTO postDto = new PostDTO(1L, user, "쓰레드", new ArrayList<>(), today, today);
             given(postService.findOneById(any())).willReturn(postDto);
 
@@ -68,8 +74,6 @@ public class PostControllerTest {
 
         @Test
         void 쓰레드_생성() throws Exception {
-            LocalDateTime today = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-            User user = new User(1L);
             PostDTO postDto = new PostDTO(1L, user, "쓰레드", new ArrayList<>(), today, today);
             given(postService.save(any())).willReturn(postDto);
 
@@ -96,8 +100,6 @@ public class PostControllerTest {
 
         @Test
         void 쓰레드_수정() throws Exception {
-            LocalDateTime today = LocalDateTime.now();
-            User user = new User(1L);
             PostDTO postDto = new PostDTO(1L, user, "쓰레드", new ArrayList<>(), today, today);
             given(postService.update(any())).willReturn(postDto);
 
