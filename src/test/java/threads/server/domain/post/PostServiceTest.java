@@ -49,7 +49,7 @@ public class PostServiceTest {
 
             assertThat(outputPostDto).isNotNull();
             assertThat(outputPostDto.id()).isNotNull();
-            assertThat(outputPostDto.user().getId()).isEqualTo(savedUser.getId());
+            assertThat(outputPostDto.user().id()).isEqualTo(savedUser.getId());
             assertThat(outputPostDto.content()).isEqualTo(inputPostDto.content());
             assertThat(outputPostDto.comments()).isNotNull();
             assertThat(outputPostDto.createdAt()).isInstanceOf(LocalDateTime.class);
@@ -64,7 +64,7 @@ public class PostServiceTest {
 
             assertThat(outputPostDto).isNotNull();
             assertThat(outputPostDto.id()).isNotNull(); // AUTO_INCREMENT로 인해 Not Null만 판단
-            assertThat(outputPostDto.user().getId()).isNotNull();
+            assertThat(outputPostDto.user().id()).isNotNull();
             assertThat(outputPostDto.content()).isEqualTo(inputPostDto.content());
             assertThat(outputPostDto.comments()).isNotNull();
             assertThat(outputPostDto.createdAt()).isInstanceOf(LocalDateTime.class);
@@ -78,7 +78,7 @@ public class PostServiceTest {
 
             assertThat(outputPostDto).isNotNull();
             assertThat(outputPostDto.id()).isNotNull();
-            assertThat(outputPostDto.user().getId()).isNotNull();
+            assertThat(outputPostDto.user().id()).isNotNull();
             assertThat(outputPostDto.content()).isEqualTo(savedPost.getContent());
             assertThat(outputPostDto.comments()).isNotNull();
             assertThat(outputPostDto.createdAt()).isInstanceOf(LocalDateTime.class);

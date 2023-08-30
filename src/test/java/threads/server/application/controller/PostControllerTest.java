@@ -18,7 +18,7 @@ import threads.server.domain.post.dto.CreatingPostDTO;
 import threads.server.domain.post.dto.DeletingPostDTO;
 import threads.server.domain.post.dto.PostDTO;
 import threads.server.domain.post.dto.UpdatingPostDTO;
-import threads.server.domain.user.User;
+import threads.server.domain.user.dto.UserDTO;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -47,7 +47,7 @@ public class PostControllerTest {
     @DisplayName("성공 케이스")
     class 성공 {
         private LocalDateTime today;
-        private final User user = new User(1L);
+        private final UserDTO userDto = UserDTO.builder().id(1L).build();
 
         @BeforeEach
         void 설정() {
@@ -55,7 +55,7 @@ public class PostControllerTest {
         }
         @Test
         void 쓰레드_단건_조회() throws Exception {
-            PostDTO postDto = new PostDTO(1L, user, "쓰레드", new ArrayList<>(), today, today);
+            PostDTO postDto = new PostDTO(1L, userDto, "쓰레드", new ArrayList<>(), today, today);
             given(postService.findOneById(any())).willReturn(postDto);
 
             mvc.perform(get(END_POINT + "/1")
@@ -74,10 +74,10 @@ public class PostControllerTest {
 
         @Test
         void 쓰레드_생성() throws Exception {
-            PostDTO postDto = new PostDTO(1L, user, "쓰레드", new ArrayList<>(), today, today);
+            PostDTO postDto = new PostDTO(1L, userDto, "쓰레드", new ArrayList<>(), today, today);
             given(postService.save(any())).willReturn(postDto);
 
-            CreatingPostDTO inputPostDto = new CreatingPostDTO(user.getId(), postDto.content());
+            CreatingPostDTO inputPostDto = new CreatingPostDTO(userDto.id(), postDto.content());
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -100,10 +100,10 @@ public class PostControllerTest {
 
         @Test
         void 쓰레드_수정() throws Exception {
-            PostDTO postDto = new PostDTO(1L, user, "쓰레드", new ArrayList<>(), today, today);
+            PostDTO postDto = new PostDTO(1L, userDto, "쓰레드", new ArrayList<>(), today, today);
             given(postService.update(any())).willReturn(postDto);
 
-            UpdatingPostDTO inputPostDto = new UpdatingPostDTO(postDto.id(), user.getId(), postDto.content());
+            UpdatingPostDTO inputPostDto = new UpdatingPostDTO(postDto.id(), userDto.id(), postDto.content());
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
