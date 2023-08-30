@@ -18,7 +18,6 @@ import threads.server.domain.comment.dto.CommentDTO;
 import threads.server.domain.comment.dto.CreatingCommentDTO;
 import threads.server.domain.comment.dto.DeletingCommentDTO;
 import threads.server.domain.comment.dto.UpdatingCommentDTO;
-import threads.server.domain.user.User;
 import threads.server.domain.user.dto.UserDTO;
 
 import java.time.LocalDateTime;

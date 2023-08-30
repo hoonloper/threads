@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import threads.server.domain.user.User;
 import threads.server.domain.user.UserRole;
 import threads.server.domain.user.UserService;
 import threads.server.domain.user.dto.SignInDTO;
