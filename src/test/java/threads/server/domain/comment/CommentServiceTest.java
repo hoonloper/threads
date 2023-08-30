@@ -55,7 +55,7 @@ public class CommentServiceTest {
 
             assertThat(outputCommentDto).isNotNull();
             assertThat(outputCommentDto.id()).isNotNull();
-            assertThat(outputCommentDto.userId()).isEqualTo(savedUser.getId());
+            assertThat(outputCommentDto.user().id()).isEqualTo(savedUser.getId());
             assertThat(outputCommentDto.content()).isEqualTo(inputCommentDto.content());
             assertThat(outputCommentDto.postId()).isEqualTo(savedPost.getId());
             assertThat(outputCommentDto.createdAt()).isInstanceOf(LocalDateTime.class);
@@ -72,7 +72,7 @@ public class CommentServiceTest {
 
             assertThat(outputCommentDto).isNotNull();
             assertThat(outputCommentDto.id()).isNotNull(); // AUTO_INCREMENT로 인해 Not Null만 판단
-            assertThat(outputCommentDto.userId()).isNotNull().isEqualTo(inputCommentDto.userId());
+            assertThat(outputCommentDto.user().id()).isNotNull().isEqualTo(inputCommentDto.userId());
             assertThat(outputCommentDto.postId()).isNotNull().isEqualTo(inputCommentDto.postId());
             assertThat(outputCommentDto.content()).isEqualTo(inputCommentDto.content());
             assertThat(outputCommentDto.createdAt()).isInstanceOf(LocalDateTime.class);

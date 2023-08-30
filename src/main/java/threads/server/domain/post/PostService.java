@@ -1,11 +1,11 @@
 package threads.server.domain.post;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
-import threads.server.domain.comment.dto.CommentDTO;
 import threads.server.domain.post.dto.*;
 import threads.server.domain.user.User;
 
@@ -18,12 +18,10 @@ import static threads.server.domain.post.dto.PostDTO.toPostDto;
 public class PostService {
     private final PostRepository postRepository;
 
-    public List<ReadPostDTO> findAllPost() {
-        List<Post> posts = postRepository.findAllPost();
-        return posts.stream().map(post -> {
-            List<CommentDTO> comments = post.getComments().stream().map(CommentDTO::toCommentDto).toList();
-            return new ReadPostDTO(post.getId(), post.getUser(), post.getContent(), comments, post.getCreatedAt(), post.getLastModifiedAt());
-        }).toList();
+    public ReadPostDTO findAllPost(Pageable pageable) {
+        Page<Post> posts = postRepository.findAll(pageable);
+        List<PostDTO> postDtoList = posts.getContent().stream().map(PostDTO::toPostDto).toList();
+        return new ReadPostDTO(posts.getTotalPages(), posts.getTotalElements(), postDtoList);
     }
 
     public PostDTO findOneById(Long postId) {

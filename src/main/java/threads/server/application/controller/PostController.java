@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import threads.server.domain.post.dto.*;
@@ -19,8 +20,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-
-    @Operation(summary = "쓰레드 전체 조회", description = "최근 작성된 쓰레드를 가져옵니다.", tags = { "쓰레드 API" })
+    @Operation(summary = "쓰레드 최신 페이지네이션 조회", description = "쓰레드를 최신순으로 페이지네이션합니다.", tags = { "쓰레드 API" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(schema = @Schema(implementation = List.class))
@@ -28,8 +28,8 @@ public class PostController {
     })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ReadPostDTO> getAllPost() {
-        return postService.findAllPost();
+    public ReadPostDTO getAllPost(Pageable pageable) {
+        return postService.findAllPost(pageable);
     }
 
     @Operation(summary = "쓰레드 단건 조회", description = "ID에 해당하는 쓰레드 정보를 가져옵니다.", tags = { "쓰레드 API" })

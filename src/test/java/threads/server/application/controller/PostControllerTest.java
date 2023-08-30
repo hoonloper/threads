@@ -3,6 +3,7 @@ package threads.server.application.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import threads.server.domain.post.dto.CreatingPostDTO;
 import threads.server.domain.post.dto.DeletingPostDTO;
 import threads.server.domain.post.dto.PostDTO;
 import threads.server.domain.post.dto.UpdatingPostDTO;
+import threads.server.domain.user.dto.UserDTO;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -44,10 +46,16 @@ public class PostControllerTest {
     @Nested
     @DisplayName("성공 케이스")
     class 성공 {
+        private LocalDateTime today;
+        private final UserDTO userDto = UserDTO.builder().id(1L).build();
+
+        @BeforeEach
+        void 설정() {
+            today = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        }
         @Test
         void 쓰레드_단건_조회() throws Exception {
-            LocalDateTime today = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-            PostDTO postDto = new PostDTO(1L, 1L, "쓰레드", new ArrayList<>(), today, today);
+            PostDTO postDto = new PostDTO(1L, userDto, "쓰레드", new ArrayList<>(), today, today);
             given(postService.findOneById(any())).willReturn(postDto);
 
             mvc.perform(get(END_POINT + "/1")
@@ -56,8 +64,8 @@ public class PostControllerTest {
                     ).andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").value(postDto.id()))
-                    .andExpect(jsonPath("$.userId").value(postDto.userId()))
                     .andExpect(jsonPath("$.content").value(postDto.content()))
+                    .andExpect(jsonPath("$.user").isNotEmpty())
                     .andExpect(jsonPath("$.comments").isArray())
                     .andExpect(jsonPath("$.comments").isEmpty())
                     .andExpect(jsonPath("$.createdAt").value(today.toString()))
@@ -66,11 +74,10 @@ public class PostControllerTest {
 
         @Test
         void 쓰레드_생성() throws Exception {
-            LocalDateTime today = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-            PostDTO postDto = new PostDTO(1L, 1L, "쓰레드", new ArrayList<>(), today, today);
+            PostDTO postDto = new PostDTO(1L, userDto, "쓰레드", new ArrayList<>(), today, today);
             given(postService.save(any())).willReturn(postDto);
 
-            CreatingPostDTO inputPostDto = new CreatingPostDTO(postDto.userId(), postDto.content());
+            CreatingPostDTO inputPostDto = new CreatingPostDTO(userDto.id(), postDto.content());
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -83,8 +90,8 @@ public class PostControllerTest {
                     ).andDo(print())
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").value(postDto.id()))
-                    .andExpect(jsonPath("$.userId").value(inputPostDto.userId()))
                     .andExpect(jsonPath("$.content").value(inputPostDto.content()))
+                    .andExpect(jsonPath("$.user").isNotEmpty())
                     .andExpect(jsonPath("$.comments").isArray())
                     .andExpect(jsonPath("$.comments").isEmpty())
                     .andExpect(jsonPath("$.createdAt").value(today.toString()))
@@ -93,11 +100,10 @@ public class PostControllerTest {
 
         @Test
         void 쓰레드_수정() throws Exception {
-            LocalDateTime today = LocalDateTime.now();
-            PostDTO postDto = new PostDTO(1L, 1L, "쓰레드", new ArrayList<>(), today, today);
+            PostDTO postDto = new PostDTO(1L, userDto, "쓰레드", new ArrayList<>(), today, today);
             given(postService.update(any())).willReturn(postDto);
 
-            UpdatingPostDTO inputPostDto = new UpdatingPostDTO(postDto.id(), postDto.userId(), postDto.content());
+            UpdatingPostDTO inputPostDto = new UpdatingPostDTO(postDto.id(), userDto.id(), postDto.content());
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -110,8 +116,8 @@ public class PostControllerTest {
                     ).andDo(print())
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").value(postDto.id()))
-                    .andExpect(jsonPath("$.userId").value(inputPostDto.userId()))
                     .andExpect(jsonPath("$.content").value(inputPostDto.content()))
+                    .andExpect(jsonPath("$.user").isNotEmpty())
                     .andExpect(jsonPath("$.comments").isArray())
                     .andExpect(jsonPath("$.comments").isEmpty())
                     .andExpect(jsonPath("$.createdAt").value(today.toString()))

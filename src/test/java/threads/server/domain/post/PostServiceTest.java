@@ -4,7 +4,6 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import threads.server.domain.post.dto.CreatingPostDTO;
 import threads.server.domain.post.dto.PostDTO;
@@ -49,7 +48,7 @@ public class PostServiceTest {
 
             assertThat(outputPostDto).isNotNull();
             assertThat(outputPostDto.id()).isNotNull();
-            assertThat(outputPostDto.userId()).isEqualTo(savedUser.getId());
+            assertThat(outputPostDto.user().id()).isEqualTo(savedUser.getId());
             assertThat(outputPostDto.content()).isEqualTo(inputPostDto.content());
             assertThat(outputPostDto.comments()).isNotNull();
             assertThat(outputPostDto.createdAt()).isInstanceOf(LocalDateTime.class);
@@ -64,7 +63,7 @@ public class PostServiceTest {
 
             assertThat(outputPostDto).isNotNull();
             assertThat(outputPostDto.id()).isNotNull(); // AUTO_INCREMENT로 인해 Not Null만 판단
-            assertThat(outputPostDto.userId()).isNotNull();
+            assertThat(outputPostDto.user().id()).isNotNull();
             assertThat(outputPostDto.content()).isEqualTo(inputPostDto.content());
             assertThat(outputPostDto.comments()).isNotNull();
             assertThat(outputPostDto.createdAt()).isInstanceOf(LocalDateTime.class);
@@ -78,7 +77,7 @@ public class PostServiceTest {
 
             assertThat(outputPostDto).isNotNull();
             assertThat(outputPostDto.id()).isNotNull();
-            assertThat(outputPostDto.userId()).isNotNull();
+            assertThat(outputPostDto.user().id()).isNotNull();
             assertThat(outputPostDto.content()).isEqualTo(savedPost.getContent());
             assertThat(outputPostDto.comments()).isNotNull();
             assertThat(outputPostDto.createdAt()).isInstanceOf(LocalDateTime.class);

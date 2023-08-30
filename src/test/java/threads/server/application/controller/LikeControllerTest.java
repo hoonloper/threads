@@ -13,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import threads.server.domain.follow.FollowService;
-import threads.server.domain.follow.dto.FollowingDTO;
 import threads.server.domain.like.LikeType;
 import threads.server.domain.like.dto.CreatingLikeDTO;
 import threads.server.domain.like.dto.DeletingLikeDTO;
