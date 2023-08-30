@@ -3,6 +3,7 @@ package threads.server.application.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,10 @@ import threads.server.domain.comment.dto.CommentDTO;
 import threads.server.domain.comment.dto.CreatingCommentDTO;
 import threads.server.domain.comment.dto.DeletingCommentDTO;
 import threads.server.domain.comment.dto.UpdatingCommentDTO;
+import threads.server.domain.user.User;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -42,9 +45,16 @@ public class CommentControllerTest {
     @Nested
     @DisplayName("성공 케이스")
     class 성공 {
+        private LocalDateTime today;
+        private final User user = new User(1L);
+
+        @BeforeEach
+        void 설정() {
+            today = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        }
+
         @Test
         void 댓글_생성() throws Exception {
-            LocalDateTime today = LocalDateTime.now();
             CommentDTO comment = new CommentDTO(1L, 1L, 1L, "댓글", today, today);
             given(commentService.save(any())).willReturn(comment);
 
@@ -74,7 +84,6 @@ public class CommentControllerTest {
 
         @Test
         void 댓글_수정() throws Exception {
-            LocalDateTime today = LocalDateTime.now();
             CommentDTO comment = new CommentDTO(1L, 1L, 1L, "댓글", today, today);
             given(commentService.update(any())).willReturn(comment);
 
