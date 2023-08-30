@@ -1,12 +1,13 @@
 package threads.server.domain.comment.dto;
 
 import threads.server.domain.comment.Comment;
+import threads.server.domain.user.User;
 
 import java.time.LocalDateTime;
 
 public record CommentDTO(
         Long id,
-        Long userId,
+        User user,
         Long postId,
         String content,
         LocalDateTime createdAt,
@@ -15,7 +16,7 @@ public record CommentDTO(
     public static CommentDTO toCommentDto(Comment comment) {
         return new CommentDTO(
                 comment.getId(),
-                comment.getUser().getId(),
+                comment.getUser(),
                 comment.getPost().getId(),
                 comment.getContent(),
                 comment.getCreatedAt(),
