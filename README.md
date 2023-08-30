@@ -8,6 +8,10 @@
 - 😴(준비중...)
 
 
+### 📀 데이터베이스 스키마
+<img width="653" alt="image" src="https://github.com/hoonloper/threads/assets/78959175/b143b148-1f7b-486e-ac3f-3bffe510353f">
+
+
 ### 📈 테스트
 
 <img width="300" alt="image" src="https://github.com/hoonloper/threads/assets/78959175/f07d183e-cff4-4166-8e1f-6586c7d631bd">
