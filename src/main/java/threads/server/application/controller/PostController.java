@@ -20,7 +20,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-    @Operation(summary = "쓰레드 전체 조회", description = "최근 작성된 쓰레드를 가져옵니다.", tags = { "쓰레드 API" })
+    @Operation(summary = "쓰레드 최신 페이지네이션 조회", description = "쓰레드를 최신순으로 페이지네이션합니다.", tags = { "쓰레드 API" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(schema = @Schema(implementation = List.class))
