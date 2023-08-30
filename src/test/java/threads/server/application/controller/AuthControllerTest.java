@@ -3,6 +3,7 @@ package threads.server.application.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import threads.server.domain.user.User;
 import threads.server.domain.user.UserRole;
 import threads.server.domain.user.UserService;
 import threads.server.domain.user.dto.SignInDTO;
@@ -19,6 +21,7 @@ import threads.server.domain.user.dto.SignUpDTO;
 import threads.server.domain.user.dto.UserDTO;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -41,6 +44,13 @@ public class AuthControllerTest {
     @Nested
     @DisplayName("성공 케이스")
     class 성공 {
+        private LocalDateTime today;
+
+        @BeforeEach
+        void 설정() {
+            today = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        }
+
         @Test
         void 회원가입() throws Exception {
             SignUpDTO signUpDto = new SignUpDTO("test@test.com", "A!@$!B@F#BRa1", "이름", "닉네임", UserRole.USER);
@@ -48,7 +58,6 @@ public class AuthControllerTest {
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
             String json = mapper.writeValueAsString(signUpDto);
-            LocalDateTime today = LocalDateTime.now();
             UserDTO returnValue = new UserDTO(1L, signUpDto.email(), signUpDto.name(), signUpDto.nickname(), signUpDto.userRole(), today, today);
             given(userService.signUp(any())).willReturn(returnValue);
 
@@ -70,7 +79,6 @@ public class AuthControllerTest {
         @Test
         void 로그인() throws Exception {
             String EMAIL = "test@test.com";
-            LocalDateTime today = LocalDateTime.now();
             UserDTO returnValue = new UserDTO(1L, EMAIL, "로그인테스트", "로그인테스트", UserRole.USER, today, today);
             given(userService.signIn(any())).willReturn(returnValue);
 
