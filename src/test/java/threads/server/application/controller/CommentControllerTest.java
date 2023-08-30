@@ -19,6 +19,7 @@ import threads.server.domain.comment.dto.CreatingCommentDTO;
 import threads.server.domain.comment.dto.DeletingCommentDTO;
 import threads.server.domain.comment.dto.UpdatingCommentDTO;
 import threads.server.domain.user.User;
+import threads.server.domain.user.dto.UserDTO;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -46,7 +47,7 @@ public class CommentControllerTest {
     @DisplayName("성공 케이스")
     class 성공 {
         private LocalDateTime today;
-        private final User user = new User(1L);
+        private final UserDTO userDto = UserDTO.builder().id(1L).build();
 
         @BeforeEach
         void 설정() {
@@ -55,11 +56,11 @@ public class CommentControllerTest {
 
         @Test
         void 댓글_생성() throws Exception {
-            CommentDTO comment = new CommentDTO(1L, 1L, 1L, "댓글", today, today);
+            CommentDTO comment = new CommentDTO(1L, userDto, 1L, "댓글", today, today);
             given(commentService.save(any())).willReturn(comment);
 
 
-            CreatingCommentDTO commentDto = new CreatingCommentDTO(comment.userId(), comment.postId(), comment.content());
+            CreatingCommentDTO commentDto = new CreatingCommentDTO(comment.user().id(), comment.postId(), comment.content());
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -74,7 +75,7 @@ public class CommentControllerTest {
                     ).andDo(print())
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").value(comment.id()))
-                    .andExpect(jsonPath("$.userId").value(commentDto.userId()))
+                    .andExpect(jsonPath("$.user").isNotEmpty())
                     .andExpect(jsonPath("$.postId").value(commentDto.postId()))
                     .andExpect(jsonPath("$.content").value(commentDto.content()))
                     .andExpect(jsonPath("$.createdAt").value(today.toString()))
@@ -84,10 +85,10 @@ public class CommentControllerTest {
 
         @Test
         void 댓글_수정() throws Exception {
-            CommentDTO comment = new CommentDTO(1L, 1L, 1L, "댓글", today, today);
+            CommentDTO comment = new CommentDTO(1L, userDto, 1L, "댓글", today, today);
             given(commentService.update(any())).willReturn(comment);
 
-            UpdatingCommentDTO commentDto = new UpdatingCommentDTO(comment.id(), comment.userId(), comment.postId(), comment.content());
+            UpdatingCommentDTO commentDto = new UpdatingCommentDTO(comment.id(), comment.user().id(), comment.postId(), comment.content());
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -100,7 +101,7 @@ public class CommentControllerTest {
                     ).andDo(print())
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").value(comment.id()))
-                    .andExpect(jsonPath("$.userId").value(commentDto.userId()))
+                    .andExpect(jsonPath("$.user").isNotEmpty())
                     .andExpect(jsonPath("$.postId").value(commentDto.postId()))
                     .andExpect(jsonPath("$.content").value(commentDto.content()))
                     .andExpect(jsonPath("$.createdAt").value(today.toString()))
