@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import threads.server.domain.post.dto.*;
@@ -28,8 +29,8 @@ public class PostController {
     })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ReadPostDTO> getAllPost() {
-        return postService.findAllPost();
+    public ReadPostDTO getAllPost(Pageable pageable) {
+        return postService.findAllPost(pageable);
     }
 
     @Operation(summary = "쓰레드 단건 조회", description = "ID에 해당하는 쓰레드 정보를 가져옵니다.", tags = { "쓰레드 API" })
