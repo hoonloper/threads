@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
+import threads.server.domain.comment.CommentRepository;
+import threads.server.domain.like.repository.LikePostRepository;
 import threads.server.domain.post.dto.*;
 import threads.server.domain.user.User;
 
@@ -18,9 +20,18 @@ import static threads.server.domain.post.dto.PostDTO.toPostDto;
 public class PostService {
     private final PostRepository postRepository;
 
+    private final CommentRepository commentRepository;
+    private final LikePostRepository likePostRepository;
+
+
     public ReadPostDTO findAllPost(Pageable pageable) {
-        Page<Post> posts = postRepository.findAll(pageable);
-        List<PostDTO> postDtoList = posts.getContent().stream().map(PostDTO::toPostDto).toList();
+        Page<Post> posts = postRepository.findAllPosts(pageable);
+        List<PostDTO> postDtoList = posts.stream().map(post -> {
+            PostDTO postDTO = PostDTO.toPostDto(post);
+            postDTO.setCommentCount(commentRepository.countByPostId(post.getId()));
+            postDTO.setLikeCount(likePostRepository.countByPostId(post.getId()));
+            return postDTO;
+        }).toList();
         return new ReadPostDTO(posts.getTotalPages(), posts.getTotalElements(), postDtoList);
     }
 
