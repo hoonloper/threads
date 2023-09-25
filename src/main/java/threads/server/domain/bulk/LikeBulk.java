@@ -23,7 +23,7 @@ public class LikeBulk {
 
     private void batchInsert(int batchSize) {
         String postSql = "INSERT INTO likes_post (user_id, post_id, like_at) values ( ?, ?, ? )";
-        String commentSql = "INSERT INTO likes_post (user_id, post_id, like_at) values ( ?, ?, ? )";
+        String commentSql = "INSERT INTO likes_comment (user_id, commment_id, like_at) values ( ?, ?, ? )";
 
         BatchPreparedStatementSetter bpss = new BatchPreparedStatementSetter() {
             @Override
