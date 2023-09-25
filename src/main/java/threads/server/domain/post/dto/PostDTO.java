@@ -15,6 +15,8 @@ public class PostDTO {
     private LocalDateTime lastModifiedAt;
     private Integer likeCount;
     private Integer commentCount;
+    private Long userId;
+    private Boolean liked;
 
     public PostDTO(Long id, UserDTO user, String content, LocalDateTime createdAt, LocalDateTime lastModifiedAt) {
         this.id = id;

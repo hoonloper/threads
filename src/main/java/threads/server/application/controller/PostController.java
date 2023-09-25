@@ -28,8 +28,8 @@ public class PostController {
     })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ReadPostDTO getAllPost(Pageable pageable) {
-        return postService.findAllPost(pageable);
+    public ReadPostDTO getAllPost(Pageable pageable, @RequestParam(value = "userId") Long userId) {
+        return postService.findAllPost(pageable, userId);
     }
 
     @Operation(summary = "쓰레드 단건 조회", description = "ID에 해당하는 쓰레드 정보를 가져옵니다.", tags = { "쓰레드 API" })

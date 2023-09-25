@@ -24,12 +24,13 @@ public class PostService {
     private final LikePostRepository likePostRepository;
 
 
-    public ReadPostDTO findAllPost(Pageable pageable) {
+    public ReadPostDTO findAllPost(Pageable pageable, Long userId) {
         Page<Post> posts = postRepository.findAllPosts(pageable);
         List<PostDTO> postDtoList = posts.stream().map(post -> {
-            PostDTO postDTO = PostDTO.toPostDto(post);
+            PostDTO postDTO = toPostDto(post);
             postDTO.setCommentCount(commentRepository.countByPostId(post.getId()));
             postDTO.setLikeCount(likePostRepository.countByPostId(post.getId()));
+            postDTO.setLiked(likePostRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
             return postDTO;
         }).toList();
         return new ReadPostDTO(posts.getTotalPages(), posts.getTotalElements(), postDtoList);
