@@ -23,7 +23,7 @@ public class LikeCommentService implements LikeService {
     }
 
     public void delete(DeletingLikeDTO likeDto) {
-        LikeComment likeComment = likeCommentRepository.findById(likeDto.id()).orElseThrow();
+        LikeComment likeComment = likeCommentRepository.findByUserIdAndCommentId(likeDto.userId(), likeDto.targetId()).orElseThrow();
         authorizeUser(likeDto.userId(), likeComment.getUser().getId());
         likeCommentRepository.delete(likeComment);
     }

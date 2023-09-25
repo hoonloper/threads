@@ -25,7 +25,7 @@ public class LikePostService implements LikeService {
     }
 
     public void delete(DeletingLikeDTO likeDto) {
-        LikePost likePost = likePostRepository.findById(likeDto.id()).orElseThrow(() -> new NotFoundException("좋아요 내역을 찾을 수 없습니다."));
+        LikePost likePost = likePostRepository.findByUserIdAndPostId(likeDto.userId(), likeDto.targetId()).orElseThrow(() -> new NotFoundException("좋아요 내역을 찾을 수 없습니다."));
         authorizeUser(likeDto.userId(), likePost.getUser().getId());
         likePostRepository.delete(likePost);
     }
