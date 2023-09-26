@@ -40,8 +40,8 @@ public class PostController {
     })
     @GetMapping("{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public PostDTO getOnePost(@PathVariable("postId") Long postId) {
-        return postService.findOneById(postId);
+    public PostDTO getOnePost(@PathVariable("postId") Long postId, @RequestParam(value = "userId") Long userId) {
+        return postService.findOneById(postId, userId);
     }
 
     @Operation(summary = "쓰레드 생성", description = "쓰레드를 생성합니다.", tags = { "쓰레드 API" })

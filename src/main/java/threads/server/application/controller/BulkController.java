@@ -2,6 +2,7 @@ package threads.server.application.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import threads.server.domain.bulk.*;
 
@@ -17,6 +18,7 @@ public class BulkController {
 
     @PostMapping("/{size}")
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     public void bulkUser(@PathVariable("size") int size) {
         userBulk.bulkInsert(size);
         postBulk.bulkInsert(size);

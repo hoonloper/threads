@@ -36,9 +36,13 @@ public class PostService {
         return new ReadPostDTO(posts.getTotalPages(), posts.getTotalElements(), postDtoList);
     }
 
-    public PostDTO findOneById(Long postId) {
+    public PostDTO findOneById(Long postId, Long userId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        return toPostDto(post);
+        PostDTO postDTO = toPostDto(post);
+        postDTO.setCommentCount(commentRepository.countByPostId(post.getId()));
+        postDTO.setLikeCount(likePostRepository.countByPostId(post.getId()));
+        postDTO.setLiked(likePostRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
+        return postDTO;
     }
 
     public PostDTO save(CreatingPostDTO postDto) {
