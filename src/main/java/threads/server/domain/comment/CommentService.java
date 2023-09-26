@@ -49,7 +49,7 @@ public class CommentService {
     }
 
     public ReadCommentDto findAllByPostId(Pageable pageable, Long postId, Long userId) {
-        Page<Comment> comments = commentRepository.findAllComments(pageable);
+        Page<Comment> comments = commentRepository.findAllComments(pageable, postId);
         List<CommentDTO> commentList = comments.stream().map(comment -> {
             CommentDTO commentDto = toCommentDto(comment);
             // TODO: commentDto.setReplyCount(replyRepository.countByPostId(comment.getId()));
