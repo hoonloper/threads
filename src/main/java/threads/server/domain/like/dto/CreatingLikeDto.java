@@ -1,13 +1,11 @@
 package threads.server.domain.like.dto;
 
+import lombok.Data;
 import threads.server.domain.like.LikeType;
 
-import java.time.LocalDateTime;
-
-public class LikeDTO {
-    private Long id;
+@Data
+public class CreatingLikeDto {
     private Long userId;
     private Long targetId;
     private LikeType type;
-    private LocalDateTime likeAt;
 }
