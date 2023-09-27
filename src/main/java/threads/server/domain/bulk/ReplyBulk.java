@@ -13,34 +13,34 @@ import java.time.LocalDateTime;
 
 @Repository
 @RequiredArgsConstructor
-public class LikeBulk {
+public class ReplyBulk {
     private final JdbcTemplate jdbcTemplate;
+
 
     @Transactional
     public void bulkInsert(int batchSize) {
-        batchInsert(batchSize);
+        for(int i = 1; i <= batchSize; i++) {
+            batchInsert(batchSize, i);
+        }
     }
 
-    private void batchInsert(int batchSize) {
-        String postSql = "INSERT INTO likes_post (user_id, post_id, like_at) values ( ?, ?, ? )";
-        String commentSql = "INSERT INTO likes_comment (user_id, comment_id, like_at) values ( ?, ?, ? )";
-        String replySql = "INSERT INTO likes_reply (user_id, reply_id, like_at) values ( ?, ?, ? )";
+    private void batchInsert(int batchSize, int userId) {
+        String sql = "INSERT INTO replies (user_id, comment_id, content, created_at, last_modified_at) values ( ?, ?, ?, ?, ? )";
 
-        BatchPreparedStatementSetter bpss = new BatchPreparedStatementSetter() {
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setLong(1, (i + 1));
-                ps.setLong(2,  1L);
-                ps.setObject(3, LocalDateTime.now());
+                ps.setLong(1, userId);
+                ps.setLong(2, (i + 1));
+                ps.setString(3, "답글 테스트" + (i + 1));
+                ps.setObject(4, LocalDateTime.now());
+                ps.setObject(5, LocalDateTime.now());
             }
 
             @Override
             public int getBatchSize() {
                 return batchSize;
             }
-        };
-        jdbcTemplate.batchUpdate(postSql, bpss);
-        jdbcTemplate.batchUpdate(commentSql, bpss);
-        jdbcTemplate.batchUpdate(replySql, bpss);
+        });
     }
 }

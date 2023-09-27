@@ -13,6 +13,7 @@ public class BulkController {
     private final PostBulk postBulk;
     private final UserBulk userBulk;
     private final CommentBulk commentBulk;
+    private final ReplyBulk replyBulk;
     private final FollowBulk followBulk;
     private final LikeBulk likeBulk;
 
@@ -23,6 +24,7 @@ public class BulkController {
         userBulk.bulkInsert(size);
         postBulk.bulkInsert(size);
         commentBulk.bulkInsert(size);
+        replyBulk.bulkInsert(size);
         followBulk.bulkInsert(size - 5);
         likeBulk.bulkInsert(size - 5);
     }
