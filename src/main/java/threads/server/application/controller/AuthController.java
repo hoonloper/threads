@@ -14,8 +14,9 @@ import threads.server.domain.user.dto.SignUpDTO;
 import threads.server.domain.user.dto.UserDTO;
 import threads.server.domain.user.UserService;
 
-@RestController
-@RequestMapping("/api/v1/auth")
+// 인증 관련 API는 Nuxt server에서 관리하는 것으로 변경해서 AuthContoller는 주석처리
+//@RestController
+//@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;

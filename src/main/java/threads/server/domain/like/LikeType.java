@@ -1,5 +1,5 @@
 package threads.server.domain.like;
 
 public enum LikeType {
-    POST, COMMENT
+    POST, COMMENT, REPLY
 }

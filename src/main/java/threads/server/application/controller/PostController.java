@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import threads.server.domain.comment.CommentService;
+import threads.server.domain.comment.dto.CommentDTO;
+import threads.server.domain.comment.dto.ReadCommentDto;
 import threads.server.domain.post.dto.*;
 import threads.server.domain.post.PostService;
 
@@ -19,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final CommentService commentService;
 
     @Operation(summary = "쓰레드 최신 페이지네이션 조회", description = "쓰레드를 최신순으로 페이지네이션합니다.", tags = { "쓰레드 API" })
     @ApiResponses({
@@ -28,8 +32,8 @@ public class PostController {
     })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ReadPostDTO getAllPost(Pageable pageable) {
-        return postService.findAllPost(pageable);
+    public ReadPostDTO getAllPost(Pageable pageable, @RequestParam(value = "userId") Long userId) {
+        return postService.findAllPost(pageable, userId);
     }
 
     @Operation(summary = "쓰레드 단건 조회", description = "ID에 해당하는 쓰레드 정보를 가져옵니다.", tags = { "쓰레드 API" })
@@ -40,8 +44,8 @@ public class PostController {
     })
     @GetMapping("{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public PostDTO getOnePost(@PathVariable("postId") Long postId) {
-        return postService.findOneById(postId);
+    public PostDTO getOnePost(@PathVariable("postId") Long postId, @RequestParam(value = "userId") Long userId) {
+        return postService.findOneById(postId, userId);
     }
 
     @Operation(summary = "쓰레드 생성", description = "쓰레드를 생성합니다.", tags = { "쓰레드 API" })
@@ -77,5 +81,17 @@ public class PostController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removePost(@RequestBody DeletingPostDTO postDTO) {
         postService.remove(postDTO);
+    }
+
+    @Operation(summary = "쓰레드의 답글 조회", description = "쓰레드에 작성된 답글을 가져옵니다.", tags = { "쓰레드 API" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
+            ),
+    })
+    @GetMapping("/{postId}/comments")
+    @ResponseStatus(HttpStatus.OK)
+    public ReadCommentDto getCommentsByPostId(Pageable pageable, @PathVariable(value = "postId") Long postId, @RequestParam(value = "userId") Long userId) {
+        return commentService.findAllByPostId(pageable, postId, userId);
     }
 }

@@ -20,6 +20,7 @@ import threads.server.domain.comment.dto.UpdatingCommentDTO;
 public class CommentController {
     private final CommentService commentService;
 
+
     @Operation(summary = "댓글 생성", description = "쓰레드에 댓글을 생성합니다.", tags = { "댓글 API" })
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "CREATED",
