@@ -6,7 +6,7 @@ import threads.server.domain.like.entity.LikeReply;
 import java.util.Optional;
 
 public interface LikeReplyRepository extends JpaRepository<LikeReply, Long>, LikeRepository<LikeReply>  {
-    Integer countByReplyId(Long replyId);
+    Long countByReplyId(Long replyId);
 
     Optional<LikeReply> findByUserIdAndReplyId(Long userId, Long replyId);
 }
