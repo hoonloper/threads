@@ -37,4 +37,12 @@ public class Reply extends BaseTime {
 
         this.content = content;
     }
+
+    @Override
+    public String toString() {
+        return "Reply{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }

@@ -18,7 +18,7 @@ import threads.server.domain.post.dto.CreatingPostDTO;
 import threads.server.domain.post.dto.DeletingPostDTO;
 import threads.server.domain.post.dto.PostDTO;
 import threads.server.domain.post.dto.UpdatingPostDTO;
-import threads.server.domain.user.dto.UserDTO;
+import threads.server.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -47,7 +47,7 @@ public class PostControllerTest {
     @DisplayName("성공 케이스")
     class 성공 {
         private LocalDateTime today;
-        private final UserDTO userDto = UserDTO.builder().id(1L).build();
+        private final UserDto userDto = UserDto.builder().id(1L).build();
 
         @BeforeEach
         void 설정() {

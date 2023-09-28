@@ -2,14 +2,14 @@ package threads.server.domain.post.dto;
 
 import lombok.Data;
 import threads.server.domain.post.Post;
-import threads.server.domain.user.dto.UserDTO;
+import threads.server.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 
 @Data
 public class PostDTO {
     private Long id;
-    private UserDTO user;
+    private UserDto user;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
@@ -18,7 +18,7 @@ public class PostDTO {
     private Long userId;
     private Boolean liked;
 
-    public PostDTO(Long id, UserDTO user, String content, LocalDateTime createdAt, LocalDateTime lastModifiedAt) {
+    public PostDTO(Long id, UserDto user, String content, LocalDateTime createdAt, LocalDateTime lastModifiedAt) {
         this.id = id;
         this.user = user;
         this.content = content;
@@ -29,7 +29,7 @@ public class PostDTO {
     public static PostDTO toPostDto(Post post) {
         return new PostDTO(
                 post.getId(),
-                UserDTO.toDto(post.getUser()),
+                UserDto.toDto(post.getUser()),
                 post.getContent(),
                 post.getCreatedAt(),
                 post.getLastModifiedAt()

@@ -2,8 +2,10 @@ package threads.server.domain.comment;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import threads.server.domain.like.entity.LikeComment;
 import threads.server.domain.post.Post;
 import threads.server.domain.reply.Reply;
 import threads.server.domain.user.User;
@@ -12,7 +14,6 @@ import threads.server.domain.common.BaseTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Entity
@@ -33,17 +34,18 @@ public class Comment extends BaseTime {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<Reply> replies = new ArrayList<>();
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+    private List<LikeComment> likeComments = new ArrayList<>();
+
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    public Comment(Long id) {
-        this.id = id;
-    }
-
-    public Comment(Long id, User user, Post post, String content) {
+    @Builder
+    public Comment(Long id, User user, Post post, List<Reply> replies, String content) {
         this.id = id;
         this.user = user;
         this.post = post;
+        this.replies = replies;
         this.content = content;
     }
 

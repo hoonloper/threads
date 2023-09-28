@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import threads.server.application.exception.BadRequestException;
 import threads.server.domain.user.dto.SignUpDTO;
-import threads.server.domain.user.dto.UserDTO;
+import threads.server.domain.user.dto.UserDto;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +36,7 @@ public class UserServiceTest {
         @DisplayName("회원가입 테스트")
         void 회원가입() {
             SignUpDTO inputUserDto = new SignUpDTO(EMAIL, PASSWORD, NAME, NICKNAME, UserRole.USER);
-            UserDTO outputUserDto = userService.signUp(inputUserDto);
+            UserDto outputUserDto = userService.signUp(inputUserDto);
 
             assertThat(outputUserDto).isNotNull();
             assertThat(outputUserDto.id()).isNotNull();

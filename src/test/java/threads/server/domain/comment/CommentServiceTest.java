@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import threads.server.domain.comment.dto.CommentDTO;
+import threads.server.domain.comment.dto.CommentDto;
 import threads.server.domain.comment.dto.CreatingCommentDTO;
 import threads.server.domain.comment.dto.DeletingCommentDTO;
 import threads.server.domain.comment.dto.UpdatingCommentDTO;
@@ -35,7 +35,7 @@ public class CommentServiceTest {
     private CommentService commentService;
 
 
-    private CommentDTO inputCommentDto;
+    private CommentDto inputCommentDto;
 
     @Nested
     @DisplayName("성공 케이스")
@@ -51,7 +51,7 @@ public class CommentServiceTest {
         @DisplayName("댓글 생성 테스트")
         void 댓글_생성() {
             CreatingCommentDTO inputCommentDto = new CreatingCommentDTO(savedUser.getId(), savedPost.getId(), "댓글테스트");
-            CommentDTO outputCommentDto = commentService.save(inputCommentDto);
+            CommentDto outputCommentDto = commentService.save(inputCommentDto);
 
             assertThat(outputCommentDto).isNotNull();
             assertThat(outputCommentDto.id()).isNotNull();
@@ -68,7 +68,7 @@ public class CommentServiceTest {
             Comment savedComment = commentRepository.save(new Comment(null, savedUser, savedPost, "수정전 내용"));
             String CONTENT = "수정할 내용";
             UpdatingCommentDTO inputCommentDto = new UpdatingCommentDTO(savedComment.getId(), savedUser.getId(), savedPost.getId(), CONTENT);
-            CommentDTO outputCommentDto = commentService.update(inputCommentDto);
+            CommentDto outputCommentDto = commentService.update(inputCommentDto);
 
             assertThat(outputCommentDto).isNotNull();
             assertThat(outputCommentDto.id()).isNotNull(); // AUTO_INCREMENT로 인해 Not Null만 판단

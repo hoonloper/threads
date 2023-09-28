@@ -25,7 +25,7 @@ public class ReplyService {
 
     public ReplyDto save(CreatingReplyDto replyDto) {
         User user = new User(replyDto.getUserId());
-        Comment comment = new Comment(replyDto.getCommentId());
+        Comment comment = Comment.builder().id(replyDto.getCommentId()).build();
         return toReplyDto(replyRepository.save(new Reply(null, user, comment, replyDto.getContent())));
     }
 

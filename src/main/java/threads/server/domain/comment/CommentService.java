@@ -1,33 +1,42 @@
 package threads.server.domain.comment;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.comment.dto.*;
 import threads.server.domain.like.repository.LikeCommentRepository;
 import threads.server.domain.post.Post;
+import threads.server.domain.reply.Reply;
+import threads.server.domain.reply.ReplyRepository;
+import threads.server.domain.reply.dto.ReplyDto;
+import threads.server.domain.user.QUser;
 import threads.server.domain.user.User;
+import threads.server.domain.user.dto.UserDto;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static threads.server.domain.comment.dto.CommentDTO.toCommentDto;
+import static threads.server.domain.comment.dto.CommentDto.toCommentDto;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final LikeCommentRepository likeCommentRepository;
+    private final CommentRepositorySupport commentRepositorySupport;
+    private final ReplyRepository replyRepository;
 
-    public CommentDTO save(CreatingCommentDTO commentDto) {
+    public CommentDto save(CreatingCommentDTO commentDto) {
         User user = new User(commentDto.userId());
         Post post = new Post(commentDto.postId());
-        return toCommentDto(commentRepository.save(new Comment(null, user, post, commentDto.content())));
+        return toCommentDto(commentRepository.save(Comment.builder().user(user).post(post).content(commentDto.content()).build()));
     }
 
-    public CommentDTO update(UpdatingCommentDTO commentDto) {
+    public CommentDto update(UpdatingCommentDTO commentDto) {
         Comment comment = commentRepository.findById(commentDto.id()).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
         authorizeUser(commentDto.userId(), comment.getUser().getId());
         comment.change(commentDto.content());
@@ -48,15 +57,20 @@ public class CommentService {
         }
     }
 
+    @Transactional
     public ReadCommentDto findAllByPostId(Pageable pageable, Long postId, Long userId) {
-        Page<Comment> comments = commentRepository.findAllComments(pageable, postId);
-        List<CommentDTO> commentList = comments.stream().map(comment -> {
-            CommentDTO commentDto = toCommentDto(comment);
-            // TODO: commentDto.setReplyCount(replyRepository.countByPostId(comment.getId()));
-            commentDto.setLikeCount(likeCommentRepository.countByCommentId(comment.getId()));
-            commentDto.setLiked(likeCommentRepository.findByUserIdAndCommentId(userId, comment.getId()).isPresent());
-            return commentDto;
-        }).toList();
-        return new ReadCommentDto(comments.getTotalPages(), comments.getTotalElements(), commentList);
+        PageImpl<Comment> commentPage = commentRepositorySupport.findCommentPage(pageable, postId);
+        List<CommentDto> commentDtoList =  commentRepositorySupport.findAllComments(pageable, postId, userId)
+                .stream()
+                .map(comment -> {
+                    // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
+                    Reply reply = replyRepository.findOneByCommentIdOrderByCreatedAtAsc(comment.getId()).orElse(null);
+                    ReplyDto replyDto = reply == null ? null : ReplyDto.toReplyDto(reply);
+                    comment.setReply(replyDto);
+                    comment.setUser(UserDto.toDto(comment.getUserEntity()));
+                    return comment;
+                })
+                .toList();
+        return new ReadCommentDto(commentPage.getTotalPages(), commentPage.getTotalElements(), commentDtoList);
     }
 }

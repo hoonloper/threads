@@ -3,6 +3,7 @@
 !gradle/wrapper/gradle-wrapper.jar
 
 application.yml
+/src/main/generated
 
 ### STS ###
 .apt_generated

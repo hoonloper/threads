@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import threads.server.domain.comment.CommentService;
-import threads.server.domain.comment.dto.CommentDTO;
+import threads.server.domain.comment.dto.CommentDto;
 import threads.server.domain.comment.dto.ReadCommentDto;
 import threads.server.domain.post.dto.*;
 import threads.server.domain.post.PostService;
@@ -86,7 +86,7 @@ public class PostController {
     @Operation(summary = "쓰레드의 답글 조회", description = "쓰레드에 작성된 답글을 가져옵니다.", tags = { "쓰레드 API" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK",
-                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
+                    content = @Content(schema = @Schema(implementation = CommentDto.class))
             ),
     })
     @GetMapping("/{postId}/comments")
