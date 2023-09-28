@@ -10,10 +10,10 @@ import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.comment.dto.*;
 import threads.server.domain.comment.repository.CommentRepository;
 import threads.server.domain.comment.repository.CommentRepositorySupport;
+import threads.server.domain.like.repository.LikeCommentRepository;
 import threads.server.domain.post.Post;
-import threads.server.domain.reply.Reply;
-import threads.server.domain.reply.ReplyRepository;
 import threads.server.domain.reply.dto.ReplyDto;
+import threads.server.domain.reply.repository.ReplyRepositorySupport;
 import threads.server.domain.user.User;
 import threads.server.domain.user.dto.UserDto;
 
@@ -24,9 +24,10 @@ import static threads.server.domain.comment.dto.CommentDto.toCommentDto;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
+    private final LikeCommentRepository likeCommentRepository;
     private final CommentRepository commentRepository;
     private final CommentRepositorySupport commentRepositorySupport;
-    private final ReplyRepository replyRepository;
+    private final ReplyRepositorySupport replyRepositorySupport;
 
     public CommentDto save(CreatingCommentDTO commentDto) {
         User user = new User(commentDto.userId());
@@ -61,10 +62,10 @@ public class CommentService {
         List<CommentDto> commentDtoList =  commentRepositorySupport.findAllComments(pageable, postId, userId)
                 .stream()
                 .map(comment -> {
+                    // TODO: 좋아요 여부 가져오는 쿼리 수정해야 함
                     // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
-                    Reply reply = replyRepository.findOneByCommentIdOrderByCreatedAtAsc(comment.getId()).orElse(null);
-                    ReplyDto replyDto = reply == null ? null : ReplyDto.toReplyDto(reply);
-                    comment.setReply(replyDto);
+                    comment.setLiked(likeCommentRepository.findByUserIdAndCommentId(userId, comment.getId()).isPresent());
+                    comment.setReply(replyRepositorySupport.findOneByCommentId(comment.getId(), userId));
                     comment.setUser(UserDto.toDto(comment.getUserEntity()));
                     return comment;
                 })

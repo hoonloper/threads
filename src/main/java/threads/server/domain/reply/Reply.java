@@ -6,7 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import threads.server.domain.comment.Comment;
 import threads.server.domain.common.BaseTime;
+import threads.server.domain.like.entity.LikeReply;
 import threads.server.domain.user.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +29,9 @@ public class Reply extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment;
+
+    @OneToMany(mappedBy = "reply", cascade = CascadeType.REMOVE)
+    private final List<LikeReply> likeReplies = new ArrayList<>();
 
     @Column(columnDefinition = "TEXT")
     private String content;

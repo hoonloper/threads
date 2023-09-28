@@ -1,7 +1,6 @@
 package threads.server.domain.comment;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +34,7 @@ public class Comment extends BaseTime {
     private List<Reply> replies = new ArrayList<>();
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
-    private List<LikeComment> likeComments = new ArrayList<>();
+    private final List<LikeComment> likeComments = new ArrayList<>();
 
     @Column(columnDefinition = "TEXT")
     private String content;

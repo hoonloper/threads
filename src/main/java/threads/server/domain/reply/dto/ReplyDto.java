@@ -1,34 +1,39 @@
 package threads.server.domain.reply.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import threads.server.domain.reply.Reply;
+import threads.server.domain.user.User;
 import threads.server.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
 public class ReplyDto {
 
     private Long id;
-    private UserDto user;
     private Long commentId;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
     private Boolean liked;
-    private Integer likeCount;
+    private Long likeCount;
+
+    @JsonIgnore
+    private User userEntity;
+    private UserDto user;
 
     @Builder
-    public ReplyDto(Long id, UserDto user, Long commentId, String content, LocalDateTime createdAt, LocalDateTime lastModifiedAt, Boolean liked, Integer likeCount) {
+    public ReplyDto(Long id, Long commentId, String content, LocalDateTime createdAt, LocalDateTime lastModifiedAt, UserDto user) {
         this.id = id;
-        this.user = user;
         this.commentId = commentId;
         this.content = content;
         this.createdAt = createdAt;
         this.lastModifiedAt = lastModifiedAt;
-        this.liked = liked;
-        this.likeCount = likeCount;
+        this.user = user;
     }
 
     public static ReplyDto toReplyDto(Reply reply) {

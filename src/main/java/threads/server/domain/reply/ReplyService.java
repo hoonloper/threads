@@ -10,6 +10,7 @@ import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.comment.Comment;
 import threads.server.domain.like.repository.LikeCommentRepository;
 import threads.server.domain.reply.dto.*;
+import threads.server.domain.reply.repository.ReplyRepository;
 import threads.server.domain.user.User;
 
 import java.util.List;
