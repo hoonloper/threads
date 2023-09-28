@@ -18,6 +18,7 @@ import java.util.List;
 
 import static threads.server.domain.comment.QComment.comment;
 import static threads.server.domain.like.entity.QLikeComment.likeComment;
+import static threads.server.domain.reply.QReply.reply;
 
 @Repository
 public class CommentRepositorySupport extends QuerydslRepositorySupport {
@@ -50,14 +51,16 @@ public class CommentRepositorySupport extends QuerydslRepositorySupport {
                                 comment.createdAt,
                                 comment.lastModifiedAt,
                                 comment.user.as("userEntity"),
-                                likeComment.count().as("likeCount")
+                                reply.countDistinct().as("replyCount"),
+                                likeComment.countDistinct().as("likeCount")
                         )
                 )
                 .from(comment)
                 .where(comment.post.id.eq(postId))
                 .innerJoin(comment.user)
                 .leftJoin(comment.likeComments, likeComment)
-                .groupBy(comment.id)
+                .leftJoin(comment.replies, reply)
+                .groupBy(comment.id, likeComment.comment.id)
                 .orderBy(createOrderSpecifier(pageable.getSort()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

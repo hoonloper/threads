@@ -28,6 +28,7 @@ public class CommentDto {
 
     private Boolean liked;
     private Long likeCount;
+    private Long replyCount;
 
     @JsonIgnore
     private Reply replyEntity;
