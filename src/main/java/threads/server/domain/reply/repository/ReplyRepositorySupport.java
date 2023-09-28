@@ -23,7 +23,7 @@ public class ReplyRepositorySupport extends QuerydslRepositorySupport {
 
     public ReplyDto findOneByCommentId(Long commentId, Long userId) {
         // TODO: 좋아요 여부 가져오는 쿼리로 개선해야 함
-        ReplyDto replyDto = queryFactory
+         ReplyDto replyDto = queryFactory
                 .select(
                         Projections.bean(
                                 ReplyDto.class,

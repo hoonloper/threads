@@ -11,6 +11,8 @@ import threads.server.domain.user.User;
 import threads.server.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -32,7 +34,7 @@ public class CommentDto {
 
     @JsonIgnore
     private Reply replyEntity;
-    private ReplyDto reply;
+    private List<ReplyDto> replies = new ArrayList<>();
 
 
     @QueryProjection
