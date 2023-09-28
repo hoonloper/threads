@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
-import threads.server.domain.comment.CommentRepository;
+import threads.server.domain.comment.repository.CommentRepository;
 import threads.server.domain.like.repository.LikePostRepository;
 import threads.server.domain.post.dto.*;
 import threads.server.domain.user.User;

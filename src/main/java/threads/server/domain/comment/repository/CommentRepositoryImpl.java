@@ -1,4 +1,4 @@
-package threads.server.domain.comment;
+package threads.server.domain.comment.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

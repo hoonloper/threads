@@ -8,18 +8,16 @@ import org.springframework.transaction.annotation.Transactional;
 import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.comment.dto.*;
-import threads.server.domain.like.repository.LikeCommentRepository;
+import threads.server.domain.comment.repository.CommentRepository;
+import threads.server.domain.comment.repository.CommentRepositorySupport;
 import threads.server.domain.post.Post;
 import threads.server.domain.reply.Reply;
 import threads.server.domain.reply.ReplyRepository;
 import threads.server.domain.reply.dto.ReplyDto;
-import threads.server.domain.user.QUser;
 import threads.server.domain.user.User;
 import threads.server.domain.user.dto.UserDto;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static threads.server.domain.comment.dto.CommentDto.toCommentDto;
 

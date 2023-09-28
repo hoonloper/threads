@@ -1,4 +1,4 @@
-package threads.server.domain.comment;
+package threads.server.domain.comment.repository;
 
 
 import com.querydsl.core.types.ExpressionUtils;
@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
+import threads.server.domain.comment.Comment;
 import threads.server.domain.comment.dto.CommentDto;
 import threads.server.domain.reply.QReply;
 import threads.server.domain.reply.Reply;
