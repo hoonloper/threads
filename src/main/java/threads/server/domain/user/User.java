@@ -17,22 +17,27 @@ public class User extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String email;
 
     @JsonIgnore
-    @Column
+    @Column(nullable = false)
     private String password;
 
-    @Column
+    @Column(nullable = false)
     private String name;
-
 
     @Column
     private String nickname;
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    @Column
+    private String link;
+
+    @Column(columnDefinition = "TEXT")
+    private String introduction;
 
     public User(Long id) {
         this.id = id;
