@@ -32,43 +32,43 @@ public class PostController {
     })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ReadPostDTO getAllPost(Pageable pageable, @RequestParam(value = "userId") Long userId) {
+    public ReadPostDto getAllPost(Pageable pageable, @RequestParam(value = "userId") Long userId) {
         return postService.findAllPost(pageable, userId);
     }
 
     @Operation(summary = "쓰레드 단건 조회", description = "ID에 해당하는 쓰레드 정보를 가져옵니다.", tags = { "쓰레드 API" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK",
-                    content = @Content(schema = @Schema(implementation = PostDTO.class))
+                    content = @Content(schema = @Schema(implementation = PostDto.class))
             ),
     })
     @GetMapping("{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public PostDTO getOnePost(@PathVariable("postId") Long postId, @RequestParam(value = "userId") Long userId) {
+    public PostDto getOnePost(@PathVariable("postId") Long postId, @RequestParam(value = "userId") Long userId) {
         return postService.findOneById(postId, userId);
     }
 
     @Operation(summary = "쓰레드 생성", description = "쓰레드를 생성합니다.", tags = { "쓰레드 API" })
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "CREATED",
-                    content = @Content(schema = @Schema(implementation = PostDTO.class))
+                    content = @Content(schema = @Schema(implementation = PostDto.class))
             ),
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostDTO createPost(@RequestBody CreatingPostDTO postDTO) {
+    public PostDto createPost(@RequestBody CreatingPostDto postDTO) {
         return postService.save(postDTO);
     }
 
     @Operation(summary = "쓰레드 수정", description = "쓰레드를 수정합니다.", tags = { "쓰레드 API" })
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "CREATED",
-                    content = @Content(schema = @Schema(implementation = PostDTO.class))
+                    content = @Content(schema = @Schema(implementation = PostDto.class))
             ),
     })
     @PatchMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostDTO updatePost(@RequestBody UpdatingPostDTO postDTO) {
+    public PostDto updatePost(@RequestBody UpdatingPostDto postDTO) {
         return postService.update(postDTO);
     }
 
@@ -79,7 +79,7 @@ public class PostController {
     })
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removePost(@RequestBody DeletingPostDTO postDTO) {
+    public void removePost(@RequestBody DeletingPostDto postDTO) {
         postService.remove(postDTO);
     }
 

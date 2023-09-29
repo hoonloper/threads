@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import threads.server.domain.like.entity.LikePost;
 import threads.server.domain.user.User;
 import threads.server.domain.common.BaseTime;
 import threads.server.domain.comment.Comment;
@@ -25,9 +26,11 @@ public class Post extends BaseTime {
     @JoinColumn(name = "user_id")
     private User user;
 
-
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<LikePost> likePosts = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();

@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import threads.server.domain.post.dto.CreatingPostDTO;
-import threads.server.domain.post.dto.PostDTO;
-import threads.server.domain.post.dto.DeletingPostDTO;
-import threads.server.domain.post.dto.UpdatingPostDTO;
+import threads.server.domain.post.dto.CreatingPostDto;
+import threads.server.domain.post.dto.PostDto;
+import threads.server.domain.post.dto.DeletingPostDto;
+import threads.server.domain.post.dto.UpdatingPostDto;
 import threads.server.domain.user.User;
 import threads.server.domain.user.UserRepository;
 import threads.server.domain.user.UserRole;
@@ -43,8 +43,8 @@ public class PostServiceTest {
         @Test
         @DisplayName("쓰레드 생성 테스트")
         void 쓰레드_생성() {
-            CreatingPostDTO inputPostDto = new CreatingPostDTO(savedUser.getId(), "쓰레드테스트");
-            PostDTO outputPostDto = postService.save(inputPostDto);
+            CreatingPostDto inputPostDto = new CreatingPostDto(savedUser.getId(), "쓰레드테스트");
+            PostDto outputPostDto = postService.save(inputPostDto);
 
             assertThat(outputPostDto).isNotNull();
             assertThat(outputPostDto.id()).isNotNull();
@@ -58,8 +58,8 @@ public class PostServiceTest {
         @Test
         @DisplayName("한개 쓰레드 수정 테스트")
         void 한개_쓰레드_수정() {
-            UpdatingPostDTO inputPostDto = new UpdatingPostDTO(savedPost.getId(), savedUser.getId(), "수정한 내용");
-            PostDTO outputPostDto = postService.update(inputPostDto);
+            UpdatingPostDto inputPostDto = new UpdatingPostDto(savedPost.getId(), savedUser.getId(), "수정한 내용");
+            PostDto outputPostDto = postService.update(inputPostDto);
 
             assertThat(outputPostDto).isNotNull();
             assertThat(outputPostDto.id()).isNotNull(); // AUTO_INCREMENT로 인해 Not Null만 판단
@@ -73,7 +73,7 @@ public class PostServiceTest {
         @Test
         @DisplayName("한개 쓰레드 찾기 테스트")
         void 한개_쓰레드_찾기() {
-            PostDTO outputPostDto = postService.findOneById(savedPost.getId());
+            PostDto outputPostDto = postService.findOneById(savedPost.getId());
 
             assertThat(outputPostDto).isNotNull();
             assertThat(outputPostDto.id()).isNotNull();
@@ -88,7 +88,7 @@ public class PostServiceTest {
         @Test
         @DisplayName("한개 쓰레드 삭제 테스트")
         void 한개_쓰레드_삭제() {
-            DeletingPostDTO inputPostDto = new DeletingPostDTO(savedPost.getId(), savedUser.getId());
+            DeletingPostDto inputPostDto = new DeletingPostDto(savedPost.getId(), savedUser.getId());
             postService.remove(inputPostDto);
             assertThat(postRepository.findAll().size()).isEqualTo(0);
         }

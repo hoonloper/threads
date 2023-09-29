@@ -62,7 +62,7 @@ public class ReplyRepositorySupport extends QuerydslRepositorySupport {
                 .leftJoin(reply.likeReplies, likeReply)
                 .groupBy(reply.id, likeReply.reply.id)
                 .orderBy(createOrderSpecifier(pageable.getSort()))
-                .offset(pageable.getOffset())
+                .offset(pageable.getOffset() + 1) // 답글을 더보기 할 때는 이미 최신 요소 1개가 있기 때문에 +1
                 .limit(pageable.getPageSize())
                 .fetch();
     }

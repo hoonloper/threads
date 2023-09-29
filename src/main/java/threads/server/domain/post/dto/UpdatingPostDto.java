@@ -1,6 +1,7 @@
 package threads.server.domain.post.dto;
 
-public record CreatingPostDTO(
+public record UpdatingPostDto(
+        Long id,
         Long userId,
         String content
 ) {}
