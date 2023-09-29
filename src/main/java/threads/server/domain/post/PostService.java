@@ -10,10 +10,11 @@ import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.comment.repository.CommentRepository;
 import threads.server.domain.like.repository.LikePostRepository;
 import threads.server.domain.post.dto.*;
+import threads.server.domain.post.repository.PostRepository;
+import threads.server.domain.post.repository.PostRepositorySupport;
 import threads.server.domain.user.User;
 import threads.server.domain.user.dto.UserDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static threads.server.domain.post.dto.PostDto.toPostDto;

@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import threads.server.domain.comment.dto.*;
 import threads.server.domain.comment.repository.CommentRepository;
 import threads.server.domain.post.Post;
-import threads.server.domain.post.PostRepository;
+import threads.server.domain.post.repository.PostRepository;
 import threads.server.domain.user.User;
 import threads.server.domain.user.UserRepository;
 

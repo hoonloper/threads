@@ -9,6 +9,7 @@ import threads.server.domain.post.dto.CreatingPostDto;
 import threads.server.domain.post.dto.PostDto;
 import threads.server.domain.post.dto.DeletingPostDto;
 import threads.server.domain.post.dto.UpdatingPostDto;
+import threads.server.domain.post.repository.PostRepository;
 import threads.server.domain.user.User;
 import threads.server.domain.user.UserRepository;
 import threads.server.domain.user.UserRole;

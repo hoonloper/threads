@@ -1,4 +1,4 @@
-package threads.server.domain.post;
+package threads.server.domain.post.repository;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
+import threads.server.domain.post.Post;
 import threads.server.domain.post.dto.PostDto;
 
 import java.util.List;
