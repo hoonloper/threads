@@ -67,6 +67,33 @@ public class CommentRepositorySupport extends QuerydslRepositorySupport {
                 .fetch();
     }
 
+    public List<CommentDto> findAllCommentsByUserId(Pageable pageable, Long userId) {
+        return queryFactory
+                .select(
+                        Projections.bean(
+                                CommentDto.class,
+                                comment.id,
+                                comment.post.id.as("postId"),
+                                comment.content,
+                                comment.createdAt,
+                                comment.lastModifiedAt,
+                                comment.user.as("userEntity"),
+                                reply.countDistinct().as("replyCount"),
+                                likeComment.countDistinct().as("likeCount")
+                        )
+                )
+                .from(comment)
+                .where(comment.user.id.eq(userId))
+                .innerJoin(comment.user)
+                .leftJoin(comment.likeComments, likeComment)
+                .leftJoin(comment.replies, reply)
+                .groupBy(comment.id, likeComment.comment.id)
+                .orderBy(createOrderSpecifier(pageable.getSort()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
     private OrderSpecifier[] createOrderSpecifier(Sort sort) {
         List<OrderSpecifier> orderSpecifiers = sort.stream()
                 .map(s -> {

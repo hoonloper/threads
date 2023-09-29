@@ -76,4 +76,23 @@ public class CommentService {
                 .toList();
         return new ReadCommentDto(commentPage.getTotalPages(), commentPage.getTotalElements(), commentDtoList);
     }
+
+    public ReadCommentDto findAllByUserId(Pageable pageable, Long userId) {
+        PageImpl<Comment> commentPage = commentRepositorySupport.findCommentPage(pageable, userId);
+        List<CommentDto> commentDtoList =  commentRepositorySupport.findAllCommentsByUserId(pageable, userId)
+                .stream()
+                .map(comment -> {
+                    // TODO: 좋아요 여부 가져오는 쿼리 수정해야 함
+                    // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
+                    comment.setLiked(likeCommentRepository.findByUserIdAndCommentId(userId, comment.getId()).isPresent());
+                    ReplyDto replyDto = replyRepositorySupport.findOneByCommentId(comment.getId(), userId);
+                    if(replyDto != null) {
+                        comment.getReplies().add(replyDto);
+                    }
+                    comment.setUser(UserDto.toDto(comment.getUserEntity()));
+                    return comment;
+                })
+                .toList();
+        return new ReadCommentDto(commentPage.getTotalPages(), commentPage.getTotalElements(), commentDtoList);
+    }
 }
