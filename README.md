@@ -1,4 +1,4 @@
-# Threads Clone
+# Threads
 
 ### 🛠️ 기술스택
 
