@@ -20,7 +20,7 @@ public class UserService {
             throw new BadRequestException("이미 존재하는 이메일입니다.");
         });
 
-        User user = userRepository.save(new User(null, userDTO.email(), userDTO.password(), userDTO.name(), userDTO.nickname(), userDTO.userRole(), null, null));
+        User user = userRepository.save(new User(null, userDTO.email(), userDTO.password(), userDTO.name(), userDTO.nickname(), userDTO.userRole(), null, null, false));
         return toDto(user);
     }
 

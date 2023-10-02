@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import threads.server.domain.common.BaseTime;
 
 @AllArgsConstructor
@@ -38,6 +39,10 @@ public class User extends BaseTime {
 
     @Column(columnDefinition = "TEXT")
     private String introduction;
+
+    @Column(nullable = false)
+    @ColumnDefault(value = "false")
+    private boolean isHidden;
 
     public User(Long id) {
         this.id = id;
