@@ -2,11 +2,21 @@
 
 ### 🛠️ 기술스택
 
-<img src="https://img.shields.io/badge/Java 17-007396?style=flat-square&logo=java&logoColor=white"/> <img src="https://img.shields.io/badge/SpringBoot 3.1-6DB33F?style=flat-square&logo=SpringBoot&logoColor=white"/> <img src="https://img.shields.io/badge/JPA-6DB33F?style=flat-square&logo=&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/H2DB-007396?style=flat-square&logoColor=white"/> 
+<!-- TODO: 뱃지로 변경
+<img src="https://img.shields.io/badge/Java 17-007396?style=flat-square&logo=java&logoColor=white"/> <img src="https://img.shields.io/badge/SpringBoot 3.1-6DB33F?style=flat-square&logo=SpringBoot&logoColor=white"/> <img src="https://img.shields.io/badge/JPA-6DB33F?style=flat-square&logo=&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/H2-007396?style=flat-square&logoColor=white"/> 
+-->
+
+- 기술 - **Java**, **Spring boot**, **JPA**, **Querydsl**
+- DB - **MySQL**, **H2**(테스트 전용)
+- 배포 - **CloudType(server)**, **GCP(database)**
+
+### 🖼️ 아키텍처
+
+<img alt="image" src="https://github.com/hoonloper/threads/assets/78959175/ac5001d7-c072-44a4-a158-595fce9f0278">
 
 
-### 📀 데이터베이스 스키마
-<img width="653" alt="image" src="https://user-images.githubusercontent.com/78959175/264331897-5b148d96-a99e-4125-ba37-c6f11ed62669.png">
+### 📀 데이터베이스 ERD
+<img width="641" alt="image" src="https://github.com/hoonloper/threads/assets/78959175/0e53cd8d-8d6c-4d28-be26-ac4d48e9d2ac">
 
 
 ### 📈 테스트
