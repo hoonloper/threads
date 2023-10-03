@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import threads.server.domain.common.BaseTime;
 
 @AllArgsConstructor
@@ -17,22 +18,31 @@ public class User extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String email;
 
     @JsonIgnore
-    @Column
+    @Column(nullable = false)
     private String password;
 
-    @Column
+    @Column(nullable = false)
     private String name;
-
 
     @Column
     private String nickname;
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    @Column
+    private String link;
+
+    @Column(columnDefinition = "TEXT")
+    private String introduction;
+
+    @Column(nullable = false)
+    @ColumnDefault(value = "false")
+    private boolean isHidden;
 
     public User(Long id) {
         this.id = id;

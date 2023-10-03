@@ -14,11 +14,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import threads.server.domain.post.PostService;
-import threads.server.domain.post.dto.CreatingPostDTO;
-import threads.server.domain.post.dto.DeletingPostDTO;
-import threads.server.domain.post.dto.PostDTO;
-import threads.server.domain.post.dto.UpdatingPostDTO;
-import threads.server.domain.user.dto.UserDTO;
+import threads.server.domain.post.dto.CreatingPostDto;
+import threads.server.domain.post.dto.DeletingPostDto;
+import threads.server.domain.post.dto.PostDto;
+import threads.server.domain.post.dto.UpdatingPostDto;
+import threads.server.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -47,7 +47,7 @@ public class PostControllerTest {
     @DisplayName("성공 케이스")
     class 성공 {
         private LocalDateTime today;
-        private final UserDTO userDto = UserDTO.builder().id(1L).build();
+        private final UserDto userDto = UserDto.builder().id(1L).build();
 
         @BeforeEach
         void 설정() {
@@ -55,7 +55,7 @@ public class PostControllerTest {
         }
         @Test
         void 쓰레드_단건_조회() throws Exception {
-            PostDTO postDto = new PostDTO(1L, userDto, "쓰레드", new ArrayList<>(), today, today);
+            PostDto postDto = new PostDto(1L, userDto, "쓰레드", new ArrayList<>(), today, today);
             given(postService.findOneById(any())).willReturn(postDto);
 
             mvc.perform(get(END_POINT + "/1")
@@ -74,10 +74,10 @@ public class PostControllerTest {
 
         @Test
         void 쓰레드_생성() throws Exception {
-            PostDTO postDto = new PostDTO(1L, userDto, "쓰레드", new ArrayList<>(), today, today);
+            PostDto postDto = new PostDto(1L, userDto, "쓰레드", new ArrayList<>(), today, today);
             given(postService.save(any())).willReturn(postDto);
 
-            CreatingPostDTO inputPostDto = new CreatingPostDTO(userDto.id(), postDto.content());
+            CreatingPostDto inputPostDto = new CreatingPostDto(userDto.id(), postDto.content());
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -100,10 +100,10 @@ public class PostControllerTest {
 
         @Test
         void 쓰레드_수정() throws Exception {
-            PostDTO postDto = new PostDTO(1L, userDto, "쓰레드", new ArrayList<>(), today, today);
+            PostDto postDto = new PostDto(1L, userDto, "쓰레드", new ArrayList<>(), today, today);
             given(postService.update(any())).willReturn(postDto);
 
-            UpdatingPostDTO inputPostDto = new UpdatingPostDTO(postDto.id(), userDto.id(), postDto.content());
+            UpdatingPostDto inputPostDto = new UpdatingPostDto(postDto.id(), userDto.id(), postDto.content());
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -126,7 +126,7 @@ public class PostControllerTest {
 
         @Test
         void 쓰레드_삭제() throws Exception {
-            DeletingPostDTO inputPostDto = new DeletingPostDTO(1L, 1L);
+            DeletingPostDto inputPostDto = new DeletingPostDto(1L, 1L);
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

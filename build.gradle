@@ -28,18 +28,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
-//	Security를 위한 의존성
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
-//	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
-//	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
-//	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
-//	testImplementation 'org.springframework.security:spring-security-test'
-
-	compileOnly 'org.projectlombok:lombok'
+	// ⭐ Spring boot 3.x이상에서 QueryDsl 패키지를 정의하는 방법
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+	annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+	annotationProcessor("jakarta.annotation:jakarta.annotation-api")
 
 	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 	runtimeOnly 'com.h2database:h2'
 
+	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

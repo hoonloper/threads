@@ -14,11 +14,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import threads.server.domain.comment.CommentService;
-import threads.server.domain.comment.dto.CommentDTO;
+import threads.server.domain.comment.dto.CommentDto;
 import threads.server.domain.comment.dto.CreatingCommentDTO;
 import threads.server.domain.comment.dto.DeletingCommentDTO;
 import threads.server.domain.comment.dto.UpdatingCommentDTO;
-import threads.server.domain.user.dto.UserDTO;
+import threads.server.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -46,7 +46,7 @@ public class CommentControllerTest {
     @DisplayName("성공 케이스")
     class 성공 {
         private LocalDateTime today;
-        private final UserDTO userDto = UserDTO.builder().id(1L).build();
+        private final UserDto userDto = UserDto.builder().id(1L).build();
 
         @BeforeEach
         void 설정() {
@@ -55,7 +55,7 @@ public class CommentControllerTest {
 
         @Test
         void 댓글_생성() throws Exception {
-            CommentDTO comment = new CommentDTO(1L, userDto, 1L, "댓글", today, today);
+            CommentDto comment = new CommentDto(1L, userDto, 1L, "댓글", today, today);
             given(commentService.save(any())).willReturn(comment);
 
 
@@ -84,7 +84,7 @@ public class CommentControllerTest {
 
         @Test
         void 댓글_수정() throws Exception {
-            CommentDTO comment = new CommentDTO(1L, userDto, 1L, "댓글", today, today);
+            CommentDto comment = new CommentDto(1L, userDto, 1L, "댓글", today, today);
             given(commentService.update(any())).willReturn(comment);
 
             UpdatingCommentDTO commentDto = new UpdatingCommentDTO(comment.id(), comment.user().id(), comment.postId(), comment.content());

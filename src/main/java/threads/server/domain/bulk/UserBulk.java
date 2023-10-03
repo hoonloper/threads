@@ -21,7 +21,7 @@ public class UserBulk {
     }
 
     private void batchInsert(int batchSize) {
-        String sql = "INSERT INTO users (email, password, name, nickname, user_role, created_at, last_modified_at) values ( ?, ?, ?, ?, ?, ?, ? )";
+        String sql = "INSERT INTO users (email, password, name, nickname, link, introduction, is_hidden, user_role, created_at, last_modified_at) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -29,9 +29,12 @@ public class UserBulk {
                 ps.setString(2, "password" + i);
                 ps.setString(3, "name" + i);
                 ps.setString(4, "nickname" + i);
-                ps.setString(5, "USER");
-                ps.setObject(6, LocalDateTime.now());
-                ps.setObject(7, LocalDateTime.now());
+                ps.setString(5, "https://naver.com");
+                ps.setString(6, "내 자기소개는 몇 번째 ? " + (i + 1));
+                ps.setBoolean(7, false);
+                ps.setString(8, "USER");
+                ps.setObject(9, LocalDateTime.now());
+                ps.setObject(10, LocalDateTime.now());
             }
 
             @Override

@@ -18,7 +18,7 @@ public class LikeCommentService implements LikeService {
 
     public void save(CreatingLikeDto likeDto) {
         User user = new User(likeDto.getUserId());
-        Comment comment = new Comment(likeDto.getTargetId());
+        Comment comment = Comment.builder().id(likeDto.getTargetId()).build();
         likeCommentRepository.save(new LikeComment(null, user, comment, LocalDateTime.now()));
     }
 

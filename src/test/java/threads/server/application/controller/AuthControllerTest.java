@@ -17,7 +17,7 @@ import threads.server.domain.user.UserRole;
 import threads.server.domain.user.UserService;
 import threads.server.domain.user.dto.SignInDTO;
 import threads.server.domain.user.dto.SignUpDTO;
-import threads.server.domain.user.dto.UserDTO;
+import threads.server.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -57,7 +57,7 @@ public class AuthControllerTest {
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
             String json = mapper.writeValueAsString(signUpDto);
-            UserDTO returnValue = new UserDTO(1L, signUpDto.email(), signUpDto.name(), signUpDto.nickname(), signUpDto.userRole(), today, today);
+            UserDto returnValue = new UserDto(1L, signUpDto.email(), signUpDto.name(), signUpDto.nickname(), signUpDto.userRole(), today, today);
             given(userService.signUp(any())).willReturn(returnValue);
 
             mvc.perform(post(END_POINT + "/sign-up")
@@ -78,7 +78,7 @@ public class AuthControllerTest {
         @Test
         void 로그인() throws Exception {
             String EMAIL = "test@test.com";
-            UserDTO returnValue = new UserDTO(1L, EMAIL, "로그인테스트", "로그인테스트", UserRole.USER, today, today);
+            UserDto returnValue = new UserDto(1L, EMAIL, "로그인테스트", "로그인테스트", UserRole.USER, today, today);
             given(userService.signIn(any())).willReturn(returnValue);
 
             SignInDTO signInDto = new SignInDTO(EMAIL, "A!@$!B@F#BRa1");

@@ -3,14 +3,19 @@ package threads.server.domain.reply;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.comment.Comment;
 import threads.server.domain.like.repository.LikeCommentRepository;
+import threads.server.domain.like.repository.LikeReplyRepository;
 import threads.server.domain.reply.dto.*;
+import threads.server.domain.reply.repository.ReplyRepository;
+import threads.server.domain.reply.repository.ReplyRepositorySupport;
 import threads.server.domain.user.User;
+import threads.server.domain.user.dto.UserDto;
 
 import java.util.List;
 
@@ -21,11 +26,12 @@ import static threads.server.domain.reply.dto.ReplyDto.toReplyDto;
 public class ReplyService {
     private final ReplyRepository replyRepository;
 
-    private final LikeCommentRepository likeCommentRepository;
+    private final ReplyRepositorySupport replyRepositorySupport;
+    private final LikeReplyRepository likeReplyRepository;
 
     public ReplyDto save(CreatingReplyDto replyDto) {
         User user = new User(replyDto.getUserId());
-        Comment comment = new Comment(replyDto.getCommentId());
+        Comment comment = Comment.builder().id(replyDto.getCommentId()).build();
         return toReplyDto(replyRepository.save(new Reply(null, user, comment, replyDto.getContent())));
     }
 
@@ -51,14 +57,16 @@ public class ReplyService {
     }
 
     public ReadReplyDto findAllByCommentId(Pageable pageable, Long commentId, Long userId) {
-        Page<Reply> replies = replyRepository.findAllReplies(pageable, commentId);
-        List<ReplyDto> replyList = replies.stream().map(reply -> {
-            ReplyDto replyDto = toReplyDto(reply);
-            // TODO: replyDto.setReplyCount(replyRepository.countByPostId(reply.getId()));
-            replyDto.setLikeCount(likeCommentRepository.countByCommentId(reply.getId()));
-            replyDto.setLiked(likeCommentRepository.findByUserIdAndCommentId(userId, reply.getId()).isPresent());
-            return replyDto;
-        }).toList();
-        return new ReadReplyDto(replies.getTotalPages(), replies.getTotalElements(), replyList);
+        PageImpl<Reply> replyPage = replyRepositorySupport.findReplyPage(pageable, commentId);
+        List<ReplyDto> replyList = replyRepositorySupport.findAllReplies(pageable, commentId, userId)
+                .stream()
+                .map(reply -> {
+                    reply.setLikeCount(likeReplyRepository.countByReplyId(reply.getId()));
+                    reply.setLiked(likeReplyRepository.findByUserIdAndReplyId(userId, reply.getId()).isPresent());
+                    reply.setUser(UserDto.toDto(reply.getUserEntity()));
+                    return reply;
+                }
+        ).toList();
+        return new ReadReplyDto(replyPage.getTotalPages(), replyPage.getTotalElements(), replyList);
     }
 }

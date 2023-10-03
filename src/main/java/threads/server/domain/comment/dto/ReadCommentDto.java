@@ -10,5 +10,5 @@ import java.util.List;
 public class ReadCommentDto {
     Integer totalPage;
     Long totalElement;
-    List<CommentDTO> items;
+    List<CommentDto> items;
 }
