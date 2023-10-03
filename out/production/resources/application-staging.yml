@@ -29,3 +29,7 @@ logging:
   org:
     hibernate:
       type: trace
+
+
+server:
+  allowed-origin: ${ALLOWED_ORIGIN}
