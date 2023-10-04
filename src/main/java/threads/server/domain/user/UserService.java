@@ -59,4 +59,20 @@ public class UserService {
                 .items(userDtoList)
                 .build();
     }
+
+    public ReadUserDto search(Pageable pageable, String keyword, Long userId) {
+        List<Long> followingIds = followRepository.findAllByFollowingIds(userId);
+        followingIds.add(userId);
+
+        PageImpl<User> searchedUserPage = userRepositorySupport.findKeywordPageByKeyword(pageable, keyword, followingIds);
+
+        // 검색은 팔로워 수를 세지 않음, 나중에 기획이 변경되면 추가될 수도
+        List<UserDto> userDtoList = userRepositorySupport.searchByUnfollowers(pageable, keyword, followingIds);
+
+        return ReadUserDto.builder()
+                .totalPage(searchedUserPage.getTotalPages())
+                .totalElement(searchedUserPage.getTotalElements())
+                .items(userDtoList)
+                .build();
+    }
 }
