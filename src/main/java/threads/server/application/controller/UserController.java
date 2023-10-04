@@ -25,6 +25,17 @@ public class UserController {
     private final PostService postService;
     private final CommentService commentService;
 
+    @Operation(summary = "유저 검색", description = "검색된 유저 목록을 가져옵니다.", tags = { "유저 API" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(schema = @Schema(implementation = ReadUserDto.class))
+            ),
+    })
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ReadUserDto search(Pageable pageable, @RequestParam(value = "keyword") String keyword, @RequestParam(value = "userId") Long userId) {
+        return userService.search(pageable, keyword, userId);
+    }
 
     @Operation(summary = "유저 조회", description = "유저 목록을 가져옵니다.", tags = { "유저 API" })
     @ApiResponses({
