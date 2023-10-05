@@ -23,19 +23,10 @@ public class UserService {
     private final UserRepositorySupport userRepositorySupport;
     private final FollowRepository followRepository;
 
-    public UserDto signUp(SignUpDTO userDTO) {
-        userRepository.findByEmail(userDTO.email()).ifPresent((user) -> {
-            throw new BadRequestException("이미 존재하는 이메일입니다.");
-        });
-
-        User user = userRepository.save(new User(null, userDTO.email(), userDTO.password(), userDTO.name(), userDTO.nickname(), userDTO.userRole(), null, null, false));
-        return toDto(user);
-    }
-
-    public UserDto signIn(SignInDTO userDTO) {
-        String password = userDTO.password();
-        User user = userRepository.findOneByEmailAndPassword(userDTO.email(), password).orElseThrow(() -> new NotFoundException("회원 정보가 없습니다."));
-        return toDto(user);
+    public UserDto getOneByUserId(Long userId, Long visitorId) {
+        UserDto userDto = userRepositorySupport.findOneByUserId(userId);
+        userDto.setFollowed(followRepository.findByToUserIdAndFromUserId(userId, visitorId).isPresent());
+        return userDto;
     }
 
     public ReadUserDto findAllUnfollowersByUserId(Pageable pageable, Long userId) {
@@ -49,6 +40,7 @@ public class UserService {
                     // 팔로워 수를 map 내부에서 찾는 이유는
                     // follow가 매우 많아질 경우 한방 쿼리로 모든 유저의 팔로워를 구한 후 page로 자르는 것보다 성능상 이점을 취할 수 있다고 판단
                     user.setFollowerCount(followRepository.countByToUserId(user.getId()));
+                    user.setFollowingCount(followRepository.countByFromUserId(user.getId()));
                     return user;
                 })
                 .toList();
@@ -65,7 +57,6 @@ public class UserService {
         followingIds.add(userId);
 
         PageImpl<User> searchedUserPage = userRepositorySupport.findKeywordPageByKeyword(pageable, keyword, followingIds);
-
         // 검색은 팔로워 수를 세지 않음, 나중에 기획이 변경되면 추가될 수도
         List<UserDto> userDtoList = userRepositorySupport.searchByUnfollowers(pageable, keyword, followingIds);
 
@@ -75,4 +66,20 @@ public class UserService {
                 .items(userDtoList)
                 .build();
     }
+
+//    스프링에서는 인증, 인가가 이뤄지지 않음
+//    public UserDto signUp(SignUpDTO userDTO) {
+//        userRepository.findByEmail(userDTO.email()).ifPresent((user) -> {
+//            throw new BadRequestException("이미 존재하는 이메일입니다.");
+//        });
+//
+//        User user = userRepository.save(new User(null, userDTO.email(), userDTO.password(), userDTO.name(), userDTO.nickname(), userDTO.userRole(), null, null, false, null, null));
+//        return toDto(user);
+//    }
+//
+//    public UserDto signIn(SignInDTO userDTO) {
+//        String password = userDTO.password();
+//        User user = userRepository.findOneByEmailAndPassword(userDTO.email(), password).orElseThrow(() -> new NotFoundException("회원 정보가 없습니다."));
+//        return toDto(user);
+//    }
 }

@@ -11,11 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
+import threads.server.domain.follow.QFollow;
 import threads.server.domain.user.dto.UserDto;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static threads.server.domain.follow.QFollow.follow;
 import static threads.server.domain.user.QUser.user;
 
 @Repository
@@ -25,6 +27,35 @@ public class UserRepositorySupport extends QuerydslRepositorySupport {
     public UserRepositorySupport(JPAQueryFactory queryFactory) {
         super(User.class);
         this.queryFactory = queryFactory;
+    }
+
+    public UserDto findOneByUserId(Long userId) {
+        QFollow toFollow = new QFollow("toUser");
+        QFollow fromFollow = new QFollow("fromUser");
+        return queryFactory
+                .select(
+                        Projections.bean(
+                                UserDto.class,
+                                user.id,
+                                user.email,
+                                user.name,
+                                user.nickname,
+                                user.link,
+                                user.introduction,
+                                user.isHidden,
+                                user.userRole,
+                                user.createdAt,
+                                user.lastModifiedAt,
+                                toFollow.countDistinct().as("followerCount"),
+                                fromFollow.countDistinct().as("followingCount")
+                        )
+                )
+                .from(user)
+                .where(user.id.eq(userId))
+                .leftJoin(user.toFollows, toFollow)
+                .leftJoin(user.fromFollows, fromFollow)
+                .groupBy(user.id)
+                .fetchOne();
     }
 
     public PageImpl<User> findUserPageByFollowingIds(Pageable pageable, List<Long> followingIds){
