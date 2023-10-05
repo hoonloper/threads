@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import threads.server.domain.follow.FollowRepository;
 import threads.server.domain.user.dto.ReadUserDto;
 import threads.server.domain.user.dto.UserDto;
+import threads.server.domain.user.repository.UserRepository;
+import threads.server.domain.user.repository.UserRepositorySupport;
 
 import java.util.List;
 

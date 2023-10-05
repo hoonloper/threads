@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import threads.server.domain.follow.dto.FollowingDTO;
 import threads.server.domain.follow.dto.UnfollowingDTO;
 import threads.server.domain.user.User;
-import threads.server.domain.user.UserRepository;
+import threads.server.domain.user.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

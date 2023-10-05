@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import threads.server.application.exception.BadRequestException;
 import threads.server.domain.user.dto.SignUpDto;
 import threads.server.domain.user.dto.UserDto;
+import threads.server.domain.user.repository.UserRepository;
 
 
 import static org.assertj.core.api.Assertions.assertThat;

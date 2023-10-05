@@ -1,4 +1,4 @@
-package threads.server.domain.user;
+package threads.server.domain.user.repository;
 
 
 import com.querydsl.core.types.Order;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 import threads.server.domain.follow.QFollow;
+import threads.server.domain.user.User;
 import threads.server.domain.user.dto.UserDto;
 
 import java.util.Arrays;
