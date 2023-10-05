@@ -15,8 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import threads.server.domain.user.UserRole;
 import threads.server.domain.user.UserService;
-import threads.server.domain.user.dto.SignInDTO;
-import threads.server.domain.user.dto.SignUpDTO;
+import threads.server.domain.user.dto.SignInDto;
+import threads.server.domain.user.dto.SignUpDto;
 import threads.server.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
@@ -52,7 +52,7 @@ public class AuthControllerTest {
 
         @Test
         void 회원가입() throws Exception {
-            SignUpDTO signUpDto = new SignUpDTO("test@test.com", "A!@$!B@F#BRa1", "이름", "닉네임", UserRole.USER);
+            SignUpDto signUpDto = new SignUpDto("test@test.com", "A!@$!B@F#BRa1", "이름", "닉네임", UserRole.USER);
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -81,7 +81,7 @@ public class AuthControllerTest {
             UserDto returnValue = new UserDto(1L, EMAIL, "로그인테스트", "로그인테스트", UserRole.USER, today, today);
             given(userService.signIn(any())).willReturn(returnValue);
 
-            SignInDTO signInDto = new SignInDTO(EMAIL, "A!@$!B@F#BRa1");
+            SignInDto signInDto = new SignInDto(EMAIL, "A!@$!B@F#BRa1");
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

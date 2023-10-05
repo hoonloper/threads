@@ -4,17 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import threads.server.application.exception.BadRequestException;
-import threads.server.application.exception.NotFoundException;
 import threads.server.domain.follow.FollowRepository;
 import threads.server.domain.user.dto.ReadUserDto;
-import threads.server.domain.user.dto.SignInDTO;
-import threads.server.domain.user.dto.SignUpDTO;
 import threads.server.domain.user.dto.UserDto;
 
 import java.util.List;
-
-import static threads.server.domain.user.dto.UserDto.toDto;
 
 @Service
 @RequiredArgsConstructor

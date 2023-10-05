@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import threads.server.domain.user.UserRole;
 
-public record SignUpDTO(
+public record SignUpDto(
         @Email
         @NotEmpty
         @NotBlank

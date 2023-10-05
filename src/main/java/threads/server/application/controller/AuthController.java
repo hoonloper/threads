@@ -1,19 +1,5 @@
 package threads.server.application.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import threads.server.domain.user.dto.SignInDTO;
-import threads.server.domain.user.dto.SignUpDTO;
-import threads.server.domain.user.dto.UserDto;
-import threads.server.domain.user.UserService;
-
 // 인증 관련 API는 Nuxt server에서 관리하는 것으로 변경해서 AuthContoller는 주석처리
 //@RestController
 //@RequestMapping("/api/v1/auth")

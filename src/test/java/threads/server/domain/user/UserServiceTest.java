@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import threads.server.application.exception.BadRequestException;
-import threads.server.domain.user.dto.SignUpDTO;
+import threads.server.domain.user.dto.SignUpDto;
 import threads.server.domain.user.dto.UserDto;
 
 
@@ -35,7 +35,7 @@ public class UserServiceTest {
         @Test
         @DisplayName("회원가입 테스트")
         void 회원가입() {
-            SignUpDTO inputUserDto = new SignUpDTO(EMAIL, PASSWORD, NAME, NICKNAME, UserRole.USER);
+            SignUpDto inputUserDto = new SignUpDto(EMAIL, PASSWORD, NAME, NICKNAME, UserRole.USER);
             UserDto outputUserDto = userService.signUp(inputUserDto);
 
             assertThat(outputUserDto).isNotNull();
@@ -52,7 +52,7 @@ public class UserServiceTest {
         @Test
         @DisplayName("회원가입 존재하는 이메일")
         void 회원가입() {
-            SignUpDTO inputUserDto = new SignUpDTO(EMAIL, PASSWORD, NAME, NICKNAME, UserRole.USER);
+            SignUpDto inputUserDto = new SignUpDto(EMAIL, PASSWORD, NAME, NICKNAME, UserRole.USER);
             userService.signUp(inputUserDto);
 
             String FAIL_MESSAGE = "이미 존재하는 이메일입니다.";
