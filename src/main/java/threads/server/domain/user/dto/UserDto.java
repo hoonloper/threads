@@ -3,6 +3,7 @@ package threads.server.domain.user.dto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import threads.server.domain.user.User;
 import threads.server.domain.user.UserRole;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@ToString
 public class UserDto {
     private Long id;
     private String email;
@@ -23,6 +25,8 @@ public class UserDto {
     private LocalDateTime lastModifiedAt;
 
     private Long followerCount;
+    private Long followingCount;
+    private Boolean followed;
 
     @Builder
     public UserDto(Long id, String email, String name, String nickname, String link, String introduction, Boolean isHidden, UserRole userRole, LocalDateTime createdAt, LocalDateTime lastModifiedAt) {

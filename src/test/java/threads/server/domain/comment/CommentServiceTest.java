@@ -13,7 +13,7 @@ import threads.server.domain.comment.repository.CommentRepository;
 import threads.server.domain.post.Post;
 import threads.server.domain.post.repository.PostRepository;
 import threads.server.domain.user.User;
-import threads.server.domain.user.UserRepository;
+import threads.server.domain.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 

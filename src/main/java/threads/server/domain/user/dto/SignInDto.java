@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 
-public record SignInDTO(
+public record SignInDto(
         @Email
         @NotEmpty
         @NotBlank

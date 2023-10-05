@@ -16,6 +16,7 @@ import threads.server.domain.post.PostService;
 import threads.server.domain.post.dto.ReadPostDto;
 import threads.server.domain.user.UserService;
 import threads.server.domain.user.dto.ReadUserDto;
+import threads.server.domain.user.dto.UserDto;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -24,6 +25,19 @@ public class UserController {
     private final UserService userService;
     private final PostService postService;
     private final CommentService commentService;
+
+
+    @Operation(summary = "단일 유저 조회", description = "조회된 유저 정보를 가져옵니다.", tags = { "유저 API" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(schema = @Schema(implementation = UserDto.class))
+            ),
+    })
+    @GetMapping("/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto search(@PathVariable(value = "userId") Long userId, @RequestParam("visitorId") Long visitorId) {
+        return userService.getOneByUserId(userId, visitorId);
+    }
 
     @Operation(summary = "유저 검색", description = "검색된 유저 목록을 가져옵니다.", tags = { "유저 API" })
     @ApiResponses({

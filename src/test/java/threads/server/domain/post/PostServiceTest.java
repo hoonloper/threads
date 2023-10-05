@@ -11,7 +11,7 @@ import threads.server.domain.post.dto.DeletingPostDto;
 import threads.server.domain.post.dto.UpdatingPostDto;
 import threads.server.domain.post.repository.PostRepository;
 import threads.server.domain.user.User;
-import threads.server.domain.user.UserRepository;
+import threads.server.domain.user.repository.UserRepository;
 import threads.server.domain.user.UserRole;
 
 import static org.assertj.core.api.Assertions.assertThat;
