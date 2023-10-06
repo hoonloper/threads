@@ -30,22 +30,30 @@ public class CommentService {
     private final ReplyRepositorySupport replyRepositorySupport;
 
     public CommentDto save(CreatingCommentDto commentDto) {
-        User user = new User(commentDto.userId());
-        Post post = new Post(commentDto.postId());
-        return toCommentDto(commentRepository.save(Comment.builder().user(user).post(post).content(commentDto.content()).build()));
+        User user = new User(commentDto.getUserId());
+        Post post = new Post(commentDto.getPostId());
+        return toCommentDto(
+                commentRepository.save(
+                        Comment.builder()
+                                .user(user)
+                                .post(post)
+                                .content(commentDto.getContent())
+                                .build()
+                )
+        );
     }
 
     public CommentDto update(UpdatingCommentDto commentDto) {
-        Comment comment = commentRepository.findById(commentDto.id()).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
-        authorizeUser(commentDto.userId(), comment.getUser().getId());
-        comment.change(commentDto.content());
+        Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
+        authorizeUser(commentDto.getUserId(), comment.getUser().getId());
+        comment.change(commentDto.getContent());
         commentRepository.save(comment);
         return toCommentDto(comment);
     }
 
-    public void delete(DeletingCommentDto commentDto) {
-        Comment comment = commentRepository.findById(commentDto.id()).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
-        authorizeUser(commentDto.userId(), comment.getUser().getId());
+    public void delete(Long commentId, Long userId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
+        authorizeUser(userId, comment.getUser().getId());
         commentRepository.delete(comment);
     }
 

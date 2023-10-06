@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class CommentController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentDto createComment(@RequestBody CreatingCommentDto commentDto) {
+    public CommentDto createComment(@RequestBody @Valid CreatingCommentDto commentDto) {
         return commentService.save(commentDto);
     }
 
@@ -42,19 +43,19 @@ public class CommentController {
     })
     @PatchMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentDto updateComment(@RequestBody UpdatingCommentDto commentDto) {
+    public CommentDto updateComment(@RequestBody @Valid UpdatingCommentDto commentDto) {
         return commentService.update(commentDto);
     }
 
 
-    @Operation(summary = "댓글 삭제", description = "쓰레드에 자신의 댓글을 삭제합니다.", tags = { "댓글 API" })
+    @Operation(summary = "댓글 삭제", description = "쓰레드에 있는 자신의 댓글을 삭제합니다.", tags = { "댓글 API" })
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
     })
-    @DeleteMapping
+    @DeleteMapping("{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeComment(@RequestBody DeletingCommentDto commentDto) {
-        commentService.delete(commentDto);
+    public void removeComment(@PathVariable("commentId") Long commentId, @RequestParam("userId") Long userId) {
+        commentService.delete(commentId, userId);
     }
 
 
