@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class ReplyController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ReplyDto createReply(@RequestBody CreatingReplyDto replyDto) {
+    public ReplyDto createReply(@RequestBody @Valid CreatingReplyDto replyDto) {
         return replyService.save(replyDto);
     }
 
@@ -39,10 +40,10 @@ public class ReplyController {
                     content = @Content(schema = @Schema(implementation = ReplyDto.class))
             ),
     })
-    @PatchMapping
+    @PatchMapping("{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ReplyDto updateReply(@RequestBody UpdatingReplyDto replyDto) {
-        return replyService.update(replyDto);
+    public ReplyDto updateReply(@RequestBody @Valid UpdatingReplyDto replyDto, @PathVariable("id") Long id) {
+        return replyService.update(replyDto, id);
     }
 
 
@@ -50,9 +51,9 @@ public class ReplyController {
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
     })
-    @DeleteMapping
+    @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeReply(@RequestBody DeletingReplyDto replyDto) {
-        replyService.delete(replyDto);
+    public void removeReply(@PathVariable("id") Long id, @RequestParam("userId") Long userId) {
+        replyService.delete(id, userId);
     }
 }
