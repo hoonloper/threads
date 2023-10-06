@@ -1,6 +1,7 @@
 package threads.server.domain.comment.dto;
 
-public record CreatingCommentDTO(
+public record UpdatingCommentDto(
+        Long id,
         Long userId,
         Long postId,
         String content

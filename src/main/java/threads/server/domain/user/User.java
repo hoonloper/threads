@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import threads.server.domain.common.BaseTime;
 import threads.server.domain.follow.Follow;
-import threads.server.domain.like.entity.LikePost;
 
 import java.util.ArrayList;
 import java.util.List;

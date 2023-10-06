@@ -17,7 +17,6 @@ import threads.server.domain.reply.repository.ReplyRepositorySupport;
 import threads.server.domain.user.User;
 import threads.server.domain.user.dto.UserDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static threads.server.domain.comment.dto.CommentDto.toCommentDto;
@@ -30,13 +29,13 @@ public class CommentService {
     private final CommentRepositorySupport commentRepositorySupport;
     private final ReplyRepositorySupport replyRepositorySupport;
 
-    public CommentDto save(CreatingCommentDTO commentDto) {
+    public CommentDto save(CreatingCommentDto commentDto) {
         User user = new User(commentDto.userId());
         Post post = new Post(commentDto.postId());
         return toCommentDto(commentRepository.save(Comment.builder().user(user).post(post).content(commentDto.content()).build()));
     }
 
-    public CommentDto update(UpdatingCommentDTO commentDto) {
+    public CommentDto update(UpdatingCommentDto commentDto) {
         Comment comment = commentRepository.findById(commentDto.id()).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
         authorizeUser(commentDto.userId(), comment.getUser().getId());
         comment.change(commentDto.content());
@@ -44,7 +43,7 @@ public class CommentService {
         return toCommentDto(comment);
     }
 
-    public void delete(DeletingCommentDTO commentDto) {
+    public void delete(DeletingCommentDto commentDto) {
         Comment comment = commentRepository.findById(commentDto.id()).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
         authorizeUser(commentDto.userId(), comment.getUser().getId());
         commentRepository.delete(comment);

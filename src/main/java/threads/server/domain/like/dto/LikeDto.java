@@ -4,7 +4,7 @@ import threads.server.domain.like.LikeType;
 
 import java.time.LocalDateTime;
 
-public class LikeDTO {
+public class LikeDto {
     private Long id;
     private Long userId;
     private Long targetId;

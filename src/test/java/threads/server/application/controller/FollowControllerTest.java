@@ -13,8 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import threads.server.domain.follow.FollowService;
-import threads.server.domain.follow.dto.FollowingDTO;
-import threads.server.domain.follow.dto.UnfollowingDTO;
+import threads.server.domain.follow.dto.FollowingDto;
+import threads.server.domain.follow.dto.UnfollowingDto;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,7 +37,7 @@ public class FollowControllerTest {
     class 성공 {
         @Test
         void 팔로우하기() throws Exception {
-            FollowingDTO followingDto = new FollowingDTO(1L, 2L);
+            FollowingDto followingDto = new FollowingDto(1L, 2L);
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -53,7 +53,7 @@ public class FollowControllerTest {
 
         @Test
         void 팔로우끊기() throws Exception {
-            UnfollowingDTO followingDto = new UnfollowingDTO(1L, 1L, 2L);
+            UnfollowingDto followingDto = new UnfollowingDto(1L, 1L, 2L);
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

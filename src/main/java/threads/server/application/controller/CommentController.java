@@ -30,8 +30,8 @@ public class CommentController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentDto createComment(@RequestBody CreatingCommentDTO commentDTO) {
-        return commentService.save(commentDTO);
+    public CommentDto createComment(@RequestBody CreatingCommentDto commentDto) {
+        return commentService.save(commentDto);
     }
 
     @Operation(summary = "댓글 수정", description = "쓰레드에 자신의 댓글을 수정합니다.", tags = { "댓글 API" })
@@ -42,8 +42,8 @@ public class CommentController {
     })
     @PatchMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentDto updateComment(@RequestBody UpdatingCommentDTO commentDTO) {
-        return commentService.update(commentDTO);
+    public CommentDto updateComment(@RequestBody UpdatingCommentDto commentDto) {
+        return commentService.update(commentDto);
     }
 
 
@@ -53,7 +53,7 @@ public class CommentController {
     })
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeComment(@RequestBody DeletingCommentDTO commentDto) {
+    public void removeComment(@RequestBody DeletingCommentDto commentDto) {
         commentService.delete(commentDto);
     }
 

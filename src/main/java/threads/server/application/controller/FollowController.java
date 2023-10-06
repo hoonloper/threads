@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import threads.server.domain.follow.FollowService;
-import threads.server.domain.follow.dto.FollowingDTO;
-import threads.server.domain.follow.dto.UnfollowingDTO;
+import threads.server.domain.follow.dto.FollowingDto;
+import threads.server.domain.follow.dto.UnfollowingDto;
 
 @RestController
 @RequestMapping("/api/v1/follows")
@@ -22,8 +22,8 @@ public class FollowController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void follow(@RequestBody FollowingDTO followDTO) {
-        followService.follow(followDTO);
+    public void follow(@RequestBody FollowingDto followDto) {
+        followService.follow(followDto);
     }
 
 
@@ -33,7 +33,7 @@ public class FollowController {
     })
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void unfollow(@RequestBody UnfollowingDTO followDto) {
+    public void unfollow(@RequestBody UnfollowingDto followDto) {
         followService.unfollow(followDto);
     }
 }

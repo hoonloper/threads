@@ -1,6 +1,6 @@
 package threads.server.domain.comment.dto;
 
-public record DeletingCommentDTO(
+public record DeletingCommentDto(
         Long id,
         Long userId
 ) {}
