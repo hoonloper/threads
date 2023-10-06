@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -56,7 +57,7 @@ public class PostController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostDto createPost(@RequestBody CreatingPostDto postDTO) {
+    public PostDto createPost(@RequestBody @Valid CreatingPostDto postDTO) {
         return postService.save(postDTO);
     }
 
@@ -68,7 +69,7 @@ public class PostController {
     })
     @PatchMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostDto updatePost(@RequestBody UpdatingPostDto postDTO) {
+    public PostDto updatePost(@RequestBody @Valid UpdatingPostDto postDTO) {
         return postService.update(postDTO);
     }
 
@@ -77,10 +78,10 @@ public class PostController {
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
     })
-    @DeleteMapping
+    @DeleteMapping("{postId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removePost(@RequestBody DeletingPostDto postDTO) {
-        postService.remove(postDTO);
+    public void removePost(@PathVariable("postId") Long postId, @RequestParam("userId") Long userId) {
+        postService.remove(postId, userId);
     }
 
     @Operation(summary = "쓰레드의 답글 조회", description = "쓰레드에 작성된 답글을 가져옵니다.", tags = { "쓰레드 API" })

@@ -50,22 +50,22 @@ public class PostService {
     }
 
     public PostDto save(CreatingPostDto postDto) {
-        Post post = postRepository.save(new Post(null, new User(postDto.userId()), postDto.content()));
+        Post post = postRepository.save(new Post(null, new User(postDto.getUserId()), postDto.getContent()));
         return toPostDto(post);
     }
 
     public PostDto update(UpdatingPostDto postDto) {
-        Post post = postRepository.findById(postDto.id()).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        authorizeUser(postDto.userId(), post.getUser().getId());
-        post.change(postDto.content());
+        Post post = postRepository.findById(postDto.getId()).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
+        authorizeUser(postDto.getUserId(), post.getUser().getId());
+        post.change(postDto.getContent());
         postRepository.save(post);
         return toPostDto(post);
     }
 
 
-    public void remove(DeletingPostDto postDto) {
-        Post post = postRepository.findById(postDto.id()).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        authorizeUser(postDto.userId(), post.getUser().getId());
+    public void remove(Long postId, Long userId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
+        authorizeUser(userId, post.getUser().getId());
         postRepository.delete(post);
     }
 
