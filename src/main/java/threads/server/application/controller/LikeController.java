@@ -3,6 +3,7 @@ package threads.server.application.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class LikeController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void like(@RequestBody CreatingLikeDto likeDto) {
+    public void like(@RequestBody @Valid CreatingLikeDto likeDto) {
         switch (likeDto.getType()) {
             case POST -> likePostService.save(likeDto);
             case COMMENT -> likeCommentService.save(likeDto);
@@ -42,7 +43,7 @@ public class LikeController {
     })
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeLike(@RequestBody DeletingLikeDto likeDto) {
+    public void removeLike(@RequestBody @Valid DeletingLikeDto likeDto) {
         switch (likeDto.getType()) {
             case POST -> likePostService.delete(likeDto);
             case COMMENT -> likeCommentService.delete(likeDto);
