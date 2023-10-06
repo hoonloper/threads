@@ -3,6 +3,7 @@ package threads.server.application.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class FollowController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void follow(@RequestBody FollowingDto followDto) {
+    public void follow(@RequestBody @Valid FollowingDto followDto) {
         followService.follow(followDto);
     }
 
@@ -33,7 +34,7 @@ public class FollowController {
     })
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void unfollow(@RequestBody UnfollowingDto followDto) {
+    public void unfollow(@RequestBody @Valid UnfollowingDto followDto) {
         followService.unfollow(followDto);
     }
 }
