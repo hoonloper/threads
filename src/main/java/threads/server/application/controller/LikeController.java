@@ -2,7 +2,6 @@ package threads.server.application.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,9 +22,7 @@ public class LikeController {
     private final LikeReplyService likeReplyService;
 
     @Operation(summary = "좋아요 하기", description = "쓰레드 or 댓글 or 답글을 '좋아요'합니다.", tags = { "좋아요 API" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "CREATED"),
-    })
+    @ApiResponse(responseCode = "201", description = "CREATED")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void like(@RequestBody @Valid CreatingLikeDto likeDto) {
@@ -38,9 +35,7 @@ public class LikeController {
     }
 
     @Operation(summary = "좋아요 취소", description = "쓰레드 or 댓글 or 답글 좋아요를 취소합니다.", tags = { "좋아요 API" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
-    })
+    @ApiResponse(responseCode = "204", description = "NO_CONTENT")
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeLike(@RequestBody @Valid DeletingLikeDto likeDto) {
