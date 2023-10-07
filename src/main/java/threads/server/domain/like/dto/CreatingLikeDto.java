@@ -16,6 +16,6 @@ public class CreatingLikeDto {
     @Positive
     private Long targetId;
 
-    @NotBlank
+    // TODO: ENUM 타입 검증
     private LikeType type;
 }

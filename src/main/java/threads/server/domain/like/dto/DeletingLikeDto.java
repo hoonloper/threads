@@ -16,6 +16,5 @@ public class DeletingLikeDto {
     @Positive
     private Long targetId;
 
-    @NotBlank
     private LikeType type;
 }
