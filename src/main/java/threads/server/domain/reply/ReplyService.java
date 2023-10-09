@@ -35,17 +35,17 @@ public class ReplyService {
         return toReplyDto(replyRepository.save(new Reply(null, user, comment, replyDto.getContent())));
     }
 
-    public ReplyDto update(UpdatingReplyDto replyDto) {
-        Reply reply = replyRepository.findById(replyDto.getId()).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
+    public ReplyDto update(UpdatingReplyDto replyDto, Long id) {
+        Reply reply = replyRepository.findById(id).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
         authorizeUser(replyDto.getUserId(), reply.getUser().getId());
         reply.change(replyDto.getContent());
         replyRepository.save(reply);
         return toReplyDto(reply);
     }
 
-    public void delete(DeletingReplyDto replyDto) {
-        Reply reply = replyRepository.findById(replyDto.getId()).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
-        authorizeUser(replyDto.getUserId(), reply.getUser().getId());
+    public void delete(Long id, Long userId) {
+        Reply reply = replyRepository.findById(id).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
+        authorizeUser(userId, reply.getUser().getId());
         replyRepository.delete(reply);
     }
 

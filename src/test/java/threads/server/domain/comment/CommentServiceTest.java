@@ -48,7 +48,7 @@ public class CommentServiceTest {
         @Test
         @DisplayName("댓글 생성 테스트")
         void 댓글_생성() {
-            CreatingCommentDTO inputCommentDto = new CreatingCommentDTO(savedUser.getId(), savedPost.getId(), "댓글테스트");
+            CreatingCommentDto inputCommentDto = new CreatingCommentDto(savedUser.getId(), savedPost.getId(), "댓글테스트");
             CommentDto outputCommentDto = commentService.save(inputCommentDto);
 
             assertThat(outputCommentDto).isNotNull();
@@ -65,7 +65,7 @@ public class CommentServiceTest {
         void 한개_댓글_수정() {
             Comment savedComment = commentRepository.save(new Comment(null, savedUser, savedPost, "수정전 내용"));
             String CONTENT = "수정할 내용";
-            UpdatingCommentDTO inputCommentDto = new UpdatingCommentDTO(savedComment.getId(), savedUser.getId(), savedPost.getId(), CONTENT);
+            UpdatingCommentDto inputCommentDto = new UpdatingCommentDto(savedComment.getId(), savedUser.getId(), savedPost.getId(), CONTENT);
             CommentDto outputCommentDto = commentService.update(inputCommentDto);
 
             assertThat(outputCommentDto).isNotNull();
@@ -82,7 +82,7 @@ public class CommentServiceTest {
         @DisplayName("한개 댓글 삭제 테스트")
         void 한개_댓글_삭제() {
             Comment savedComment = commentRepository.save(new Comment(null, savedUser, savedPost, "임시 댓글"));
-            DeletingCommentDTO inputCommentDto = new DeletingCommentDTO(savedComment.getId(), savedComment.getUser().getId());
+            DeletingCommentDto inputCommentDto = new DeletingCommentDto(savedComment.getId(), savedComment.getUser().getId());
             commentService.delete(inputCommentDto);
             assertThat(commentRepository.findAll().size()).isNotNull().isEqualTo(0);
         }

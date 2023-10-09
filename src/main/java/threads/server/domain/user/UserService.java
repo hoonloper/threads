@@ -4,6 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import threads.server.domain.activity.Activity;
+import threads.server.domain.activity.ActivityStatus;
+import threads.server.domain.activity.dto.ActivityDto;
+import threads.server.domain.activity.dto.ActivityUserDto;
+import threads.server.domain.activity.dto.ReadActivityDto;
+import threads.server.domain.activity.repository.ActivityRepositorySupport;
 import threads.server.domain.follow.FollowRepository;
 import threads.server.domain.user.dto.ReadUserDto;
 import threads.server.domain.user.dto.UserDto;
@@ -16,8 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final UserRepositorySupport userRepositorySupport;
     private final FollowRepository followRepository;
+    private final UserRepositorySupport userRepositorySupport;
+    private final ActivityRepositorySupport activityRepositorySupport;
 
     public UserDto getOneByUserId(Long userId, Long visitorId) {
         UserDto userDto = userRepositorySupport.findOneByUserId(userId);
@@ -60,6 +67,23 @@ public class UserService {
                 .totalPage(searchedUserPage.getTotalPages())
                 .totalElement(searchedUserPage.getTotalElements())
                 .items(userDtoList)
+                .build();
+    }
+
+    public ReadActivityDto findAllActivitiesByUserId(Pageable pageable, Long userId, ActivityStatus status) {
+        PageImpl<Activity> searchedUserPage = activityRepositorySupport.findActivityPageByUserId(pageable, userId, status);
+        List<ActivityDto> activityDtoList = activityRepositorySupport.findAllActivitiesByUserIdAndStatus(pageable, userId, status)
+                .stream()
+                .map(activity -> {
+                    activity.setFromUser(ActivityUserDto.toActivityUserDto(activity.getFromUserEntity()));
+                    return activity;
+                })
+                .toList();
+
+        return ReadActivityDto.builder()
+                .totalPage(searchedUserPage.getTotalPages())
+                .totalElement(searchedUserPage.getTotalElements())
+                .items(activityDtoList)
                 .build();
     }
 

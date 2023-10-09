@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -25,11 +25,7 @@ public class PostController {
     private final CommentService commentService;
 
     @Operation(summary = "쓰레드 최신 페이지네이션 조회", description = "쓰레드를 최신순으로 페이지네이션합니다.", tags = { "쓰레드 API" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK",
-                    content = @Content(schema = @Schema(implementation = List.class))
-            ),
-    })
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = List.class)))
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ReadPostDto getAllPost(Pageable pageable, @RequestParam(value = "userId") Long userId) {
@@ -37,11 +33,7 @@ public class PostController {
     }
 
     @Operation(summary = "쓰레드 단건 조회", description = "ID에 해당하는 쓰레드 정보를 가져옵니다.", tags = { "쓰레드 API" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK",
-                    content = @Content(schema = @Schema(implementation = PostDto.class))
-            ),
-    })
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PostDto.class)))
     @GetMapping("{postId}")
     @ResponseStatus(HttpStatus.OK)
     public PostDto getOnePost(@PathVariable("postId") Long postId, @RequestParam(value = "userId") Long userId) {
@@ -49,46 +41,32 @@ public class PostController {
     }
 
     @Operation(summary = "쓰레드 생성", description = "쓰레드를 생성합니다.", tags = { "쓰레드 API" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "CREATED",
-                    content = @Content(schema = @Schema(implementation = PostDto.class))
-            ),
-    })
+    @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PostDto.class)))
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostDto createPost(@RequestBody CreatingPostDto postDTO) {
+    public PostDto createPost(@RequestBody @Valid CreatingPostDto postDTO) {
         return postService.save(postDTO);
     }
 
     @Operation(summary = "쓰레드 수정", description = "쓰레드를 수정합니다.", tags = { "쓰레드 API" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "CREATED",
-                    content = @Content(schema = @Schema(implementation = PostDto.class))
-            ),
-    })
+    @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PostDto.class)))
     @PatchMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostDto updatePost(@RequestBody UpdatingPostDto postDTO) {
+    public PostDto updatePost(@RequestBody @Valid UpdatingPostDto postDTO) {
         return postService.update(postDTO);
     }
 
 
     @Operation(summary = "쓰레드 삭제", description = "쓰레드를 삭제합니다.", tags = { "쓰레드 API" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
-    })
-    @DeleteMapping
+    @ApiResponse(responseCode = "204", description = "NO_CONTENT")
+    @DeleteMapping("{postId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removePost(@RequestBody DeletingPostDto postDTO) {
-        postService.remove(postDTO);
+    public void removePost(@PathVariable("postId") Long postId, @RequestParam("userId") Long userId) {
+        postService.remove(postId, userId);
     }
 
     @Operation(summary = "쓰레드의 답글 조회", description = "쓰레드에 작성된 답글을 가져옵니다.", tags = { "쓰레드 API" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK",
-                    content = @Content(schema = @Schema(implementation = CommentDto.class))
-            ),
-    })
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = CommentDto.class)))
     @GetMapping("/{postId}/comments")
     @ResponseStatus(HttpStatus.OK)
     public ReadCommentDto getCommentsByPostId(Pageable pageable, @PathVariable(value = "postId") Long postId, @RequestParam(value = "userId") Long userId) {

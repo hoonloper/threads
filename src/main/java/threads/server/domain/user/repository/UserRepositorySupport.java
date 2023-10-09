@@ -15,10 +15,8 @@ import threads.server.domain.follow.QFollow;
 import threads.server.domain.user.User;
 import threads.server.domain.user.dto.UserDto;
 
-import java.util.Arrays;
 import java.util.List;
 
-import static threads.server.domain.follow.QFollow.follow;
 import static threads.server.domain.user.QUser.user;
 
 @Repository
@@ -141,5 +139,4 @@ public class UserRepositorySupport extends QuerydslRepositorySupport {
                 .toList();
         return orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]);
     }
-
 }

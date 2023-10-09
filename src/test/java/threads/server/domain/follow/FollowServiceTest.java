@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import threads.server.domain.follow.dto.FollowingDTO;
-import threads.server.domain.follow.dto.UnfollowingDTO;
+import threads.server.domain.follow.dto.FollowingDto;
+import threads.server.domain.follow.dto.UnfollowingDto;
 import threads.server.domain.user.User;
 import threads.server.domain.user.repository.UserRepository;
 
@@ -40,7 +40,7 @@ public class FollowServiceTest {
         @Test
         @DisplayName("팔로우 테스트")
         void 팔로우하기() {
-            FollowingDTO inputFollowDto = new FollowingDTO(toUserId, fromUserId);
+            FollowingDto inputFollowDto = new FollowingDto(toUserId, fromUserId);
             followService.follow(inputFollowDto);
             assertThat(followRepository.findAll().size()).isEqualTo(1);
         }
@@ -48,9 +48,9 @@ public class FollowServiceTest {
         @Test
         @DisplayName("팔로우 끊기 테스트")
         void 팔로우끊기() {
-            FollowingDTO followDto = new FollowingDTO(toUserId, fromUserId);
+            FollowingDto followDto = new FollowingDto(toUserId, fromUserId);
             followService.follow(followDto);
-            UnfollowingDTO inputFollowDto = new UnfollowingDTO(1L, toUserId, fromUserId);
+            UnfollowingDto inputFollowDto = new UnfollowingDto(1L, toUserId, fromUserId);
             followService.unfollow(inputFollowDto);
 
             assertThat(followRepository.findAll().size()).isEqualTo(0);

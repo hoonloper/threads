@@ -15,9 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import threads.server.domain.comment.CommentService;
 import threads.server.domain.comment.dto.CommentDto;
-import threads.server.domain.comment.dto.CreatingCommentDTO;
-import threads.server.domain.comment.dto.DeletingCommentDTO;
-import threads.server.domain.comment.dto.UpdatingCommentDTO;
+import threads.server.domain.comment.dto.CreatingCommentDto;
+import threads.server.domain.comment.dto.DeletingCommentDto;
+import threads.server.domain.comment.dto.UpdatingCommentDto;
 import threads.server.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
@@ -59,7 +59,7 @@ public class CommentControllerTest {
             given(commentService.save(any())).willReturn(comment);
 
 
-            CreatingCommentDTO commentDto = new CreatingCommentDTO(comment.user().id(), comment.postId(), comment.content());
+            CreatingCommentDto commentDto = new CreatingCommentDto(comment.user().id(), comment.postId(), comment.content());
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -87,7 +87,7 @@ public class CommentControllerTest {
             CommentDto comment = new CommentDto(1L, userDto, 1L, "댓글", today, today);
             given(commentService.update(any())).willReturn(comment);
 
-            UpdatingCommentDTO commentDto = new UpdatingCommentDTO(comment.id(), comment.user().id(), comment.postId(), comment.content());
+            UpdatingCommentDto commentDto = new UpdatingCommentDto(comment.id(), comment.user().id(), comment.postId(), comment.content());
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -110,7 +110,7 @@ public class CommentControllerTest {
 
         @Test
         void 댓글_삭제() throws Exception {
-            DeletingCommentDTO commentDto = new DeletingCommentDTO(1L, 1L);
+            DeletingCommentDto commentDto = new DeletingCommentDto(1L, 1L);
             ObjectMapper mapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule())
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

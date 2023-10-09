@@ -1,5 +1,8 @@
 package threads.server.application.handler;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,6 +16,7 @@ import threads.server.application.exception.*;
 @Slf4j
 public class CustomExceptionHandler {
     /* Validator Exception */
+    @ApiResponse(responseCode = "400", description = "BAD_REQUEST")
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
@@ -21,6 +25,7 @@ public class CustomExceptionHandler {
         return buildExceptionError(ex, HttpStatus.BAD_REQUEST);
     }
     /* 400 - Bad Request */
+    @ApiResponse(responseCode = "400", description = "BAD_REQUEST")
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
@@ -30,6 +35,7 @@ public class CustomExceptionHandler {
     }
 
     /* 401 - Unauthorized */
+    @ApiResponse(responseCode = "401", description = "UNAUTHORIZED")
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
@@ -39,6 +45,7 @@ public class CustomExceptionHandler {
     }
 
     /* 403 - Forbidden */
+    @ApiResponse(responseCode = "403", description = "FORBIDDEN")
     @ExceptionHandler(ForbiddenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
@@ -48,6 +55,7 @@ public class CustomExceptionHandler {
     }
 
     /* 404 - Not Found */
+    @ApiResponse(responseCode = "404", description = "NOT_FOUND")
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
@@ -58,6 +66,7 @@ public class CustomExceptionHandler {
 
 
     /* 500 - Internal Server Error(and ALL) */
+    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
     @ExceptionHandler({ Exception.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
@@ -68,6 +77,7 @@ public class CustomExceptionHandler {
     }
 
     /* 알 수 없는 에러 */
+    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
