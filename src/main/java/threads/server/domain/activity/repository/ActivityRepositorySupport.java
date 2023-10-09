@@ -16,6 +16,7 @@ import threads.server.domain.user.dto.UserDto;
 import java.util.List;
 
 import static threads.server.domain.activity.QActivity.activity;
+import static threads.server.domain.follow.QFollow.follow;
 import static threads.server.domain.user.QUser.user;
 
 @Repository
@@ -55,7 +56,8 @@ public class ActivityRepositorySupport  extends QuerydslRepositorySupport {
                                 activity.content,
                                 activity.status,
                                 activity.isConfirmed,
-                                activity.issuedAt
+                                activity.issuedAt,
+                                follow.isNotNull().as("followed")
                         )
                 )
                 .from(activity)
@@ -65,6 +67,7 @@ public class ActivityRepositorySupport  extends QuerydslRepositorySupport {
         }
         return activityJPAQueryFactory
                 .leftJoin(user).on(user.id.eq(activity.fromUserId))
+                .leftJoin(follow).on(follow.toUser.id.eq(activity.fromUserId).and(follow.fromUser.id.eq(userId)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(activity.issuedAt.desc())

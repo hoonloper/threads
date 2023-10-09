@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import threads.server.domain.activity.Activity;
 import threads.server.domain.activity.ActivityStatus;
 import threads.server.domain.activity.dto.ActivityDto;
+import threads.server.domain.activity.dto.ActivityUserDto;
 import threads.server.domain.activity.dto.ReadActivityDto;
 import threads.server.domain.activity.repository.ActivityRepositorySupport;
 import threads.server.domain.follow.FollowRepository;
@@ -74,7 +75,7 @@ public class UserService {
         List<ActivityDto> activityDtoList = activityRepositorySupport.findAllActivitiesByUserIdAndStatus(pageable, userId, status)
                 .stream()
                 .map(activity -> {
-                    activity.setFromUser(UserDto.toDto(activity.getFromUserEntity()));
+                    activity.setFromUser(ActivityUserDto.toActivityUserDto(activity.getFromUserEntity()));
                     return activity;
                 })
                 .toList();

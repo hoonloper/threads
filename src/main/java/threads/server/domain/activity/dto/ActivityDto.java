@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import threads.server.domain.activity.ActivityStatus;
 import threads.server.domain.user.User;
-import threads.server.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 
@@ -15,11 +14,12 @@ public class ActivityDto {
 
     @JsonIgnore
     private User fromUserEntity;
-    private UserDto fromUser;
+    private ActivityUserDto fromUser;
 
     private Long targetId;
     private String content;
     private ActivityStatus status;
     private Boolean isConfirmed;
+    private Boolean followed;
     private LocalDateTime issuedAt;
 }
