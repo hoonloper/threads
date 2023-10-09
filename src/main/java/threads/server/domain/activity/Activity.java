@@ -2,6 +2,7 @@ package threads.server.domain.activity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -31,7 +32,7 @@ public class Activity {
     private Long targetId;
 
     @Column(columnDefinition = "TEXT")
-    private Long content;
+    private String content;
 
     @Column(name = "is_confirmed", nullable = false)
     @ColumnDefault(value = "false")
@@ -42,4 +43,13 @@ public class Activity {
 
     @CreatedDate
     private LocalDateTime issuedAt;
+
+    @Builder
+    public Activity(Long toUserId, Long fromUserId, Long targetId, String content, ActivityStatus status) {
+        this.toUserId = toUserId;
+        this.fromUserId = fromUserId;
+        this.targetId = targetId;
+        this.content = content;
+        this.status = status;
+    }
 }
