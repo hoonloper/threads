@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import threads.server.application.exception.BadRequestException;
+import threads.server.domain.activity.ActivityService;
+import threads.server.domain.activity.ActivityStatus;
+import threads.server.domain.activity.dto.SaveActivityDto;
 import threads.server.domain.like.dto.CreatingLikeDto;
 import threads.server.domain.like.dto.DeletingLikeDto;
 import threads.server.domain.like.service.LikeCommentService;
@@ -20,16 +23,30 @@ public class LikeController {
     private final LikePostService likePostService;
     private final LikeCommentService likeCommentService;
     private final LikeReplyService likeReplyService;
+    private final ActivityService activityService;
 
     @Operation(summary = "좋아요 하기", description = "쓰레드 or 댓글 or 답글을 '좋아요'합니다.", tags = { "좋아요 API" })
     @ApiResponse(responseCode = "201", description = "CREATED")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void like(@RequestBody @Valid CreatingLikeDto likeDto) {
+        SaveActivityDto activityDto = new SaveActivityDto(likeDto.getTargetUserId(), likeDto.getUserId(), likeDto.getTargetId(), null, null);
         switch (likeDto.getType()) {
-            case POST -> likePostService.save(likeDto);
-            case COMMENT -> likeCommentService.save(likeDto);
-            case REPLY -> likeReplyService.save(likeDto);
+            case POST -> {
+                likePostService.save(likeDto);
+                activityDto.setStatus(ActivityStatus.LIKE_POST);
+                activityService.saveActivity(activityDto);
+            }
+            case COMMENT -> {
+                likeCommentService.save(likeDto);
+                activityDto.setStatus(ActivityStatus.LIKE_COMMENT);
+                activityService.saveActivity(activityDto);
+            }
+            case REPLY -> {
+                likeReplyService.save(likeDto);
+                activityDto.setStatus(ActivityStatus.LIKE_REPLY);
+                activityService.saveActivity(activityDto);
+            }
             default -> throw new BadRequestException("잘못된 타입입니다.");
         }
     }

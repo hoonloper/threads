@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.CreatedDate;
-import threads.server.domain.user.User;
 
 import java.time.LocalDateTime;
 
@@ -41,7 +39,7 @@ public class Activity {
     @Enumerated(EnumType.STRING)
     private ActivityStatus status;
 
-    @CreatedDate
+    @Column(name = "issued_at")
     private LocalDateTime issuedAt;
 
     @Builder
@@ -51,5 +49,6 @@ public class Activity {
         this.targetId = targetId;
         this.content = content;
         this.status = status;
+        this.issuedAt = LocalDateTime.now();
     }
 }

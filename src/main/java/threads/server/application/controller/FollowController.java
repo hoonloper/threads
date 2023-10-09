@@ -6,6 +6,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import threads.server.domain.activity.ActivityService;
+import threads.server.domain.activity.ActivityStatus;
+import threads.server.domain.activity.dto.SaveActivityDto;
 import threads.server.domain.follow.FollowService;
 import threads.server.domain.follow.dto.FollowingDto;
 import threads.server.domain.follow.dto.UnfollowingDto;
@@ -15,6 +18,7 @@ import threads.server.domain.follow.dto.UnfollowingDto;
 @RequiredArgsConstructor
 public class FollowController {
     private final FollowService followService;
+    private final ActivityService activityService;
 
     @Operation(summary = "팔로우 하기", description = "유저를 팔로우합니다.", tags = { "팔로우 API" })
     @ApiResponse(responseCode = "201", description = "CREATED")
@@ -22,6 +26,8 @@ public class FollowController {
     @ResponseStatus(HttpStatus.CREATED)
     public void follow(@RequestBody @Valid FollowingDto followDto) {
         followService.follow(followDto);
+
+        activityService.saveActivity(new SaveActivityDto(followDto.getToUserId(), followDto.getFromUserId(), followDto.getToUserId(), null, ActivityStatus.FOLLOW));
     }
 
 

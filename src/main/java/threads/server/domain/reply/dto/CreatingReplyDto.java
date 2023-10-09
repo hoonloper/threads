@@ -16,6 +16,10 @@ public class CreatingReplyDto {
     @Positive
     private Long commentId;
 
+    @NotNull(message = "commentUserId is null")
+    @Positive
+    private Long commentUserId;
+
     @NotBlank(message = "content is required")
     @Size(min = 1, max = 500, message = "content length greater than 500")
     private String content;
