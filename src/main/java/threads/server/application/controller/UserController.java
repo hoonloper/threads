@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import threads.server.domain.activity.ActivityStatus;
+import threads.server.domain.activity.dto.ReadActivityDto;
 import threads.server.domain.comment.CommentService;
 import threads.server.domain.comment.dto.ReadCommentDto;
 import threads.server.domain.post.PostService;
@@ -64,5 +66,13 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public ReadCommentDto getCommentsByUserId(Pageable pageable, @PathVariable(value = "userId") Long userId) {
         return commentService.findAllByUserId(pageable, userId);
+    }
+
+    @Operation(summary = "유저 활동 조회", description = "유저 관련된 활동 내역을 조회합니다.", tags = { "유저 API" })
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = UserDto.class)))
+    @GetMapping("{userId}/activities")
+    @ResponseStatus(HttpStatus.OK)
+    public ReadActivityDto getActivities(Pageable pageable, @PathVariable(value = "userId") Long userId, @RequestParam(value = "status", required = false) ActivityStatus status) {
+        return userService.findAllActivitiesByUserId(pageable, userId, status);
     }
 }
