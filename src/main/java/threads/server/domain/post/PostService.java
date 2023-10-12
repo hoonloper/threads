@@ -31,22 +31,22 @@ public class PostService {
     public ReadPostDto findAllPost(Pageable pageable, Long userId) {
         Page<Post> posts = postRepository.findAllPosts(pageable);
         List<PostDto> postDtoList = posts.stream().map(post -> {
-            PostDto postDTO = toPostDto(post);
-            postDTO.setCommentCount(commentRepository.countByPostId(post.getId()));
-            postDTO.setLikeCount(likePostRepository.countByPostId(post.getId()));
-            postDTO.setLiked(likePostRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
-            return postDTO;
+            PostDto postDto = toPostDto(post);
+            postDto.setCommentCount(commentRepository.countByPostId(post.getId()));
+            postDto.setLikeCount(likePostRepository.countByPostId(post.getId()));
+            postDto.setLiked(likePostRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
+            return postDto;
         }).toList();
         return new ReadPostDto(posts.getTotalPages(), posts.getTotalElements(), postDtoList);
     }
 
     public PostDto findOneById(Long postId, Long userId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        PostDto postDTO = toPostDto(post);
-        postDTO.setCommentCount(commentRepository.countByPostId(post.getId()));
-        postDTO.setLikeCount(likePostRepository.countByPostId(post.getId()));
-        postDTO.setLiked(likePostRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
-        return postDTO;
+        PostDto postDto = toPostDto(post);
+        postDto.setCommentCount(commentRepository.countByPostId(post.getId()));
+        postDto.setLikeCount(likePostRepository.countByPostId(post.getId()));
+        postDto.setLiked(likePostRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
+        return postDto;
     }
 
     public PostDto save(CreatingPostDto postDto) {
