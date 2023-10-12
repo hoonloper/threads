@@ -44,16 +44,16 @@ public class PostController {
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PostDto.class)))
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostDto createPost(@RequestBody @Valid CreatingPostDto postDTO) {
-        return postService.save(postDTO);
+    public PostDto createPost(@RequestBody @Valid CreatingPostDto postDto) {
+        return postService.save(postDto);
     }
 
     @Operation(summary = "쓰레드 수정", description = "쓰레드를 수정합니다.", tags = { "쓰레드 API" })
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PostDto.class)))
     @PatchMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostDto updatePost(@RequestBody @Valid UpdatingPostDto postDTO) {
-        return postService.update(postDTO);
+    public PostDto updatePost(@RequestBody @Valid UpdatingPostDto postDto) {
+        return postService.update(postDto);
     }
 
 
