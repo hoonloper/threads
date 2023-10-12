@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import threads.server.domain.comment.CommentService;
 import threads.server.domain.comment.dto.CommentDto;
 import threads.server.domain.comment.dto.CreatingCommentDto;
-import threads.server.domain.comment.dto.DeletingCommentDto;
 import threads.server.domain.comment.dto.UpdatingCommentDto;
 import threads.server.domain.user.dto.UserDto;
 

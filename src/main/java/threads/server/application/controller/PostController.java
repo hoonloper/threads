@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import threads.server.domain.comment.CommentService;
 import threads.server.domain.comment.dto.CommentDto;
 import threads.server.domain.comment.dto.ReadCommentDto;
-import threads.server.domain.post.dto.*;
 import threads.server.domain.post.PostService;
-
-import java.util.List;
+import threads.server.domain.post.dto.CreatingPostDto;
+import threads.server.domain.post.dto.PostDto;
+import threads.server.domain.post.dto.ReadPostDto;
+import threads.server.domain.post.dto.UpdatingPostDto;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -25,7 +26,7 @@ public class PostController {
     private final CommentService commentService;
 
     @Operation(summary = "쓰레드 최신 페이지네이션 조회", description = "쓰레드를 최신순으로 페이지네이션합니다.", tags = { "쓰레드 API" })
-    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = List.class)))
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = ReadPostDto.class)))
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ReadPostDto getAllPost(Pageable pageable, @RequestParam(value = "userId") Long userId) {
