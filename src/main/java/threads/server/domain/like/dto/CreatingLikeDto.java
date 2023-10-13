@@ -2,10 +2,10 @@ package threads.server.domain.like.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Data;
+import lombok.Getter;
 import threads.server.domain.like.LikeType;
 
-@Data
+@Getter
 public class CreatingLikeDto {
     @NotNull(message = "userId is null")
     @Positive
