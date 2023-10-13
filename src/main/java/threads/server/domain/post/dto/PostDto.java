@@ -1,7 +1,7 @@
 package threads.server.domain.post.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import threads.server.domain.post.Post;
 import threads.server.domain.user.User;
@@ -9,8 +9,8 @@ import threads.server.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 
-@Data
 @NoArgsConstructor
+@Getter
 public class PostDto {
     private Long id;
     private String content;
@@ -20,6 +20,7 @@ public class PostDto {
     private Long commentCount;
     private Long userId;
     private Boolean liked;
+
 
     @JsonIgnore
     private User userEntity;
@@ -41,5 +42,21 @@ public class PostDto {
                 post.getCreatedAt(),
                 post.getLastModifiedAt()
         );
+    }
+
+    public void setUser(UserDto user) {
+        this.user = user;
+    }
+
+    public void setLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public void setCommentCount(Long commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public void setLiked(Boolean liked) {
+        this.liked = liked;
     }
 }
