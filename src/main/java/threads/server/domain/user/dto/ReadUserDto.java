@@ -1,12 +1,12 @@
 package threads.server.domain.user.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
 @Builder
+@Getter
 public class ReadUserDto {
     private Integer totalPage;
     private Long totalElement;

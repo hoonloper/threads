@@ -1,17 +1,13 @@
 package threads.server.domain.user.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import threads.server.domain.user.User;
 import threads.server.domain.user.UserRole;
 
 import java.time.LocalDateTime;
 
-@Data
 @NoArgsConstructor
-@ToString
+@Getter
 public class UserDto {
     private Long id;
     private String email;
@@ -55,5 +51,17 @@ public class UserDto {
                 .createdAt(user.getCreatedAt())
                 .lastModifiedAt(user.getLastModifiedAt())
                 .build();
+    }
+
+    public void setFollowerCount(Long followerCount) {
+        this.followerCount = followerCount;
+    }
+
+    public void setFollowingCount(Long followingCount) {
+        this.followingCount = followingCount;
+    }
+
+    public void setFollowed(Boolean followed) {
+        this.followed = followed;
     }
 }
