@@ -37,6 +37,7 @@ public class Activity {
     private boolean isConfirmed;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ActivityStatus status;
 
     @Column(name = "issued_at")

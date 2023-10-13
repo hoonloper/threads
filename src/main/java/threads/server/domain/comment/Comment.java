@@ -23,11 +23,11 @@ public class Comment extends BaseTime {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
@@ -36,7 +36,7 @@ public class Comment extends BaseTime {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private final List<LikeComment> likeComments = new ArrayList<>();
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @Builder

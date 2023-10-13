@@ -23,10 +23,10 @@ public class Post extends BaseTime {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
