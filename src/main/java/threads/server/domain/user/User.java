@@ -36,6 +36,7 @@ public class User extends BaseTime {
     private String nickname;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private UserRole userRole;
 
     @Column

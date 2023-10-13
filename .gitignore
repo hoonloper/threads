@@ -4,6 +4,7 @@
 
 application-dev.yml
 /src/main/generated
+out
 
 ### STS ###
 .apt_generated

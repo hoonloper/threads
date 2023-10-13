@@ -2,9 +2,9 @@ package threads.server.domain.follow.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class UnfollowingDto {
     @NotNull(message = "toUserId is null")
     @Positive

@@ -1,17 +1,13 @@
 package threads.server.domain.user.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import threads.server.domain.user.User;
 import threads.server.domain.user.UserRole;
 
 import java.time.LocalDateTime;
 
-@Data
 @NoArgsConstructor
-@ToString
+@Data
 public class UserDto {
     private Long id;
     private String email;

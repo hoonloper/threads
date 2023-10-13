@@ -9,8 +9,8 @@ import threads.server.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 
-@Data
 @NoArgsConstructor
+@Data
 public class PostDto {
     private Long id;
     private String content;
@@ -20,6 +20,7 @@ public class PostDto {
     private Long commentCount;
     private Long userId;
     private Boolean liked;
+
 
     @JsonIgnore
     private User userEntity;

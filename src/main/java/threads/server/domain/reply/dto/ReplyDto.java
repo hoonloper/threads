@@ -10,8 +10,8 @@ import threads.server.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 
-@Data
 @NoArgsConstructor
+@Data
 public class ReplyDto {
 
     private Long id;
