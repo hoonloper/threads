@@ -2,7 +2,7 @@ package threads.server.domain.comment.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import threads.server.domain.comment.Comment;
 import threads.server.domain.reply.Reply;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-@Getter
+@Data
 public class CommentDto {
 
     private Long id;

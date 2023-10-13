@@ -1,13 +1,16 @@
 package threads.server.domain.activity.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import threads.server.domain.activity.ActivityStatus;
 import threads.server.domain.user.User;
 
 import java.time.LocalDateTime;
 
-@Getter
+@Data
 public class ActivityDto {
     private Long id;
     private Long toUserId;

@@ -2,7 +2,7 @@ package threads.server.domain.reply.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import threads.server.domain.reply.Reply;
 import threads.server.domain.user.User;
@@ -11,7 +11,7 @@ import threads.server.domain.user.dto.UserDto;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Getter
+@Data
 public class ReplyDto {
 
     private Long id;
@@ -46,17 +46,5 @@ public class ReplyDto {
                 .createdAt(reply.getCreatedAt())
                 .lastModifiedAt(reply.getLastModifiedAt())
                 .build();
-    }
-
-    public void setLikeCount(Long likeCount) {
-        this.likeCount = likeCount;
-    }
-
-    public void setLiked(Boolean liked) {
-        this.liked = liked;
-    }
-
-    public void setUser(UserDto user) {
-        this.user = user;
     }
 }
