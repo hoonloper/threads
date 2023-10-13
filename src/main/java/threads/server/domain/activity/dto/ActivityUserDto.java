@@ -1,11 +1,11 @@
 package threads.server.domain.activity.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import threads.server.domain.user.User;
 
 @Builder
-@Data
+@Getter
 public class ActivityUserDto {
     private Long id;
     private String name;
