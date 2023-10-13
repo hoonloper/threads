@@ -2,7 +2,7 @@ package threads.server.domain.comment.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import threads.server.domain.comment.Comment;
 import threads.server.domain.reply.Reply;
@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @NoArgsConstructor
+@Getter
 public class CommentDto {
 
     private Long id;
@@ -27,8 +27,15 @@ public class CommentDto {
     @JsonIgnore
     private User userEntity;
     private UserDto user;
+    public void setUser(UserDto user) {
+        this.user = user;
+    }
 
     private Boolean liked;
+    public void setLiked(Boolean liked) {
+        this.liked = liked;
+    }
+
     private Long likeCount;
     private Long replyCount;
 
@@ -49,7 +56,6 @@ public class CommentDto {
     public static CommentDto toCommentDto(Comment comment) {
         return new CommentDto(
                 comment.getId(),
-//                UserDto.toDto(comment.getUser()),
                 comment.getPost().getId(),
                 comment.getContent(),
                 comment.getCreatedAt(),
