@@ -29,6 +29,7 @@ public class PostService {
     private final PostRepositorySupport postRepositorySupport;
 
     public PostDto findOneById(Long postId, Long userId) {
+//        PostDto postD = postRepositorySupport.findById(postId, userId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
         Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
         PostDto postDto = toPostDto(post);
         postDto.setCommentCount(commentRepository.countByPostId(post.getId()));
@@ -72,7 +73,7 @@ public class PostService {
         return new ReadPostDto(
                 postPage.getTotalPages(),
                 postPage.getTotalElements(),
-                toUserDtoInPosts(postRepositorySupport.findAllPosts(pageable, userId))
+                toUserDtoInPosts(postRepositorySupport.findAllPostsByUserId(pageable, userId))
         );
     }
 

@@ -1,9 +1,7 @@
 package threads.server.domain.post.repository;
 
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
-import threads.server.domain.like.entity.QLikePost;
 import threads.server.domain.post.Post;
 import threads.server.domain.post.dto.PostDto;
 
@@ -34,69 +31,66 @@ public class PostRepositorySupport extends QuerydslRepositorySupport {
         this.queryFactory = queryFactory;
     }
 
-    public List<PostDto> findAllPosts(Pageable pageable, Long userId) {
-        return queryFactory
-                .select(
-                        Projections.bean(
-                                PostDto.class,
-                                post.id,
-                                post.content,
-                                post.createdAt,
-                                post.lastModifiedAt,
-                                Expressions.asNumber(userId).as("userId"),
-                                post.user.as("userEntity"),
-                                comment.countDistinct().as("commentCount"),
-                                likePost.countDistinct().as("likeCount"),
-                                ExpressionUtils.as(Expressions.booleanTemplate("exists(select 1 from LikePost l where l.post.id = {0} and l.user.id = {1})", post.id, userId), "liked")
-                        )
-                )
-                .from(post)
-                .innerJoin(post.user, user)
-                .leftJoin(post.likePosts, likePost)
-                .leftJoin(post.comments, comment)
-                .groupBy(post.id)
-                .orderBy(createOrderSpecifier(pageable.getSort()))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-    }
-
     public PageImpl<Post> findPostPage(Pageable pageable, Optional<Long> userId){
         JPAQuery<Post> query = queryFactory.selectFrom(post);
         userId.ifPresent(id -> query.where(post.user.id.eq(id)));
-        long totalCount = query.fetchAll().stream().count();
+        long totalCount = query.fetchCount();
         List<Post> result = Objects.requireNonNull(getQuerydsl()).applyPagination(pageable, query).fetch();
 
         return new PageImpl<>(result, pageable, totalCount);
     }
 
+    public List<PostDto> findAllPosts(Pageable pageable, Long userId) {
+        return defaultJoinQuery(userId, pageable).fetch();
+    }
+
     public List<PostDto> findAllPostsByUserId(Pageable pageable, Long userId) {
+        return defaultJoinQuery(userId, post.user.id.eq(userId), pageable).fetch();
+    }
+
+    private JPAQuery<PostDto> defaultJoinQuery(Long userId) {
         // TODO: replies에서 최신 요소 한개 찾아오는 쿼리로 개선
         return queryFactory
-                .select(
-                        Projections.bean(
-                                PostDto.class,
-                                post.id,
-                                post.content,
-                                post.createdAt,
-                                post.lastModifiedAt,
-                                Expressions.asNumber(userId).as("userId"),
-                                user.as("userEntity"),
-                                comment.countDistinct().as("commentCount"),
-                                likePost.countDistinct().as("likeCount"),
-                                ExpressionUtils.as(Expressions.booleanTemplate("exists(select 1 from LikePost l where l.post.id = {0} and l.user.id = {1})", post.id, userId), "liked")
-                        )
-                )
+                .select(makePostDtoBean(userId))
                 .from(post)
-                .where(post.user.id.eq(userId))
                 .innerJoin(post.user, user)
                 .leftJoin(post.likePosts, likePost)
                 .leftJoin(post.comments, comment)
-                .groupBy(post.id)
+                .groupBy(post.id);
+    }
+
+    private JPAQuery<PostDto> defaultJoinQuery(Long userId, BooleanExpression where) {
+        return defaultJoinQuery(userId).where(where);
+    }
+
+    private JPAQuery<PostDto> defaultJoinQuery(Long userId, Pageable pageable) {
+        return defaultJoinQuery(userId)
                 .orderBy(createOrderSpecifier(pageable.getSort()))
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+                .limit(pageable.getPageSize());
+    }
+
+    private JPAQuery<PostDto> defaultJoinQuery(Long userId, BooleanExpression where, Pageable pageable) {
+        return defaultJoinQuery(userId, where)
+                .orderBy(createOrderSpecifier(pageable.getSort()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+    }
+
+
+    private QBean<PostDto> makePostDtoBean(Long userId) {
+        return Projections.bean(
+                PostDto.class,
+                post.id,
+                post.content,
+                post.createdAt,
+                post.lastModifiedAt,
+                Expressions.asNumber(post.user.id).as("userId"),
+                post.user.as("userEntity"),
+                comment.countDistinct().as("commentCount"),
+                likePost.countDistinct().as("likeCount"),
+                ExpressionUtils.as(Expressions.booleanTemplate("exists(select 1 from LikePost l where l.post.id = {0} and l.user.id = {1})", post.id, userId), "liked")
+        );
     }
 
     private OrderSpecifier[] createOrderSpecifier(Sort sort) {
