@@ -29,13 +29,11 @@ public class PostService {
 
 
     public ReadPostDto findAllPost(Pageable pageable, Long userId) {
-        Page<Post> postPage = postRepository.findAllPosts(pageable);
-        List<PostDto> postDtoList = postPage.stream().map(post -> {
-            PostDto postDto = toPostDto(post);
-            postDto.setCommentCount(commentRepository.countByPostId(post.getId()));
-            postDto.setLikeCount(likePostRepository.countByPostId(post.getId()));
-            postDto.setLiked(likePostRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
-            return postDto;
+        Page<Post> postPage = postRepositorySupport.findPostPage(pageable);
+        List<PostDto> postDtoList = postRepositorySupport.findAllPosts(pageable, userId).stream().map(post -> {
+            post.setLiked(likePostRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
+            post.setUser(UserDto.toDto(post.getUserEntity()));
+            return post;
         }).toList();
         return new ReadPostDto(postPage.getTotalPages(), postPage.getTotalElements(), postDtoList);
     }

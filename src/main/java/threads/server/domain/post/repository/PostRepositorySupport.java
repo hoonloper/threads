@@ -1,8 +1,10 @@
 package threads.server.domain.post.repository;
 
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.PageImpl;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
+import threads.server.domain.like.entity.QLikePost;
 import threads.server.domain.post.Post;
 import threads.server.domain.post.dto.PostDto;
 
@@ -18,6 +21,7 @@ import java.util.List;
 import static threads.server.domain.comment.QComment.comment;
 import static threads.server.domain.like.entity.QLikePost.likePost;
 import static threads.server.domain.post.QPost.post;
+import static threads.server.domain.user.QUser.user;
 
 @Repository
 public class PostRepositorySupport extends QuerydslRepositorySupport {
@@ -26,6 +30,43 @@ public class PostRepositorySupport extends QuerydslRepositorySupport {
     public PostRepositorySupport(JPAQueryFactory queryFactory) {
         super(Post.class);
         this.queryFactory = queryFactory;
+    }
+
+
+    public PageImpl<Post> findPostPage(Pageable pageable){
+
+        JPAQuery<Post> query = queryFactory.selectFrom(post);
+        long totalCount = query.fetchCount();
+        List<Post> result = getQuerydsl().applyPagination(pageable, query).fetch();
+
+        return new PageImpl<>(result, pageable, totalCount);
+    }
+
+    public List<PostDto> findAllPosts(Pageable pageable, Long userId) {
+        // TODO: liked 쿼리에 포함시켜야 함
+        return queryFactory
+                .select(
+                        Projections.bean(
+                                PostDto.class,
+                                post.id,
+                                post.content,
+                                post.createdAt,
+                                post.lastModifiedAt,
+                                Expressions.asNumber(userId).as("userId"),
+                                user.as("userEntity"),
+                                comment.countDistinct().as("commentCount"),
+                                likePost.countDistinct().as("likeCount")
+                        )
+                )
+                .from(post)
+                .innerJoin(post.user, user)
+                .leftJoin(post.likePosts, likePost)
+                .leftJoin(post.comments, comment)
+                .groupBy(post.id, likePost.post.id)
+                .orderBy(createOrderSpecifier(pageable.getSort()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
     }
 
     public PageImpl<Post> findPostPageByUserId(Pageable pageable, Long userId){
