@@ -16,6 +16,7 @@ import threads.server.domain.user.User;
 import threads.server.domain.user.dto.UserDto;
 
 import java.util.List;
+import java.util.Optional;
 
 import static threads.server.domain.post.dto.PostDto.toPostDto;
 
@@ -26,16 +27,6 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final LikePostRepository likePostRepository;
     private final PostRepositorySupport postRepositorySupport;
-
-
-    public ReadPostDto findAllPost(Pageable pageable, Long userId) {
-        Page<Post> postPage = postRepositorySupport.findPostPage(pageable);
-        List<PostDto> postDtoList = postRepositorySupport.findAllPosts(pageable, userId).stream().map(post -> {
-            post.setUser(UserDto.toDto(post.getUserEntity()));
-            return post;
-        }).toList();
-        return new ReadPostDto(postPage.getTotalPages(), postPage.getTotalElements(), postDtoList);
-    }
 
     public PostDto findOneById(Long postId, Long userId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
@@ -66,14 +57,27 @@ public class PostService {
         postRepository.delete(post);
     }
 
+
+    public ReadPostDto findAllPost(Pageable pageable, Long userId) {
+        Page<Post> postPage = postRepositorySupport.findPostPage(pageable, java.util.Optional.empty());
+        return new ReadPostDto(
+                postPage.getTotalPages(),
+                postPage.getTotalElements(),
+                toUserDtoInPosts(postRepositorySupport.findAllPosts(pageable, userId))
+        );
+    }
+
     public ReadPostDto findAllByUserId(Pageable pageable, Long userId) {
-        PageImpl<Post> postPage = postRepositorySupport.findPostPageByUserId(pageable, userId);
-        List<PostDto> postDtoList = postRepositorySupport.findAllPostsByUserId(pageable, userId).stream().map(post -> {
-            post.setUser(UserDto.toDto(post.getUserEntity()));
-            post.setLiked(likePostRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
-            return post;
-        }).toList();
-        return new ReadPostDto(postPage.getTotalPages(), postPage.getTotalElements(), postDtoList);
+        PageImpl<Post> postPage = postRepositorySupport.findPostPage(pageable, Optional.of(userId));
+        return new ReadPostDto(
+                postPage.getTotalPages(),
+                postPage.getTotalElements(),
+                toUserDtoInPosts(postRepositorySupport.findAllPosts(pageable, userId))
+        );
+    }
+
+    private List<PostDto> toUserDtoInPosts(List<PostDto> postDtoList) {
+        return postDtoList.stream().peek(post -> post.setUser(UserDto.toDto(post.getUserEntity()))).toList();
     }
 
     private void authorizeUser(Long requestUserId, Long userIdFromPost) {

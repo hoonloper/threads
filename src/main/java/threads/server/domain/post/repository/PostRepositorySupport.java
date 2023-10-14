@@ -17,6 +17,8 @@ import threads.server.domain.post.Post;
 import threads.server.domain.post.dto.PostDto;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static threads.server.domain.comment.QComment.comment;
 import static threads.server.domain.like.entity.QLikePost.likePost;
@@ -32,16 +34,6 @@ public class PostRepositorySupport extends QuerydslRepositorySupport {
         this.queryFactory = queryFactory;
     }
 
-
-    public PageImpl<Post> findPostPage(Pageable pageable){
-
-        JPAQuery<Post> query = queryFactory.selectFrom(post);
-        long totalCount = query.fetchCount();
-        List<Post> result = getQuerydsl().applyPagination(pageable, query).fetch();
-
-        return new PageImpl<>(result, pageable, totalCount);
-    }
-
     public List<PostDto> findAllPosts(Pageable pageable, Long userId) {
         return queryFactory
                 .select(
@@ -52,7 +44,7 @@ public class PostRepositorySupport extends QuerydslRepositorySupport {
                                 post.createdAt,
                                 post.lastModifiedAt,
                                 Expressions.asNumber(userId).as("userId"),
-                                user.as("userEntity"),
+                                post.user.as("userEntity"),
                                 comment.countDistinct().as("commentCount"),
                                 likePost.countDistinct().as("likeCount"),
                                 ExpressionUtils.as(Expressions.booleanTemplate("exists(select 1 from LikePost l where l.post.id = {0} and l.user.id = {1})", post.id, userId), "liked")
@@ -69,19 +61,16 @@ public class PostRepositorySupport extends QuerydslRepositorySupport {
                 .fetch();
     }
 
-    public PageImpl<Post> findPostPageByUserId(Pageable pageable, Long userId){
-
-        JPAQuery<Post> query = queryFactory
-                .selectFrom(post)
-                .where(post.user.id.eq(userId));
-        long totalCount = query.fetchCount();
-        List<Post> result = getQuerydsl().applyPagination(pageable, query).fetch();
+    public PageImpl<Post> findPostPage(Pageable pageable, Optional<Long> userId){
+        JPAQuery<Post> query = queryFactory.selectFrom(post);
+        userId.ifPresent(id -> query.where(post.user.id.eq(id)));
+        long totalCount = query.fetchAll().stream().count();
+        List<Post> result = Objects.requireNonNull(getQuerydsl()).applyPagination(pageable, query).fetch();
 
         return new PageImpl<>(result, pageable, totalCount);
     }
 
     public List<PostDto> findAllPostsByUserId(Pageable pageable, Long userId) {
-        // TODO: 좋아요 여부 가져오는 쿼리로 개선
         // TODO: replies에서 최신 요소 한개 찾아오는 쿼리로 개선
         return queryFactory
                 .select(
@@ -91,17 +80,19 @@ public class PostRepositorySupport extends QuerydslRepositorySupport {
                                 post.content,
                                 post.createdAt,
                                 post.lastModifiedAt,
-                                post.user.as("userEntity"),
+                                Expressions.asNumber(userId).as("userId"),
+                                user.as("userEntity"),
                                 comment.countDistinct().as("commentCount"),
-                                likePost.countDistinct().as("likeCount")
+                                likePost.countDistinct().as("likeCount"),
+                                ExpressionUtils.as(Expressions.booleanTemplate("exists(select 1 from LikePost l where l.post.id = {0} and l.user.id = {1})", post.id, userId), "liked")
                         )
                 )
                 .from(post)
                 .where(post.user.id.eq(userId))
-                .innerJoin(post.user)
+                .innerJoin(post.user, user)
                 .leftJoin(post.likePosts, likePost)
                 .leftJoin(post.comments, comment)
-                .groupBy(post.id, likePost.post.id)
+                .groupBy(post.id)
                 .orderBy(createOrderSpecifier(pageable.getSort()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -111,7 +102,6 @@ public class PostRepositorySupport extends QuerydslRepositorySupport {
     private OrderSpecifier[] createOrderSpecifier(Sort sort) {
         List<OrderSpecifier> orderSpecifiers = sort.stream()
                 .map(s -> {
-                    System.out.println("SORT " + s.toString() + " " + s.getProperty()+ " " + s.getDirection());
                     Order order = Order.valueOf(String.valueOf(s.getDirection()));
                     if(s.getProperty().equals("createdAt")) {
                         return new OrderSpecifier(order, post.createdAt);
