@@ -40,6 +40,10 @@ public class PostRepositorySupport extends QuerydslRepositorySupport {
         return new PageImpl<>(result, pageable, totalCount);
     }
 
+    public Optional<PostDto> findById(Long postId, Long userId) {
+        return Optional.ofNullable(defaultJoinQuery(userId, post.id.eq(postId)).fetchOne());
+    }
+
     public List<PostDto> findAllPosts(Pageable pageable, Long userId) {
         return defaultJoinQuery(userId, pageable).fetch();
     }

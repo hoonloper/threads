@@ -7,8 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
-import threads.server.domain.comment.repository.CommentRepository;
-import threads.server.domain.like.repository.LikePostRepository;
 import threads.server.domain.post.dto.*;
 import threads.server.domain.post.repository.PostRepository;
 import threads.server.domain.post.repository.PostRepositorySupport;
@@ -24,18 +22,12 @@ import static threads.server.domain.post.dto.PostDto.toPostDto;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
-    private final LikePostRepository likePostRepository;
     private final PostRepositorySupport postRepositorySupport;
 
     public PostDto findOneById(Long postId, Long userId) {
-//        PostDto postD = postRepositorySupport.findById(postId, userId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        PostDto postDto = toPostDto(post);
-        postDto.setCommentCount(commentRepository.countByPostId(post.getId()));
-        postDto.setLikeCount(likePostRepository.countByPostId(post.getId()));
-        postDto.setLiked(likePostRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
-        return postDto;
+        PostDto postD = postRepositorySupport.findById(postId, userId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
+        postD.setUser(UserDto.toDto(postD.getUserEntity()));
+        return postD;
     }
 
     public PostDto save(CreatingPostDto postDto) {
