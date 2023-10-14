@@ -43,7 +43,6 @@ public class PostRepositorySupport extends QuerydslRepositorySupport {
     }
 
     public List<PostDto> findAllPosts(Pageable pageable, Long userId) {
-        // TODO: liked 쿼리에 포함시켜야 함
         return queryFactory
                 .select(
                         Projections.bean(
@@ -55,14 +54,15 @@ public class PostRepositorySupport extends QuerydslRepositorySupport {
                                 Expressions.asNumber(userId).as("userId"),
                                 user.as("userEntity"),
                                 comment.countDistinct().as("commentCount"),
-                                likePost.countDistinct().as("likeCount")
+                                likePost.countDistinct().as("likeCount"),
+                                ExpressionUtils.as(Expressions.booleanTemplate("exists(select 1 from LikePost l where l.post.id = {0} and l.user.id = {1})", post.id, userId), "liked")
                         )
                 )
                 .from(post)
                 .innerJoin(post.user, user)
                 .leftJoin(post.likePosts, likePost)
                 .leftJoin(post.comments, comment)
-                .groupBy(post.id, likePost.post.id)
+                .groupBy(post.id)
                 .orderBy(createOrderSpecifier(pageable.getSort()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
