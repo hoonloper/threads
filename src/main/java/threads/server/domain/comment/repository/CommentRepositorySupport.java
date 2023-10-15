@@ -1,8 +1,7 @@
 package threads.server.domain.comment.repository;
 
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -29,38 +28,30 @@ public class CommentRepositorySupport extends QuerydslRepositorySupport {
         this.queryFactory = queryFactory;
     }
 
-    public PageImpl<Comment> findCommentPage(Pageable pageable, Long postId){
+    public PageImpl<Comment> findCommentPageByPostId(Pageable pageable, Long postId){
+        JPAQuery<Comment> query = makeSelectFromQueryWith(comment.post.id.eq(postId));
+        return makePageImpl(query, pageable);
+    }
 
-        JPAQuery<Comment> query = queryFactory.selectFrom(comment).where(comment.post.id.eq(postId));
+
+    public PageImpl<Comment> findCommentPageByUserId(Pageable pageable, Long userId){
+        JPAQuery<Comment> query = makeSelectFromQueryWith(comment.user.id.eq(userId));
+        return makePageImpl(query, pageable);
+    }
+
+    private PageImpl<Comment> makePageImpl(JPAQuery<Comment> query, Pageable pageable) {
         long totalCount = query.fetchCount();
         List<Comment> result = getQuerydsl().applyPagination(pageable, query).fetch();
 
         return new PageImpl<>(result, pageable, totalCount);
     }
 
+    private JPAQuery<Comment> makeSelectFromQueryWith(BooleanExpression where) {
+        return queryFactory.selectFrom(comment).where(where);
+    }
+
     public List<CommentDto> findAllComments(Pageable pageable, Long postId, Long userId) {
-        // TODO: 좋아요 여부 가져오는 쿼리로 개선
-        // TODO: replies에서 최신 요소 한개 찾아오는 쿼리로 개선
-        return queryFactory
-                .select(
-                        Projections.bean(
-                                CommentDto.class,
-                                comment.id,
-                                Expressions.asNumber(postId).as("postId"),
-                                comment.content,
-                                comment.createdAt,
-                                comment.lastModifiedAt,
-                                comment.user.as("userEntity"),
-                                reply.countDistinct().as("replyCount"),
-                                likeComment.countDistinct().as("likeCount")
-                        )
-                )
-                .from(comment)
-                .where(comment.post.id.eq(postId))
-                .innerJoin(comment.user)
-                .leftJoin(comment.likeComments, likeComment)
-                .leftJoin(comment.replies, reply)
-                .groupBy(comment.id, likeComment.comment.id)
+        return defaultJoinQuery(userId, comment.post.id.eq(postId))
                 .orderBy(createOrderSpecifier(pageable.getSort()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -68,36 +59,46 @@ public class CommentRepositorySupport extends QuerydslRepositorySupport {
     }
 
     public List<CommentDto> findAllCommentsByUserId(Pageable pageable, Long userId) {
-        return queryFactory
-                .select(
-                        Projections.bean(
-                                CommentDto.class,
-                                comment.id,
-                                comment.post.id.as("postId"),
-                                comment.content,
-                                comment.createdAt,
-                                comment.lastModifiedAt,
-                                comment.user.as("userEntity"),
-                                reply.countDistinct().as("replyCount"),
-                                likeComment.countDistinct().as("likeCount")
-                        )
-                )
-                .from(comment)
-                .where(comment.user.id.eq(userId))
-                .innerJoin(comment.user)
-                .leftJoin(comment.likeComments, likeComment)
-                .leftJoin(comment.replies, reply)
-                .groupBy(comment.id, likeComment.comment.id)
+        return defaultJoinQuery(userId, comment.user.id.eq(userId))
                 .orderBy(createOrderSpecifier(pageable.getSort()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
     }
 
+    private JPAQuery<CommentDto> defaultJoinQuery(Long userId) {
+        // TODO: replies에서 최신 요소 한개 찾아오는 쿼리로 개선
+        return queryFactory
+                .select(makePostDtoBean(userId))
+                .from(comment)
+                .innerJoin(comment.user)
+                .leftJoin(comment.likeComments, likeComment)
+                .leftJoin(comment.replies, reply)
+                .groupBy(comment.id);
+    }
+
+    private JPAQuery<CommentDto> defaultJoinQuery(Long userId, BooleanExpression where) {
+        return defaultJoinQuery(userId).where(where);
+    }
+
+    private QBean<CommentDto> makePostDtoBean(Long userId) {
+        return Projections.bean(
+                CommentDto.class,
+                comment.id,
+                comment.post.id.as("postId"),
+                comment.content,
+                comment.createdAt,
+                comment.lastModifiedAt,
+                comment.user.as("userEntity"),
+                reply.countDistinct().as("replyCount"),
+                likeComment.countDistinct().as("likeCount"),
+                ExpressionUtils.as(Expressions.booleanTemplate("exists(select 1 from LikeComment l where l.comment.id = {0} and l.user.id = {1})", comment.id, userId), "liked")
+        );
+    }
+
     private OrderSpecifier[] createOrderSpecifier(Sort sort) {
         List<OrderSpecifier> orderSpecifiers = sort.stream()
                 .map(s -> {
-                    System.out.println("SORT " + s.toString() + " " + s.getProperty()+ " " + s.getDirection());
                     Order order = Order.valueOf(String.valueOf(s.getDirection()));
                     if(s.getProperty().equals("createdAt")) {
                         return new OrderSpecifier(order, comment.createdAt);

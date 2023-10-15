@@ -1,8 +1,6 @@
 package threads.server.domain.reply.repository;
 
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -18,6 +16,7 @@ import threads.server.domain.user.dto.UserDto;
 
 import java.util.List;
 
+import static threads.server.domain.comment.QComment.comment;
 import static threads.server.domain.like.entity.QLikeReply.likeReply;
 import static threads.server.domain.reply.QReply.reply;
 
@@ -32,7 +31,6 @@ public class ReplyRepositorySupport extends QuerydslRepositorySupport {
 
 
     public PageImpl<Reply> findReplyPage(Pageable pageable, Long commentId){
-
         JPAQuery<Reply> query = queryFactory.selectFrom(reply).where(reply.comment.id.eq(commentId));
         long totalCount = query.fetchCount();
         List<Reply> result = getQuerydsl().applyPagination(pageable, query).fetch();
@@ -41,21 +39,8 @@ public class ReplyRepositorySupport extends QuerydslRepositorySupport {
     }
 
     public List<ReplyDto> findAllReplies(Pageable pageable, Long commentId, Long userId) {
-        // TODO: 좋아요 여부 가져오는 쿼리로 개선
         return queryFactory
-                .select(
-                        Projections.bean(
-                                ReplyDto.class,
-                                reply.id,
-                                Expressions.asNumber(commentId).as("commentId"),
-                                reply.content,
-                                reply.createdAt,
-                                reply.lastModifiedAt,
-                                reply.user.as("userEntity"),
-                                reply.countDistinct().as("replyCount"),
-                                likeReply.countDistinct().as("likeCount")
-                        )
-                )
+                .select(makeReplyDtoBean(userId))
                 .from(reply)
                 .where(reply.comment.id.eq(commentId))
                 .innerJoin(reply.user)
@@ -65,6 +50,21 @@ public class ReplyRepositorySupport extends QuerydslRepositorySupport {
                 .offset(pageable.getOffset() + 1) // 답글을 더보기 할 때는 이미 최신 요소 1개가 있기 때문에 +1
                 .limit(pageable.getPageSize())
                 .fetch();
+    }
+
+    private QBean<ReplyDto> makeReplyDtoBean(Long userId) {
+        return Projections.bean(
+                    ReplyDto.class,
+                    reply.id,
+                    Expressions.asNumber(reply.comment.id).as("commentId"),
+                    reply.content,
+                    reply.createdAt,
+                    reply.lastModifiedAt,
+                    reply.user.as("userEntity"),
+                    reply.countDistinct().as("replyCount"),
+                    likeReply.countDistinct().as("likeCount"),
+                    ExpressionUtils.as(Expressions.booleanTemplate("exists(select 1 from LikeReply l where l.reply.id = {0} and l.user.id = {1})", comment.id, userId), "liked")
+            );
     }
 
     private OrderSpecifier[] createOrderSpecifier(Sort sort) {
@@ -82,20 +82,8 @@ public class ReplyRepositorySupport extends QuerydslRepositorySupport {
     }
 
     public ReplyDto findOneByCommentId(Long commentId, Long userId) {
-        // TODO: 좋아요 여부 가져오는 쿼리로 개선해야 함
-         ReplyDto replyDto = queryFactory
-                .select(
-                        Projections.bean(
-                                ReplyDto.class,
-                                Expressions.asNumber(commentId).as("commentId"),
-                                reply.id,
-                                reply.content,
-                                reply.createdAt,
-                                reply.lastModifiedAt,
-                                reply.user.as("userEntity"),
-                                likeReply.count().as("likeCount")
-                        )
-                )
+         return queryFactory
+                .select(makeReplyDtoBean(userId))
                 .from(reply)
                 .where(reply.comment.id.eq(commentId))
                 .innerJoin(reply.user)
@@ -104,14 +92,5 @@ public class ReplyRepositorySupport extends QuerydslRepositorySupport {
                 .orderBy(reply.createdAt.asc())
                 .limit(1)
                 .fetchOne();
-        if(replyDto != null) {
-            replyDto.setUser(UserDto.toDto(replyDto.getUserEntity()));
-            Boolean liked = queryFactory
-                        .selectFrom(likeReply)
-                        .where(likeReply.reply.id.eq(replyDto.getId()).and(Expressions.asBoolean(likeReply.user.id.eq(userId))))
-                        .fetchOne() != null;
-            replyDto.setLiked(liked);
-        }
-        return replyDto;
     }
 }

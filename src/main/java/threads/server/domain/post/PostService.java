@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.post.dto.*;
@@ -35,6 +36,7 @@ public class PostService {
         return toPostDto(post);
     }
 
+    @Transactional
     public PostDto update(UpdatingPostDto postDto) {
         Post post = postRepository.findById(postDto.getId()).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
         authorizeUser(postDto.getUserId(), post.getUser().getId());
@@ -43,7 +45,7 @@ public class PostService {
         return toPostDto(post);
     }
 
-
+    @Transactional
     public void remove(Long postId, Long userId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
         authorizeUser(userId, post.getUser().getId());
