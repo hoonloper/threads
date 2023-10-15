@@ -17,7 +17,6 @@ import java.util.List;
 
 import static threads.server.domain.comment.QComment.comment;
 import static threads.server.domain.like.entity.QLikeComment.likeComment;
-import static threads.server.domain.post.QPost.post;
 import static threads.server.domain.reply.QReply.reply;
 
 @Repository
@@ -100,7 +99,6 @@ public class CommentRepositorySupport extends QuerydslRepositorySupport {
     private OrderSpecifier[] createOrderSpecifier(Sort sort) {
         List<OrderSpecifier> orderSpecifiers = sort.stream()
                 .map(s -> {
-                    System.out.println("SORT " + s.toString() + " " + s.getProperty()+ " " + s.getDirection());
                     Order order = Order.valueOf(String.valueOf(s.getDirection()));
                     if(s.getProperty().equals("createdAt")) {
                         return new OrderSpecifier(order, comment.createdAt);
