@@ -61,8 +61,6 @@ public class ReplyService {
         List<ReplyDto> replyList = replyRepositorySupport.findAllReplies(pageable, commentId, userId)
                 .stream()
                 .map(reply -> {
-                    reply.setLikeCount(likeReplyRepository.countByReplyId(reply.getId()));
-                    reply.setLiked(likeReplyRepository.findByUserIdAndReplyId(userId, reply.getId()).isPresent());
                     reply.setUser(UserDto.toDto(reply.getUserEntity()));
                     return reply;
                 }
