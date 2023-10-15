@@ -41,6 +41,7 @@ public class CommentService {
         );
     }
 
+    @Transactional
     public CommentDto update(UpdatingCommentDto commentDto) {
         Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
         authorizeUser(commentDto.getUserId(), comment.getUser().getId());
@@ -49,6 +50,7 @@ public class CommentService {
         return toCommentDto(comment);
     }
 
+    @Transactional
     public void delete(Long commentId, Long userId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
         authorizeUser(userId, comment.getUser().getId());
