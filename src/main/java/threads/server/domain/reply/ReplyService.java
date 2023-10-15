@@ -2,15 +2,13 @@ package threads.server.domain.reply;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.comment.Comment;
-import threads.server.domain.like.repository.LikeCommentRepository;
-import threads.server.domain.like.repository.LikeReplyRepository;
 import threads.server.domain.reply.dto.*;
 import threads.server.domain.reply.repository.ReplyRepository;
 import threads.server.domain.reply.repository.ReplyRepositorySupport;
@@ -27,7 +25,6 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
 
     private final ReplyRepositorySupport replyRepositorySupport;
-    private final LikeReplyRepository likeReplyRepository;
 
     public ReplyDto save(CreatingReplyDto replyDto) {
         User user = new User(replyDto.getUserId());
@@ -35,6 +32,7 @@ public class ReplyService {
         return toReplyDto(replyRepository.save(new Reply(null, user, comment, replyDto.getContent())));
     }
 
+    @Transactional
     public ReplyDto update(UpdatingReplyDto replyDto, Long id) {
         Reply reply = replyRepository.findById(id).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
         authorizeUser(replyDto.getUserId(), reply.getUser().getId());
@@ -43,6 +41,7 @@ public class ReplyService {
         return toReplyDto(reply);
     }
 
+    @Transactional
     public void delete(Long id, Long userId) {
         Reply reply = replyRepository.findById(id).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
         authorizeUser(userId, reply.getUser().getId());
@@ -60,11 +59,8 @@ public class ReplyService {
         PageImpl<Reply> replyPage = replyRepositorySupport.findReplyPage(pageable, commentId);
         List<ReplyDto> replyList = replyRepositorySupport.findAllReplies(pageable, commentId, userId)
                 .stream()
-                .map(reply -> {
-                    reply.setUser(UserDto.toDto(reply.getUserEntity()));
-                    return reply;
-                }
-        ).toList();
+                .peek(reply -> reply.setUser(UserDto.toDto(reply.getUserEntity())))
+                .toList();
         return new ReadReplyDto(replyPage.getTotalPages(), replyPage.getTotalElements(), replyList);
     }
 }
