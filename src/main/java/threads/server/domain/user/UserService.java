@@ -39,12 +39,11 @@ public class UserService {
         PageImpl<User> userPage = userRepositorySupport.findUserPageByFollowingIds(pageable, followingIds);
         List<UserDto> userDtoList = userRepositorySupport.findAllUnfollowers(pageable, followingIds)
                 .stream()
-                .map(user -> {
+                .peek(user -> {
                     // 팔로워 수를 map 내부에서 찾는 이유는
                     // follow가 매우 많아질 경우 한방 쿼리로 모든 유저의 팔로워를 구한 후 page로 자르는 것보다 성능상 이점을 취할 수 있다고 판단
                     user.setFollowerCount(followRepository.countByToUserId(user.getId()));
                     user.setFollowingCount(followRepository.countByFromUserId(user.getId()));
-                    return user;
                 })
                 .toList();
 
