@@ -48,11 +48,11 @@ public class UserService {
                 })
                 .toList();
 
-        return ReadUserDto.builder()
-                .totalPage(userPage.getTotalPages())
-                .totalElement(userPage.getTotalElements())
-                .items(userDtoList)
-                .build();
+        return new ReadUserDto(
+                userPage.getTotalPages(),
+                userPage.getTotalElements(),
+                userDtoList
+        );
     }
 
     public ReadUserDto search(Pageable pageable, String keyword, Long userId) {
@@ -63,28 +63,25 @@ public class UserService {
         // 검색은 팔로워 수를 세지 않음, 나중에 기획이 변경되면 추가될 수도
         List<UserDto> userDtoList = userRepositorySupport.searchByUnfollowers(pageable, keyword, followingIds);
 
-        return ReadUserDto.builder()
-                .totalPage(searchedUserPage.getTotalPages())
-                .totalElement(searchedUserPage.getTotalElements())
-                .items(userDtoList)
-                .build();
+        return new ReadUserDto(
+                searchedUserPage.getTotalPages(),
+                searchedUserPage.getTotalElements(),
+                userDtoList
+        );
     }
 
     public ReadActivityDto findAllActivitiesByUserId(Pageable pageable, Long userId, ActivityStatus status) {
         PageImpl<Activity> searchedUserPage = activityRepositorySupport.findActivityPageByUserId(pageable, userId, status);
         List<ActivityDto> activityDtoList = activityRepositorySupport.findAllActivitiesByUserIdAndStatus(pageable, userId, status)
                 .stream()
-                .map(activity -> {
-                    activity.setFromUser(ActivityUserDto.toActivityUserDto(activity.getFromUserEntity()));
-                    return activity;
-                })
+                .peek(activity -> activity.setFromUser(ActivityUserDto.toActivityUserDto(activity.getFromUserEntity())))
                 .toList();
 
-        return ReadActivityDto.builder()
-                .totalPage(searchedUserPage.getTotalPages())
-                .totalElement(searchedUserPage.getTotalElements())
-                .items(activityDtoList)
-                .build();
+        return new ReadActivityDto(
+                searchedUserPage.getTotalPages(),
+                searchedUserPage.getTotalElements(),
+                activityDtoList
+        );
     }
 
 //    스프링에서는 인증, 인가가 이뤄지지 않음
