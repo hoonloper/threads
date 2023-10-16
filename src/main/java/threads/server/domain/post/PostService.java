@@ -26,14 +26,13 @@ public class PostService {
     private final PostRepositorySupport postRepositorySupport;
 
     public PostDto findOneById(Long postId, Long userId) {
-        PostDto postD = postRepositorySupport.findById(postId, userId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        postD.setUser(UserDto.toDto(postD.getUserEntity()));
-        return postD;
+        PostDto postDto = postRepositorySupport.findById(postId, userId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
+        postDto.setUser(UserDto.toDto(postDto.getUserEntity()));
+        return postDto;
     }
 
     public PostDto save(CreatingPostDto postDto) {
-        Post post = postRepository.save(new Post(null, new User(postDto.getUserId()), postDto.getContent()));
-        return toPostDto(post);
+        return toPostDto(postRepository.save(new Post(null, new User(postDto.getUserId()), postDto.getContent())));
     }
 
     @Transactional
