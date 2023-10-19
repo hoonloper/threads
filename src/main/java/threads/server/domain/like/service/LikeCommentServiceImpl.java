@@ -13,7 +13,7 @@ import threads.server.domain.user.User;
 import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
-public class LikeCommentService implements LikeService {
+public class LikeCommentServiceImpl implements LikeService {
     private final LikeCommentRepository likeCommentRepository;
 
     public void save(CreatingLikeDto likeDto) {
