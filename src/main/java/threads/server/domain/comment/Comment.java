@@ -1,9 +1,9 @@
 package threads.server.domain.comment;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import threads.server.domain.comment.dto.CreatingCommentDto;
 import threads.server.domain.like.entity.LikeComment;
 import threads.server.domain.post.Post;
 import threads.server.domain.reply.Reply;
@@ -39,12 +39,18 @@ public class Comment extends BaseTime {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Builder
-    public Comment(Long id, Long userId, Long postId, String content) {
+    public Comment(Long id) {
         this.id = id;
-        this.user = new User(userId);
-        this.post = new Post(postId);
-        this.content = content;
+    }
+
+    private Comment(final CreatingCommentDto commentDto) {
+        this.user = new User(commentDto.getUserId());
+        this.post = new Post(commentDto.getPostId());
+        this.content = commentDto.getContent();
+    }
+
+    static public Comment toComment(final CreatingCommentDto commentDto) {
+        return new Comment(commentDto);
     }
 
     public void change(String content) {

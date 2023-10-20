@@ -25,7 +25,7 @@ public class CommentService {
     private final ReplyRepositorySupport replyRepositorySupport;
 
     public CommentDto save(CreatingCommentDto commentDto) {
-        return toCommentDto(commentRepository.save(Comment.builder().userId(commentDto.getUserId()).postId(commentDto.getPostId()).content(commentDto.getContent()).build()));
+        return toCommentDto(commentRepository.save(Comment.toComment(commentDto)));
     }
 
     @Transactional
