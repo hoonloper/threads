@@ -6,12 +6,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import threads.server.application.exception.BadRequestException;
 import threads.server.domain.activity.ActivityService;
-import threads.server.domain.activity.ActivityStatus;
 import threads.server.domain.activity.dto.SaveActivityDto;
 import threads.server.domain.follow.FollowService;
-import threads.server.domain.follow.dto.FollowingDto;
-import threads.server.domain.follow.dto.UnfollowingDto;
+import threads.server.domain.follow.FollowDto;
 
 @RestController
 @RequestMapping("/api/v1/follows")
@@ -24,7 +23,10 @@ public class FollowController {
     @ApiResponse(responseCode = "201", description = "CREATED")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void follow(@RequestBody @Valid FollowingDto followDto) {
+    public void follow(@RequestBody @Valid FollowDto followDto) {
+        if(followDto.checkIfSelfFollowing()) {
+            throw new BadRequestException("자신을 팔로우 할 수 없습니다.");
+        }
         followService.follow(followDto);
         activityService.saveActivity(SaveActivityDto.getFollowingActivity(followDto));
     }
@@ -34,7 +36,10 @@ public class FollowController {
     @ApiResponse(responseCode = "204", description = "NO_CONTENT")
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void unfollow(@RequestBody @Valid UnfollowingDto followDto) {
+    public void unfollow(@RequestBody @Valid FollowDto followDto) {
+        if(followDto.checkIfSelfFollowing()) {
+            throw new BadRequestException("자신을 언팔로우 할 수 없습니다.");
+        }
         followService.unfollow(followDto);
     }
 }

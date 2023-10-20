@@ -28,4 +28,14 @@ public class Follow {
 
     @Column
     private LocalDateTime followAt;
+
+    private Follow(FollowDto followingDto) {
+        this.toUser = new User(followingDto.getToUserId());
+        this.fromUser = new User(followingDto.getFromUserId());
+        this.followAt = LocalDateTime.now();
+    }
+
+    static public Follow toFollowingEntity(FollowDto followingDto) {
+        return new Follow(followingDto);
+    }
 }

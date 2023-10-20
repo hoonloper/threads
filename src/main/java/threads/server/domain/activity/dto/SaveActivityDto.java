@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import threads.server.domain.activity.ActivityStatus;
 import threads.server.domain.comment.dto.CreatingCommentDto;
-import threads.server.domain.follow.dto.FollowingDto;
+import threads.server.domain.follow.FollowDto;
 import threads.server.domain.like.LikeType;
 import threads.server.domain.like.dto.CreatingLikeDto;
-import threads.server.domain.like.dto.LikeDto;
 import threads.server.domain.reply.dto.CreatingReplyDto;
 
 @AllArgsConstructor
@@ -34,14 +33,14 @@ public class SaveActivityDto {
         return new SaveActivityDto(commentDto);
     }
 
-    private SaveActivityDto(FollowingDto followingDto) {
-        this.toUserId = followingDto.getToUserId();
-        this.fromUserId = followingDto.getFromUserId();
-        this.targetId = followingDto.getToUserId();
+    private SaveActivityDto(FollowDto followDto) {
+        this.toUserId = followDto.getToUserId();
+        this.fromUserId = followDto.getFromUserId();
+        this.targetId = followDto.getToUserId();
         this.content = null;
         this.status = ActivityStatus.COMMENT;
     }
-    static public SaveActivityDto getFollowingActivity(FollowingDto followDto) {
+    static public SaveActivityDto getFollowingActivity(FollowDto followDto) {
         return new SaveActivityDto(followDto);
     }
 

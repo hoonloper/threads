@@ -1,11 +1,11 @@
-package threads.server.domain.follow.dto;
+package threads.server.domain.follow;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 
 @Getter
-public class FollowingDto {
+public class FollowDto {
     @NotNull(message = "toUserId is null")
     @Positive
     private Long toUserId;
@@ -13,4 +13,8 @@ public class FollowingDto {
     @NotNull(message = "fromUserId is null")
     @Positive
     private Long fromUserId;
+
+    public Boolean checkIfSelfFollowing() {
+        return fromUserId.equals(toUserId);
+    }
 }

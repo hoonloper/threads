@@ -4,34 +4,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import threads.server.application.exception.BadRequestException;
 import threads.server.application.exception.NotFoundException;
-import threads.server.application.exception.UnauthorizedException;
-import threads.server.domain.follow.dto.FollowingDto;
-import threads.server.domain.follow.dto.UnfollowingDto;
-import threads.server.domain.user.User;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class FollowService {
     private final FollowRepository followRepository;
 
-    public void follow(FollowingDto followDto) {
-        boolean followed = followRepository.findByToUserIdAndFromUserId(followDto.getToUserId(), followDto.getFromUserId()).isPresent();
-        if(Boolean.TRUE.equals(followed)) {
+    public void follow(final FollowDto followDto) {
+        followRepository.findByToUserIdAndFromUserId(followDto.getToUserId(), followDto.getFromUserId()).ifPresent(e -> {
             throw new BadRequestException("이미 팔로우 중 입니다.");
-        }
-        User toUser = new User(followDto.getToUserId());
-        User fromUser = new User(followDto.getFromUserId());
-        followRepository.save(new Follow(null, toUser, fromUser, LocalDateTime.now()));
+        });
+        followRepository.save(Follow.toFollowingEntity(followDto));
     }
 
-    public void unfollow(UnfollowingDto followDto) {
+    public void unfollow(FollowDto followDto) {
         Follow follow = followRepository.findByToUserIdAndFromUserId(followDto.getToUserId(), followDto.getFromUserId()).orElseThrow(() -> new NotFoundException("팔로우 내역을 찾을 수 없습니다."));
-        if(!followDto.getFromUserId().equals(follow.getFromUser().getId()) ||
-            !followDto.getToUserId().equals(follow.getToUser().getId())) {
-            throw new UnauthorizedException("권한이 없습니다.");
-        }
         followRepository.delete(follow);
     }
 
