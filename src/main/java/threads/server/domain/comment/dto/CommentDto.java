@@ -1,7 +1,6 @@
 package threads.server.domain.comment.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import threads.server.domain.comment.Comment;
@@ -31,10 +30,10 @@ public class CommentDto {
     private User userEntity;
     private UserDto user;
     public void changeUserToUserDto() {
-        if(this.userEntity == null) {
+        if(userEntity == null) {
             throw new NullPointerException("userEntity is null");
         }
-        this.user = UserDto.toDto(this.userEntity);
+        user = UserDto.toDto(userEntity);
     }
 
 
@@ -42,8 +41,6 @@ public class CommentDto {
     private Reply replyEntity;
     private List<ReplyDto> replies = new ArrayList<>();
 
-
-    @QueryProjection
     public CommentDto(Long id, Long postId, String content, LocalDateTime createdAt, LocalDateTime lastModifiedAt) {
         this.id = id;
         this.postId = postId;

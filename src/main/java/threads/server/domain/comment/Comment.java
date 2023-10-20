@@ -31,7 +31,7 @@ public class Comment extends BaseTime {
     private Post post;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
-    private List<Reply> replies = new ArrayList<>();
+    private final List<Reply> replies = new ArrayList<>();
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private final List<LikeComment> likeComments = new ArrayList<>();
@@ -40,15 +40,18 @@ public class Comment extends BaseTime {
     private String content;
 
     @Builder
-    public Comment(Long id, User user, Post post, List<Reply> replies, String content) {
+    public Comment(Long id, Long userId, Long postId, String content) {
         this.id = id;
-        this.user = user;
-        this.post = post;
-        this.replies = replies;
+        this.user = new User(userId);
+        this.post = new Post(postId);
         this.content = content;
     }
 
     public void change(String content) {
         this.content = content;
+    }
+
+    public Boolean checkIfAuthor(Long userId) {
+        return user.getId().equals(userId);
     }
 }
