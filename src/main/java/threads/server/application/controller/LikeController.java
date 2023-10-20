@@ -30,9 +30,7 @@ public class LikeController {
     @ResponseStatus(HttpStatus.CREATED)
     public void like(@RequestBody @Valid CreatingLikeDto likeDto) {
         likeService.save(likeDto);
-        ActivityStatus status = likeDto.getType().equals(LikeType.POST) ? ActivityStatus.LIKE_POST : likeDto.getType().equals(LikeType.COMMENT) ? ActivityStatus.LIKE_COMMENT : ActivityStatus.LIKE_REPLY;
-        SaveActivityDto activityDto = new SaveActivityDto(likeDto.getTargetUserId(), likeDto.getUserId(), likeDto.getTargetId(), null, status);
-        activityService.saveActivity(activityDto);
+        activityService.saveActivity(SaveActivityDto.getCreatingLikeActivity(likeDto));
     }
 
     @Operation(summary = "좋아요 취소", description = "쓰레드 or 댓글 or 답글 좋아요를 취소합니다.", tags = { "좋아요 API" })

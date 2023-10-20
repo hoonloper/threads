@@ -26,8 +26,7 @@ public class FollowController {
     @ResponseStatus(HttpStatus.CREATED)
     public void follow(@RequestBody @Valid FollowingDto followDto) {
         followService.follow(followDto);
-
-        activityService.saveActivity(new SaveActivityDto(followDto.getToUserId(), followDto.getFromUserId(), followDto.getToUserId(), null, ActivityStatus.FOLLOW));
+        activityService.saveActivity(SaveActivityDto.getFollowingActivity(followDto));
     }
 
 
