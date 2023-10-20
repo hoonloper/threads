@@ -24,12 +24,12 @@ public class CommentService {
     private final CommentRepositorySupport commentRepositorySupport;
     private final ReplyRepositorySupport replyRepositorySupport;
 
-    public CommentDto save(CreatingCommentDto commentDto) {
+    public CommentDto save(final CreatingCommentDto commentDto) {
         return toCommentDto(commentRepository.save(Comment.toComment(commentDto)));
     }
 
     @Transactional
-    public CommentDto update(UpdatingCommentDto commentDto) {
+    public CommentDto update(final UpdatingCommentDto commentDto) {
         Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
         if(!comment.checkIfAuthor(commentDto.getUserId())) {
             throw new ForbiddenException("권한이 없습니다.");
@@ -40,7 +40,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(Long commentId, Long userId) {
+    public void delete(final Long commentId, final Long userId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
         if(!comment.checkIfAuthor(userId)) {
             throw new ForbiddenException("권한이 없습니다.");
@@ -49,7 +49,7 @@ public class CommentService {
     }
 
     @Transactional
-    public ReadCommentDto findAllByPostId(Pageable pageable, Long postId, Long userId) {
+    public ReadCommentDto findAllByPostId(final Pageable pageable, final Long postId, final Long userId) {
         PageImpl<Comment> commentPage = commentRepositorySupport.findCommentPageByPostId(pageable, postId);
         // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
         List<CommentDto> commentDtoList =  commentRepositorySupport.findAllComments(pageable, postId, userId)
@@ -60,7 +60,7 @@ public class CommentService {
     }
 
     @Transactional
-    public ReadCommentDto findAllByUserId(Pageable pageable, Long userId) {
+    public ReadCommentDto findAllByUserId(final Pageable pageable, final Long userId) {
         PageImpl<Comment> commentPage = commentRepositorySupport.findCommentPageByUserId(pageable, userId);
         // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
         List<CommentDto> commentDtoList =  commentRepositorySupport.findAllCommentsByUserId(pageable, userId)
@@ -70,7 +70,7 @@ public class CommentService {
         return new ReadCommentDto(commentPage.getTotalPages(), commentPage.getTotalElements(), commentDtoList);
     }
 
-    private void addFoundLastReplyFromComment(CommentDto comment, Long userId) {
+    private void addFoundLastReplyFromComment(final CommentDto comment, final Long userId) {
         replyRepositorySupport.findOneByCommentId(comment.getId(), userId).ifPresent(comment::addReply);
     }
 }

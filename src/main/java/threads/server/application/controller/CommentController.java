@@ -57,7 +57,7 @@ public class CommentController {
 
     @Operation(summary = "댓글의 답글 조회", description = "댓글에 작성된 답글을 가져옵니다.", tags = { "댓글 API" })
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = CommentDto.class)))
-    @GetMapping("/{commentId}/replies")
+    @GetMapping("{commentId}/replies")
     @ResponseStatus(HttpStatus.OK)
     public ReadReplyDto getRepliesByCommentId(Pageable pageable, @PathVariable(value = "commentId") Long commentId, @RequestParam(value = "userId") Long userId) {
         return replyService.findAllByCommentId(pageable, commentId, userId);
