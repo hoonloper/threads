@@ -12,17 +12,17 @@ import java.util.Map;
 public class LikeServiceImpl implements LikeService {
     private final Map<LikeType, LikeService> likeServiceMap = new HashMap<>();
 
-    public LikeServiceImpl(LikePostServiceImpl likePostServiceImpl, LikeCommentServiceImpl likeCommentServiceImpl, LikeReplyServiceImpl likeReplyServiceImpl) {
+    public LikeServiceImpl(final LikePostServiceImpl likePostServiceImpl, final LikeCommentServiceImpl likeCommentServiceImpl, final LikeReplyServiceImpl likeReplyServiceImpl) {
         likeServiceMap.put(LikeType.POST, likePostServiceImpl);
         likeServiceMap.put(LikeType.COMMENT, likeCommentServiceImpl);
         likeServiceMap.put(LikeType.REPLY, likeReplyServiceImpl);
     }
 
-    public void save(CreatingLikeDto likeDto) {
+    public void save(final CreatingLikeDto likeDto) {
         likeServiceMap.get(likeDto.getType()).save(likeDto);
     }
 
-    public void delete(DeletingLikeDto likeDto) {
+    public void delete(final DeletingLikeDto likeDto) {
         likeServiceMap.get(likeDto.getType()).delete(likeDto);
     }
 }
