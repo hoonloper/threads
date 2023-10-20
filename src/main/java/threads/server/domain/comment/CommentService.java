@@ -30,15 +30,7 @@ public class CommentService {
     public CommentDto save(CreatingCommentDto commentDto) {
         User user = new User(commentDto.getUserId());
         Post post = new Post(commentDto.getPostId());
-        return toCommentDto(
-                commentRepository.save(
-                        Comment.builder()
-                                .user(user)
-                                .post(post)
-                                .content(commentDto.getContent())
-                                .build()
-                )
-        );
+        return toCommentDto(commentRepository.save(Comment.builder().user(user).post(post).content(commentDto.getContent()).build()));
     }
 
     @Transactional
@@ -69,14 +61,13 @@ public class CommentService {
         PageImpl<Comment> commentPage = commentRepositorySupport.findCommentPageByPostId(pageable, postId);
         List<CommentDto> commentDtoList =  commentRepositorySupport.findAllComments(pageable, postId, userId)
                 .stream()
-                .map(comment -> {
+                .peek(comment -> {
                     // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
                     ReplyDto replyDto = replyRepositorySupport.findOneByCommentId(comment.getId(), userId);
                     if(replyDto != null) {
                         comment.getReplies().add(replyDto);
                     }
                     comment.setUser(UserDto.toDto(comment.getUserEntity()));
-                    return comment;
                 })
                 .toList();
         return new ReadCommentDto(commentPage.getTotalPages(), commentPage.getTotalElements(), commentDtoList);
@@ -87,14 +78,13 @@ public class CommentService {
         PageImpl<Comment> commentPage = commentRepositorySupport.findCommentPageByUserId(pageable, userId);
         List<CommentDto> commentDtoList =  commentRepositorySupport.findAllCommentsByUserId(pageable, userId)
                 .stream()
-                .map(comment -> {
+                .peek(comment -> {
                     // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
                     ReplyDto replyDto = replyRepositorySupport.findOneByCommentId(comment.getId(), userId);
                     if(replyDto != null) {
                         comment.getReplies().add(replyDto);
                     }
                     comment.setUser(UserDto.toDto(comment.getUserEntity()));
-                    return comment;
                 })
                 .toList();
         return new ReadCommentDto(commentPage.getTotalPages(), commentPage.getTotalElements(), commentDtoList);
