@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import threads.server.domain.like.dto.CreatingLikeDto;
 import threads.server.domain.user.User;
 import threads.server.domain.comment.Comment;
 
@@ -29,4 +30,14 @@ public class LikeComment {
 
     @Column
     private LocalDateTime likeAt;
+
+    private LikeComment(CreatingLikeDto likeDto) {
+        this.user = new User(likeDto.getUserId());
+        this.comment = new Comment(likeDto.getTargetId());
+        this.likeAt = LocalDateTime.now();
+    }
+
+    static public LikeComment toLikeCommentEntity(CreatingLikeDto likeDto) {
+        return new LikeComment(likeDto);
+    }
 }
