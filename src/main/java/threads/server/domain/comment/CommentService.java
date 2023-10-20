@@ -51,15 +51,10 @@ public class CommentService {
     @Transactional
     public ReadCommentDto findAllByPostId(Pageable pageable, Long postId, Long userId) {
         PageImpl<Comment> commentPage = commentRepositorySupport.findCommentPageByPostId(pageable, postId);
+        // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
         List<CommentDto> commentDtoList =  commentRepositorySupport.findAllComments(pageable, postId, userId)
                 .stream()
-                .peek(comment -> {
-                    // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
-                    ReplyDto replyDto = replyRepositorySupport.findOneByCommentId(comment.getId(), userId);
-                    if(replyDto != null) {
-                        comment.getReplies().add(replyDto);
-                    }
-                })
+                .peek(comment -> addFoundLastReplyFromComment(comment, userId))
                 .toList();
         return new ReadCommentDto(commentPage.getTotalPages(), commentPage.getTotalElements(), commentDtoList);
     }
@@ -67,16 +62,15 @@ public class CommentService {
     @Transactional
     public ReadCommentDto findAllByUserId(Pageable pageable, Long userId) {
         PageImpl<Comment> commentPage = commentRepositorySupport.findCommentPageByUserId(pageable, userId);
+        // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
         List<CommentDto> commentDtoList =  commentRepositorySupport.findAllCommentsByUserId(pageable, userId)
                 .stream()
-                .peek(comment -> {
-                    // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
-                    ReplyDto replyDto = replyRepositorySupport.findOneByCommentId(comment.getId(), userId);
-                    if(replyDto != null) {
-                        comment.getReplies().add(replyDto);
-                    }
-                })
+                .peek(comment -> addFoundLastReplyFromComment(comment, userId))
                 .toList();
         return new ReadCommentDto(commentPage.getTotalPages(), commentPage.getTotalElements(), commentDtoList);
+    }
+
+    private void addFoundLastReplyFromComment(CommentDto comment, Long userId) {
+        replyRepositorySupport.findOneByCommentId(comment.getId(), userId).ifPresent(comment::addReply);
     }
 }

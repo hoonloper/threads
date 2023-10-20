@@ -58,4 +58,8 @@ public class CommentDto {
                 comment.getLastModifiedAt()
         );
     }
+
+    public void addReply(final ReplyDto replyDto) {
+        replies.add(replyDto);
+    }
 }
