@@ -67,7 +67,6 @@ public class CommentService {
                     if(replyDto != null) {
                         comment.getReplies().add(replyDto);
                     }
-                    comment.setUser(UserDto.toDto(comment.getUserEntity()));
                 })
                 .toList();
         return new ReadCommentDto(commentPage.getTotalPages(), commentPage.getTotalElements(), commentDtoList);
@@ -84,7 +83,6 @@ public class CommentService {
                     if(replyDto != null) {
                         comment.getReplies().add(replyDto);
                     }
-                    comment.setUser(UserDto.toDto(comment.getUserEntity()));
                 })
                 .toList();
         return new ReadCommentDto(commentPage.getTotalPages(), commentPage.getTotalElements(), commentDtoList);

@@ -23,21 +23,20 @@ public class CommentDto {
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
+    private Boolean liked;
+    private Long likeCount;
+    private Long replyCount;
 
     @JsonIgnore
     private User userEntity;
     private UserDto user;
-    public void setUser(UserDto user) {
-        this.user = user;
+    public void changeUserToUserDto() {
+        if(this.userEntity == null) {
+            throw new NullPointerException("userEntity is null");
+        }
+        this.user = UserDto.toDto(this.userEntity);
     }
 
-    private Boolean liked;
-    public void setLiked(Boolean liked) {
-        this.liked = liked;
-    }
-
-    private Long likeCount;
-    private Long replyCount;
 
     @JsonIgnore
     private Reply replyEntity;
