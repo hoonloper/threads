@@ -30,9 +30,7 @@ public class ReplyController {
     @ResponseStatus(HttpStatus.CREATED)
     public ReplyDto createReply(@RequestBody @Valid CreatingReplyDto replyDto) {
         ReplyDto reply = replyService.save(replyDto);
-
-        activityService.saveActivity(new SaveActivityDto(replyDto.getCommentUserId(), replyDto.getUserId(), replyDto.getCommentId(), replyDto.getContent(), ActivityStatus.REPLY));
-
+        activityService.saveActivity(SaveActivityDto.getCreatingReplyActivity(replyDto));
         return reply;
     }
 

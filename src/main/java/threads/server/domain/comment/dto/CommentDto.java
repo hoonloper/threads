@@ -1,7 +1,6 @@
 package threads.server.domain.comment.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import threads.server.domain.comment.Comment;
@@ -23,28 +22,25 @@ public class CommentDto {
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
+    private Boolean liked;
+    private Long likeCount;
+    private Long replyCount;
 
     @JsonIgnore
     private User userEntity;
     private UserDto user;
-    public void setUser(UserDto user) {
-        this.user = user;
+    public void changeUserToUserDto() {
+        if(userEntity == null) {
+            throw new NullPointerException("userEntity is null");
+        }
+        user = UserDto.toDto(userEntity);
     }
 
-    private Boolean liked;
-    public void setLiked(Boolean liked) {
-        this.liked = liked;
-    }
-
-    private Long likeCount;
-    private Long replyCount;
 
     @JsonIgnore
     private Reply replyEntity;
     private List<ReplyDto> replies = new ArrayList<>();
 
-
-    @QueryProjection
     public CommentDto(Long id, Long postId, String content, LocalDateTime createdAt, LocalDateTime lastModifiedAt) {
         this.id = id;
         this.postId = postId;
@@ -61,5 +57,9 @@ public class CommentDto {
                 comment.getCreatedAt(),
                 comment.getLastModifiedAt()
         );
+    }
+
+    public void addReply(final ReplyDto replyDto) {
+        replies.add(replyDto);
     }
 }

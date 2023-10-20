@@ -5,16 +5,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import threads.server.application.exception.ForbiddenException;
 import threads.server.application.exception.NotFoundException;
-import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.comment.dto.*;
 import threads.server.domain.comment.repository.CommentRepository;
 import threads.server.domain.comment.repository.CommentRepositorySupport;
-import threads.server.domain.post.Post;
 import threads.server.domain.reply.dto.ReplyDto;
 import threads.server.domain.reply.repository.ReplyRepositorySupport;
-import threads.server.domain.user.User;
-import threads.server.domain.user.dto.UserDto;
 
 import java.util.List;
 
@@ -27,76 +24,53 @@ public class CommentService {
     private final CommentRepositorySupport commentRepositorySupport;
     private final ReplyRepositorySupport replyRepositorySupport;
 
-    public CommentDto save(CreatingCommentDto commentDto) {
-        User user = new User(commentDto.getUserId());
-        Post post = new Post(commentDto.getPostId());
-        return toCommentDto(
-                commentRepository.save(
-                        Comment.builder()
-                                .user(user)
-                                .post(post)
-                                .content(commentDto.getContent())
-                                .build()
-                )
-        );
+    public CommentDto save(final CreatingCommentDto commentDto) {
+        return toCommentDto(commentRepository.save(Comment.toComment(commentDto)));
     }
 
     @Transactional
-    public CommentDto update(UpdatingCommentDto commentDto) {
+    public CommentDto update(final UpdatingCommentDto commentDto) {
         Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
-        authorizeUser(commentDto.getUserId(), comment.getUser().getId());
+        if(!comment.checkIfAuthor(commentDto.getUserId())) {
+            throw new ForbiddenException("권한이 없습니다.");
+        };
         comment.change(commentDto.getContent());
         commentRepository.save(comment);
         return toCommentDto(comment);
     }
 
     @Transactional
-    public void delete(Long commentId, Long userId) {
+    public void delete(final Long commentId, final Long userId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
-        authorizeUser(userId, comment.getUser().getId());
+        if(!comment.checkIfAuthor(userId)) {
+            throw new ForbiddenException("권한이 없습니다.");
+        };
         commentRepository.delete(comment);
     }
 
-
-    private void authorizeUser(Long requestUserId, Long userIdFromComment) {
-        if (!requestUserId.equals(userIdFromComment)) {
-            throw new UnauthorizedException("권한이 없습니다.");
-        }
-    }
-
     @Transactional
-    public ReadCommentDto findAllByPostId(Pageable pageable, Long postId, Long userId) {
+    public ReadCommentDto findAllByPostId(final Pageable pageable, final Long postId, final Long userId) {
         PageImpl<Comment> commentPage = commentRepositorySupport.findCommentPageByPostId(pageable, postId);
+        // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
         List<CommentDto> commentDtoList =  commentRepositorySupport.findAllComments(pageable, postId, userId)
                 .stream()
-                .map(comment -> {
-                    // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
-                    ReplyDto replyDto = replyRepositorySupport.findOneByCommentId(comment.getId(), userId);
-                    if(replyDto != null) {
-                        comment.getReplies().add(replyDto);
-                    }
-                    comment.setUser(UserDto.toDto(comment.getUserEntity()));
-                    return comment;
-                })
+                .peek(comment -> addFoundLastReplyFromComment(comment, userId))
                 .toList();
         return new ReadCommentDto(commentPage.getTotalPages(), commentPage.getTotalElements(), commentDtoList);
     }
 
     @Transactional
-    public ReadCommentDto findAllByUserId(Pageable pageable, Long userId) {
+    public ReadCommentDto findAllByUserId(final Pageable pageable, final Long userId) {
         PageImpl<Comment> commentPage = commentRepositorySupport.findCommentPageByUserId(pageable, userId);
+        // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
         List<CommentDto> commentDtoList =  commentRepositorySupport.findAllCommentsByUserId(pageable, userId)
                 .stream()
-                .map(comment -> {
-                    // TODO: 순회로 댓글의 답글 가져오는 쿼리 개선해야 함
-                    ReplyDto replyDto = replyRepositorySupport.findOneByCommentId(comment.getId(), userId);
-                    if(replyDto != null) {
-                        comment.getReplies().add(replyDto);
-                    }
-                    comment.setUser(UserDto.toDto(comment.getUserEntity()));
-                    return comment;
-                })
+                .peek(comment -> addFoundLastReplyFromComment(comment, userId))
                 .toList();
         return new ReadCommentDto(commentPage.getTotalPages(), commentPage.getTotalElements(), commentDtoList);
+    }
+
+    private void addFoundLastReplyFromComment(final CommentDto comment, final Long userId) {
+        replyRepositorySupport.findOneByCommentId(comment.getId(), userId).ifPresent(comment::addReply);
     }
 }

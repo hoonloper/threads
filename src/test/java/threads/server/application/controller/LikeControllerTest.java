@@ -16,8 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import threads.server.domain.like.LikeType;
 import threads.server.domain.like.dto.CreatingLikeDto;
 import threads.server.domain.like.dto.DeletingLikeDto;
-import threads.server.domain.like.service.LikeCommentService;
-import threads.server.domain.like.service.LikePostService;
+import threads.server.domain.like.service.LikeCommentServiceImpl;
+import threads.server.domain.like.service.LikePostServiceImpl;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -28,10 +28,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class LikeControllerTest {
     @MockBean
-    LikePostService likePostService;
+    LikePostServiceImpl likePostServiceImpl;
 
     @MockBean
-    LikeCommentService likeCommentService;
+    LikeCommentServiceImpl likeCommentServiceImpl;
 
     @Autowired
     MockMvc mvc;

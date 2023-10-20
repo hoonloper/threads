@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import threads.server.domain.activity.ActivityService;
-import threads.server.domain.activity.ActivityStatus;
 import threads.server.domain.activity.dto.SaveActivityDto;
 import threads.server.domain.comment.dto.*;
 import threads.server.domain.comment.CommentService;
@@ -31,9 +30,7 @@ public class CommentController {
     @ResponseStatus(HttpStatus.CREATED)
     public CommentDto createComment(@RequestBody @Valid CreatingCommentDto commentDto) {
         CommentDto comment = commentService.save(commentDto);
-
-        activityService.saveActivity(new SaveActivityDto(commentDto.getPostUserId(), commentDto.getUserId(), commentDto.getPostId(), commentDto.getContent(), ActivityStatus.COMMENT));
-
+        activityService.saveActivity(SaveActivityDto.getCreatingCommentActivity(commentDto));
         return comment;
     }
 
@@ -57,7 +54,7 @@ public class CommentController {
 
     @Operation(summary = "댓글의 답글 조회", description = "댓글에 작성된 답글을 가져옵니다.", tags = { "댓글 API" })
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = CommentDto.class)))
-    @GetMapping("/{commentId}/replies")
+    @GetMapping("{commentId}/replies")
     @ResponseStatus(HttpStatus.OK)
     public ReadReplyDto getRepliesByCommentId(Pageable pageable, @PathVariable(value = "commentId") Long commentId, @RequestParam(value = "userId") Long userId) {
         return replyService.findAllByCommentId(pageable, commentId, userId);

@@ -15,6 +15,7 @@ import threads.server.domain.reply.dto.ReplyDto;
 import threads.server.domain.user.dto.UserDto;
 
 import java.util.List;
+import java.util.Optional;
 
 import static threads.server.domain.comment.QComment.comment;
 import static threads.server.domain.like.entity.QLikeReply.likeReply;
@@ -81,16 +82,16 @@ public class ReplyRepositorySupport extends QuerydslRepositorySupport {
         return orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]);
     }
 
-    public ReplyDto findOneByCommentId(Long commentId, Long userId) {
-         return queryFactory
-                .select(makeReplyDtoBean(userId))
-                .from(reply)
-                .where(reply.comment.id.eq(commentId))
-                .innerJoin(reply.user)
-                .leftJoin(reply.likeReplies, likeReply)
-                .groupBy(reply.id)
-                .orderBy(reply.createdAt.asc())
-                .limit(1)
-                .fetchOne();
+    public Optional<ReplyDto> findOneByCommentId(Long commentId, Long userId) {
+         return Optional.ofNullable(queryFactory
+                 .select(makeReplyDtoBean(userId))
+                 .from(reply)
+                 .where(reply.comment.id.eq(commentId))
+                 .innerJoin(reply.user)
+                 .leftJoin(reply.likeReplies, likeReply)
+                 .groupBy(reply.id)
+                 .orderBy(reply.createdAt.asc())
+                 .limit(1)
+                 .fetchOne());
     }
 }
