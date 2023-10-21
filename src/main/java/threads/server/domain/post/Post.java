@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import threads.server.domain.like.entity.LikePost;
+import threads.server.domain.post.dto.CreatingPostDto;
 import threads.server.domain.user.User;
 import threads.server.domain.common.BaseTime;
 import threads.server.domain.comment.Comment;
@@ -37,6 +38,16 @@ public class Post extends BaseTime {
 
     public Post(Long id) {
         this.id = id;
+    }
+
+
+    private Post(final CreatingPostDto postDto) {
+        this.user = new User(postDto.getUserId());
+        this.content = postDto.getContent();
+    }
+
+    static public Post toPostEntity(final CreatingPostDto postDto) {
+        return new Post(postDto);
     }
 
     public Post(Long id, User user, String content) {
