@@ -40,7 +40,6 @@ public class Post extends BaseTime {
         this.id = id;
     }
 
-
     private Post(final CreatingPostDto postDto) {
         this.user = new User(postDto.getUserId());
         this.content = postDto.getContent();
@@ -48,12 +47,6 @@ public class Post extends BaseTime {
 
     static public Post toPostEntity(final CreatingPostDto postDto) {
         return new Post(postDto);
-    }
-
-    public Post(Long id, User user, String content) {
-        this.id = id;
-        this.user = user;
-        this.content = content;
     }
 
     public void change(String content) {
