@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import threads.server.application.exception.ForbiddenException;
 import threads.server.application.exception.NotFoundException;
 import threads.server.application.exception.UnauthorizedException;
 import threads.server.domain.post.dto.*;
@@ -25,18 +26,18 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostRepositorySupport postRepositorySupport;
 
-    public PostDto findOneById(Long postId, Long userId) {
+    public PostDto findOneById(final Long postId, final Long userId) {
         PostDto postDto = postRepositorySupport.findById(postId, userId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        postDto.setUser(UserDto.toDto(postDto.getUserEntity()));
+        postDto.changeUserToUserDto();
         return postDto;
     }
 
-    public PostDto save(CreatingPostDto postDto) {
-        return toPostDto(postRepository.save(new Post(null, new User(postDto.getUserId()), postDto.getContent())));
+    public PostDto save(final CreatingPostDto postDto) {
+        return toPostDto(postRepository.save(Post.toPostEntity(postDto)));
     }
 
     @Transactional
-    public PostDto update(UpdatingPostDto postDto) {
+    public PostDto update(final UpdatingPostDto postDto) {
         Post post = postRepository.findById(postDto.getId()).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
         authorizeUser(postDto.getUserId(), post.getUser().getId());
         post.change(postDto.getContent());
@@ -45,14 +46,14 @@ public class PostService {
     }
 
     @Transactional
-    public void remove(Long postId, Long userId) {
+    public void remove(final Long postId, final Long userId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
         authorizeUser(userId, post.getUser().getId());
         postRepository.delete(post);
     }
 
 
-    public ReadPostDto findAllPost(Pageable pageable, Long userId) {
+    public ReadPostDto findAllPost(final Pageable pageable, final Long userId) {
         Page<Post> postPage = postRepositorySupport.findPostPage(pageable, java.util.Optional.empty());
         return new ReadPostDto(
                 postPage.getTotalPages(),
@@ -61,7 +62,7 @@ public class PostService {
         );
     }
 
-    public ReadPostDto findAllByUserId(Pageable pageable, Long userId) {
+    public ReadPostDto findAllByUserId(final Pageable pageable, final Long userId) {
         PageImpl<Post> postPage = postRepositorySupport.findPostPage(pageable, Optional.of(userId));
         return new ReadPostDto(
                 postPage.getTotalPages(),
@@ -70,13 +71,13 @@ public class PostService {
         );
     }
 
-    private List<PostDto> toUserDtoInPosts(List<PostDto> postDtoList) {
+    private List<PostDto> toUserDtoInPosts(final List<PostDto> postDtoList) {
         return postDtoList.stream().peek(post -> post.setUser(UserDto.toDto(post.getUserEntity()))).toList();
     }
 
-    private void authorizeUser(Long requestUserId, Long userIdFromPost) {
+    private void authorizeUser(final Long requestUserId, final Long userIdFromPost) {
         if (!requestUserId.equals(userIdFromPost)) {
-            throw new UnauthorizedException("권한이 없습니다.");
+            throw new ForbiddenException("권한이 없습니다.");
         }
     }
 
