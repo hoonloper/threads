@@ -27,7 +27,7 @@ public class PostService {
 
     public PostDto findOneById(Long postId, Long userId) {
         PostDto postDto = postRepositorySupport.findById(postId, userId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        postDto.setUser(UserDto.toDto(postDto.getUserEntity()));
+        postDto.changeUserToUserDto();
         return postDto;
     }
 

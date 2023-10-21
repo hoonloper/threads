@@ -26,6 +26,13 @@ public class PostDto {
     private User userEntity;
     private UserDto user;
 
+    public void changeUserToUserDto() {
+        if(userEntity == null) {
+            throw new NullPointerException("userEntity is null");
+        }
+        user = UserDto.toDto(userEntity);
+    }
+
     public PostDto(Long id, UserDto user, String content, LocalDateTime createdAt, LocalDateTime lastModifiedAt) {
         this.id = id;
         this.user = user;
