@@ -39,7 +39,9 @@ public class PostService {
     @Transactional
     public PostDto update(final UpdatingPostDto postDto) {
         Post post = postRepository.findById(postDto.getId()).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        authorizeUser(postDto.getUserId(), post.getUser().getId());
+        if(!post.checkIfAuthor(postDto.getUserId())) {
+            throw new ForbiddenException("권한이 없습니다.");
+        }
         post.change(postDto.getContent());
         postRepository.save(post);
         return toPostDto(post);
@@ -48,7 +50,9 @@ public class PostService {
     @Transactional
     public void remove(final Long postId, final Long userId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        authorizeUser(userId, post.getUser().getId());
+        if(!post.checkIfAuthor(userId)) {
+            throw new ForbiddenException("권한이 없습니다.");
+        }
         postRepository.delete(post);
     }
 
@@ -74,11 +78,4 @@ public class PostService {
     private List<PostDto> toUserDtoInPosts(final List<PostDto> postDtoList) {
         return postDtoList.stream().peek(post -> post.setUser(UserDto.toDto(post.getUserEntity()))).toList();
     }
-
-    private void authorizeUser(final Long requestUserId, final Long userIdFromPost) {
-        if (!requestUserId.equals(userIdFromPost)) {
-            throw new ForbiddenException("권한이 없습니다.");
-        }
-    }
-
 }

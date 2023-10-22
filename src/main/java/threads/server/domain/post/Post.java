@@ -52,4 +52,8 @@ public class Post extends BaseTime {
     public void change(String content) {
         this.content = content;
     }
+
+    public Boolean checkIfAuthor(Long userId) {
+        return user.getId().equals(userId);
+    }
 }
