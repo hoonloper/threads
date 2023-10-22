@@ -39,7 +39,9 @@ public class PostService {
     @Transactional
     public PostDto update(final UpdatingPostDto postDto) {
         Post post = postRepository.findById(postDto.getId()).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        authorizeUser(postDto.getUserId(), post.getUser().getId());
+        if(!post.checkIfAuthor(postDto.getUserId())) {
+            throw new ForbiddenException("권한이 없습니다.");
+        }
         post.change(postDto.getContent());
         postRepository.save(post);
         return toPostDto(post);
@@ -48,37 +50,20 @@ public class PostService {
     @Transactional
     public void remove(final Long postId, final Long userId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("쓰레드를 찾을 수 없습니다."));
-        authorizeUser(userId, post.getUser().getId());
+        if(!post.checkIfAuthor(userId)) {
+            throw new ForbiddenException("권한이 없습니다.");
+        }
         postRepository.delete(post);
     }
 
 
     public ReadPostDto findAllPost(final Pageable pageable, final Long userId) {
         Page<Post> postPage = postRepositorySupport.findPostPage(pageable, java.util.Optional.empty());
-        return new ReadPostDto(
-                postPage.getTotalPages(),
-                postPage.getTotalElements(),
-                toUserDtoInPosts(postRepositorySupport.findAllPosts(pageable, userId))
-        );
+        return ReadPostDto.toReadPostDto(postPage, postRepositorySupport.findAllPosts(pageable, userId));
     }
 
     public ReadPostDto findAllByUserId(final Pageable pageable, final Long userId) {
-        PageImpl<Post> postPage = postRepositorySupport.findPostPage(pageable, Optional.of(userId));
-        return new ReadPostDto(
-                postPage.getTotalPages(),
-                postPage.getTotalElements(),
-                toUserDtoInPosts(postRepositorySupport.findAllPostsByUserId(pageable, userId))
-        );
+        Page<Post> postPage = postRepositorySupport.findPostPage(pageable, Optional.of(userId));
+        return ReadPostDto.toReadPostDto(postPage, postRepositorySupport.findAllPostsByUserId(pageable, userId));
     }
-
-    private List<PostDto> toUserDtoInPosts(final List<PostDto> postDtoList) {
-        return postDtoList.stream().peek(post -> post.setUser(UserDto.toDto(post.getUserEntity()))).toList();
-    }
-
-    private void authorizeUser(final Long requestUserId, final Long userIdFromPost) {
-        if (!requestUserId.equals(userIdFromPost)) {
-            throw new ForbiddenException("권한이 없습니다.");
-        }
-    }
-
 }
