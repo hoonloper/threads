@@ -45,6 +45,10 @@ public class Reply extends BaseTime {
         this.content = content;
     }
 
+    public Boolean checkIfAuthor(Long userId) {
+        return user.getId().equals(userId);
+    }
+
     @Override
     public String toString() {
         return "Reply{" +

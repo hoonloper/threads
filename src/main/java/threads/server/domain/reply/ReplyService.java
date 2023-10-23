@@ -13,9 +13,6 @@ import threads.server.domain.reply.dto.*;
 import threads.server.domain.reply.repository.ReplyRepository;
 import threads.server.domain.reply.repository.ReplyRepositorySupport;
 import threads.server.domain.user.User;
-import threads.server.domain.user.dto.UserDto;
-
-import java.util.List;
 
 import static threads.server.domain.reply.dto.ReplyDto.toReplyDto;
 
@@ -26,41 +23,34 @@ public class ReplyService {
 
     private final ReplyRepositorySupport replyRepositorySupport;
 
-    public ReplyDto save(CreatingReplyDto replyDto) {
+    public ReplyDto save(final CreatingReplyDto replyDto) {
         User user = new User(replyDto.getUserId());
         Comment comment = new Comment(replyDto.getCommentId());
         return toReplyDto(replyRepository.save(new Reply(null, user, comment, replyDto.getContent())));
     }
 
     @Transactional
-    public ReplyDto update(UpdatingReplyDto replyDto, Long id) {
+    public ReplyDto update(final UpdatingReplyDto replyDto, Long id) {
         Reply reply = replyRepository.findById(id).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
-        authorizeUser(replyDto.getUserId(), reply.getUser().getId());
+        if (!reply.checkIfAuthor(replyDto.getUserId())) {
+            throw new UnauthorizedException("권한이 없습니다.");
+        }
         reply.change(replyDto.getContent());
         replyRepository.save(reply);
         return toReplyDto(reply);
     }
 
     @Transactional
-    public void delete(Long id, Long userId) {
+    public void delete(final Long id, final Long userId) {
         Reply reply = replyRepository.findById(id).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
-        authorizeUser(userId, reply.getUser().getId());
+        if (!reply.checkIfAuthor(userId)) {
+            throw new UnauthorizedException("권한이 없습니다.");
+        }
         replyRepository.delete(reply);
     }
 
-
-    private void authorizeUser(Long requestUserId, Long userIdFromComment) {
-        if (!requestUserId.equals(userIdFromComment)) {
-            throw new UnauthorizedException("권한이 없습니다.");
-        }
-    }
-
-    public ReadReplyDto findAllByCommentId(Pageable pageable, Long commentId, Long userId) {
+    public ReadReplyDto findAllByCommentId(final Pageable pageable, final Long commentId, final Long userId) {
         PageImpl<Reply> replyPage = replyRepositorySupport.findReplyPage(pageable, commentId);
-        List<ReplyDto> replyList = replyRepositorySupport.findAllReplies(pageable, commentId, userId)
-                .stream()
-                .peek(reply -> reply.setUser(UserDto.toDto(reply.getUserEntity())))
-                .toList();
-        return new ReadReplyDto(replyPage.getTotalPages(), replyPage.getTotalElements(), replyList);
+        return ReadReplyDto.toReadReplyDto(replyPage, replyRepositorySupport.findAllReplies(pageable, commentId, userId));
     }
 }
