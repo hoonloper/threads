@@ -26,14 +26,14 @@ public class ReplyService {
 
     private final ReplyRepositorySupport replyRepositorySupport;
 
-    public ReplyDto save(CreatingReplyDto replyDto) {
+    public ReplyDto save(final CreatingReplyDto replyDto) {
         User user = new User(replyDto.getUserId());
         Comment comment = new Comment(replyDto.getCommentId());
         return toReplyDto(replyRepository.save(new Reply(null, user, comment, replyDto.getContent())));
     }
 
     @Transactional
-    public ReplyDto update(UpdatingReplyDto replyDto, Long id) {
+    public ReplyDto update(final UpdatingReplyDto replyDto, Long id) {
         Reply reply = replyRepository.findById(id).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
         authorizeUser(replyDto.getUserId(), reply.getUser().getId());
         reply.change(replyDto.getContent());
@@ -42,7 +42,7 @@ public class ReplyService {
     }
 
     @Transactional
-    public void delete(Long id, Long userId) {
+    public void delete(final Long id, final Long userId) {
         Reply reply = replyRepository.findById(id).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
         authorizeUser(userId, reply.getUser().getId());
         replyRepository.delete(reply);
@@ -55,7 +55,7 @@ public class ReplyService {
         }
     }
 
-    public ReadReplyDto findAllByCommentId(Pageable pageable, Long commentId, Long userId) {
+    public ReadReplyDto findAllByCommentId(final Pageable pageable, final Long commentId, final Long userId) {
         PageImpl<Reply> replyPage = replyRepositorySupport.findReplyPage(pageable, commentId);
         List<ReplyDto> replyList = replyRepositorySupport.findAllReplies(pageable, commentId, userId)
                 .stream()
