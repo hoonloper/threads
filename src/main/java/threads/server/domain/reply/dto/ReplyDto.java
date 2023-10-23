@@ -26,6 +26,13 @@ public class ReplyDto {
     private User userEntity;
     private UserDto user;
 
+    public void changeUserToUserDto() {
+        if(userEntity == null) {
+            throw new NullPointerException("userEntity is null");
+        }
+        user = UserDto.toDto(userEntity);
+    }
+
     @Builder
     public ReplyDto(Long id, Long commentId, String content, LocalDateTime createdAt, LocalDateTime lastModifiedAt, UserDto user) {
         this.id = id;

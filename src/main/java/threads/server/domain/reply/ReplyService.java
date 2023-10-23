@@ -17,6 +17,7 @@ import threads.server.domain.user.dto.UserDto;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static threads.server.domain.reply.dto.ReplyDto.toReplyDto;
 
 @Service
@@ -54,10 +55,6 @@ public class ReplyService {
 
     public ReadReplyDto findAllByCommentId(final Pageable pageable, final Long commentId, final Long userId) {
         PageImpl<Reply> replyPage = replyRepositorySupport.findReplyPage(pageable, commentId);
-        List<ReplyDto> replyList = replyRepositorySupport.findAllReplies(pageable, commentId, userId)
-                .stream()
-                .peek(reply -> reply.setUser(UserDto.toDto(reply.getUserEntity())))
-                .toList();
-        return new ReadReplyDto(replyPage.getTotalPages(), replyPage.getTotalElements(), replyList);
+        return ReadReplyDto.toReadReplyDto(replyPage, replyRepositorySupport.findAllReplies(pageable, commentId, userId));
     }
 }
