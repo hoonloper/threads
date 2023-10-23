@@ -13,11 +13,7 @@ import threads.server.domain.reply.dto.*;
 import threads.server.domain.reply.repository.ReplyRepository;
 import threads.server.domain.reply.repository.ReplyRepositorySupport;
 import threads.server.domain.user.User;
-import threads.server.domain.user.dto.UserDto;
 
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 import static threads.server.domain.reply.dto.ReplyDto.toReplyDto;
 
 @Service

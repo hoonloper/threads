@@ -1,9 +1,7 @@
 package threads.server.domain.reply.dto;
 
 import org.springframework.data.domain.Page;
-import threads.server.domain.post.dto.PostDto;
 import threads.server.domain.reply.Reply;
-import threads.server.domain.user.dto.UserDto;
 
 import java.util.List;
 
